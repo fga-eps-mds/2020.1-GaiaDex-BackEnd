@@ -1,3 +1,5 @@
+require('dotenv').config();
+const config = require('./config')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -15,6 +17,9 @@ app.use(express.json());
 app.use(require('./routes/index.js'));
 
 // starting the server
-app.listen(app.get('port'), () => {
-    console.log(`Server on port ${app.get('port')}`);
+app.listen(config.app.port, (err) => {
+    if (err)
+        console.log('Erro')
+
+    console.log(`Server on port ${config.app.port}`);
 });

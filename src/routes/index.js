@@ -8,5 +8,17 @@ router.get('/test', (req, res) => {
     }
     res.json(data)
 });
+router.get('/create', (req, res) => {
+    const data = {
+        "name" : "delete"
+    }
+    res.json(data)
+});
+router.get('/delete', (req, res) => {
+    const data = {
+        "name" : "delete"
+    }
+    res.json(data)
+});
 
 module.exports = router;
