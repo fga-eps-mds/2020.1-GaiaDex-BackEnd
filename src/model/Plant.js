@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require('../database/BancoMongo.js');
 
 const PlantSchema = new mongoose.Schema({
     scientificName: {
         type: String,
         require: true
     },
-    Family: {
+    family: {
         type: String,
         require: true
     },
     gbifID: {
-        type: String,
+        type: Number,
         require: true,
         unique:true    
     },
@@ -18,7 +18,6 @@ const PlantSchema = new mongoose.Schema({
         type: String,
         require : true
     },
-
 });
 
 
