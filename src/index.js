@@ -1,6 +1,7 @@
 const express = require('express');
 const volleyball = require('volleyball');
 const mongoose = require('mongoose');
+const auth = require('./routes/auth');
 
 const app = express();
 const morgan = require('morgan');
@@ -29,6 +30,7 @@ app.use(express.json());
 // routes
 app.use('/item',itemRoutes);
 app.use(require('./routes'));
+app.use('/auth', auth);
 
 function notFound(req, res, next) {
     res.status(404);
