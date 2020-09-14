@@ -1,7 +1,7 @@
 const express = require('express');
 const volleyball = require('volleyball');
-const mongoose = require('mongoose');
 const auth = require('./routes/auth');
+const mongoose = require('mongoose');
 
 const app = express();
 const morgan = require('morgan');
@@ -32,7 +32,7 @@ app.use('/item',itemRoutes);
 app.use(require('./routes'));
 app.use('/auth', auth);
 
-// error handlers
+// Error Handlers
 function notFound(req, res, next) {
     res.status(404);
     const error = new Error('Not Found - ' + req.originalUrl);
@@ -54,7 +54,7 @@ app.use(errorHandler);
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        // The server only starts when the mongoose connects to the database.
+        // Only starts to listen after connecting to the database
         app.listen(app.get('port'), () => {
             console.log(`Server on port ${app.get('port')}`);
         });
