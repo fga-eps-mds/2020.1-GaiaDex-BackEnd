@@ -1,4 +1,7 @@
 const express = require('express');
+const volleyball = require('volleyball');
+const mongoose = require('mongoose');
+
 const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -19,14 +22,37 @@ app.set('port', process.env.PORT || 3000);
 app.set('json spaces', 2);
 
 // middlewares
-app.use(morgan('dev'));
+app.use(volleyball);
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 // routes
 app.use('/item',itemRoutes);
+app.use(require('./routes'));
+
+function notFound(req, res, next) {
+    res.status(404);
+    const error = new Error('Not Found - ' + req.originalUrl);
+    next(error);
+}
+
+function errorHandler(err, req, res, next) {
+    res.status(res.statusCode || 500);
+    res.json({
+        message: err.messege,
+        stack: err.stack
+    });
+}
+
+app.use(notFound);
+app.use(errorHandler);
 
 // starting the server
-app.listen(app.get('port'), () => {
-    console.log(`Server on port ${app.get('port')}`);
-});
+
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        app.listen(app.get('port'), () => {
+            console.log(`Server on port ${app.get('port')}`);
+        });
+    })
+    .catch(err => console.log(err));
