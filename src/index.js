@@ -28,6 +28,12 @@ app.use(express.json());
 // routes
 app.use('/item',itemRoutes);
 
+
+//Controller
+require('./controller/plantController')(app);
+
+
+
 // starting the server
 app.listen(config.app.port, (err) => {
     if (err)
