@@ -32,6 +32,7 @@ app.use('/item',itemRoutes);
 app.use(require('./routes'));
 app.use('/auth', auth);
 
+// error handlers
 function notFound(req, res, next) {
     res.status(404);
     const error = new Error('Not Found - ' + req.originalUrl);
@@ -53,6 +54,7 @@ app.use(errorHandler);
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
+        // The server only starts when the mongoose connects to the database.
         app.listen(app.get('port'), () => {
             console.log(`Server on port ${app.get('port')}`);
         });
