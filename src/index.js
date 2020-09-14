@@ -31,6 +31,8 @@ app.use('/item',itemRoutes);
 
 //Controller
 require('./controller/plantController')(app);
+require('./controller/commentController')(app);
+require('./controller/topicController')(app);
 
 
 
