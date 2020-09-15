@@ -14,6 +14,9 @@ app.use(express.json());
 // routes
 app.use(require('./routes/index.js'));
 
+//controllers
+require('./controllers/loginController')(app);
+
 // starting the server
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
