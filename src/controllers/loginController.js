@@ -1,5 +1,7 @@
 const express = require('express');
 
+const jasonwebtoken = require('jasonwebtoker');
+
 const User = require('../models/User');
 
 const router = express.Router();
@@ -22,6 +24,8 @@ router.post('/login', async(req, res) => {
     }
 
     user.password = undefined;
+
+    const token = jasonwebtoken.sign({id: user.id}) 
 
     res.send({ user });
 });
