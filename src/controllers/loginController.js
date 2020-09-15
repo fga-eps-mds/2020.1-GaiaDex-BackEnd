@@ -31,7 +31,7 @@ router.post('/login', async(req, res) => {
         expiresIn: 86400,
     }); 
 
-    res.send({ user });
+    res.send({ user, token });
 });
 
 module.exports = app => app.use('/', router);
