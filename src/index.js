@@ -1,6 +1,16 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+
+// MongoDB connection
+mongoose
+    .connect(
+        'mongodb://mongo:27017/backend',
+        { useNewUrlParser: true }
+    )
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
 
 // settings
 app.set('port', process.env.PORT || 3000);
