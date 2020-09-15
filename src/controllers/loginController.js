@@ -6,6 +6,8 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+const authConfig = require('../config/auth');
+
 router.post('/login', async(req, res) => {
     const {email, password} = req.body;
 
@@ -25,7 +27,9 @@ router.post('/login', async(req, res) => {
 
     user.password = undefined;
 
-    const token = jasonwebtoken.sign({id: user.id}) 
+    const token = jasonwebtoken.sign({id: user.id}, authConfig.secret,{
+        expiresIn: 86400,
+    }); 
 
     res.send({ user });
 });
