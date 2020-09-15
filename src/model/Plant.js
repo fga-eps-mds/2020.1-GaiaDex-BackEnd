@@ -32,7 +32,6 @@ const PlantSchema = new mongoose.Schema({
     collection_count: {
         type: Number,
         require: true,
-        unique: true
     },
     extinction: {
         type: Boolean,
@@ -41,12 +40,10 @@ const PlantSchema = new mongoose.Schema({
     profile_picture: {
         type: Number,
         require : true
-    },
-    
+    },   
     gbifID: {
         type: Number,
-        require: true,
-        unique:true    
+        require: true,    
     },
     stateProvince: {
         type: String,

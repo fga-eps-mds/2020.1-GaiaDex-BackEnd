@@ -3,11 +3,28 @@ const Plant = require('../model/Plant');
 const Topico = require('../model/Topico');
 
 const router = express.Router();
-
-router.post('/register', async (req , res) => {
+//Criar um novo topico pelo id da planta
+router.put('/:plantId', async (req , res) => {
+    
     try{
-        const topic = await Topico.create(req.body);
-        return res.send({ topic });
+        const {topicos} = req.body;
+
+        const plant = await Plant.findByIdAndUpdate(req.params.plantId,
+            {},{ new: true}).populate('topicos');
+        
+
+        await Promise.all(topicos.map(async topico =>{
+            const plantTopic = new Topico({...topico,plant : plant._id});
+
+            await plantTopic.save();
+
+            plant.topicos.push(plantTopic);
+        }));
+
+        await plant.save();
+
+
+        return res.send({ plant });
     }catch (err){
         return res.status(400).send({ error: 'Registration failed'});
     }
@@ -45,12 +62,12 @@ router.delete('/:topicId', async (req , res) => {
 //Dando upgrade topic por id
 router.put('/:topicId', async (req , res) => {
     try{
-        await Topico.findByIdAndRemove(req.params.plantId);
+        
+        await Topico.findByIdAndUpdate(req.params.topicId,{description: 'marcos felipe'},{new : true});
 
-        const topics = await Topico.find();
-
-        return res.send({ topics });
+        return res.send();
     }catch (err){
+        console.log(err);
         return res.status(400).send({ error: 'Error when Delete this plant'});
     }
 });

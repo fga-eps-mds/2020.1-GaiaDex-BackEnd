@@ -12,11 +12,13 @@ router.post('/register', async (req , res) => {
 
         const plant = await Plant.create({scientificName,family_name,gender_name,specie_name,common_name,usage,first_User,collection_count,extinction,profile_picture, gbifID,stateProvince});
 
-        topicos.map(topico =>{
+        await Promise.all(topicos.map(async topico =>{
             const plantTopic = new Topico({...topico,plant : plant._id});
 
-            plantTopic.save().then(topico => plant.topicos.push(topico));
-        });
+            await plantTopic.save();
+
+            plant.topicos.push(plantTopic);
+        }));
 
         await plant.save();
 
@@ -29,7 +31,7 @@ router.post('/register', async (req , res) => {
 //Listagem de Todas as plantas
 router.get('/', async (req , res) => {
     try{
-        const plants = await Plant.find().populate('topic');
+        const plants = await Plant.find().populate('topicos');
 
         return res.send({ plants });
     }catch (err){
@@ -39,7 +41,7 @@ router.get('/', async (req , res) => {
 //Procurando planta por id
 router.get('/:plantId', async (req , res) => {
     try{
-        const plant = await Plant.findById(req.params.plantId).populate('topic');
+        const plant = await Plant.findById(req.params.plantId).populate('topicos');
 
         return res.send({ plant });
     }catch (err){
@@ -58,15 +60,32 @@ router.delete('/:plantId', async (req , res) => {
 });
 //Dando upgrade planta por id
 router.put('/:plantId', async (req , res) => {
-    try{
-        await Plant.findByIdAndRemove(req.params.plantId);
+    
+        try{
+            const { scientificName,family_name,gender_name,specie_name,common_name,usage,first_User,collection_count,extinction,profile_picture, gbifID,stateProvince,topicos} = req.body;
+    
+            const plant = await Plant.findByIdAndUpdate(req.params.plantId,
+                {scientificName,family_name,gender_name,specie_name,common_name,usage,first_User,collection_count,extinction,profile_picture, gbifID,stateProvince},{ new: true});
+            
+            plant.topicos = [];
+            await Topico.remove({plant: plant._id});
 
-        const plants = await Plant.find().populate('topic');
-
-        return res.send({ plants });
-    }catch (err){
-        return res.status(400).send({ error: 'Error when Delete this plant'});
-    }
+            await Promise.all(topicos.map(async topico =>{
+                const plantTopic = new Topico({...topico,plant : plant._id});
+    
+                await plantTopic.save();
+    
+                plant.topicos.push(plantTopic);
+            }));
+    
+            await plant.save();
+    
+    
+            return res.send({ plant });
+        }catch (err){
+            return res.status(400).send({ error: 'Registration failed'});
+        }
+   
 });
 
 
