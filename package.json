@@ -20,6 +20,7 @@
   "homepage": "https://github.com/fga-eps-mds/2020.1-Grupo2-backend#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
