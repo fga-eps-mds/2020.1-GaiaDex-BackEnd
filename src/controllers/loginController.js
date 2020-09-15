@@ -25,3 +25,5 @@ router.post('/login', async(req, res) => {
 
     res.send({ user });
 });
+
+module.exports = app => app.use('/', router);
