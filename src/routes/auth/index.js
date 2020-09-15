@@ -6,7 +6,8 @@ const User = require('../../models/user');
 
 const schema = Joi.object({
     username: Joi.string().alphanum().min(4).max(30).required(),
-    password: Joi.string().min(8).required()
+    password: Joi.string().min(8).required(),
+    email: Joi.string().email().required()
 });
 
 router.get('/', (req, res) => {
@@ -28,13 +29,16 @@ router.post('/signup', (req, res, next) => {
         User.findOne({
             username: req.body.username
         }).then(user => { 
-            if( user ) {
+
+            if(user) {
+                // If user is not undefined it means that there is already an user with the username
                 const error = new Error(user.username + ' username is already being used.');
                 next(error);
             } else {
                 const user = new User({
                     username: req.body.username,
-                    password: req.body.password
+                    password: req.body.password,
+                    email: req.body.email
                 });
 
                 user.save()
@@ -43,7 +47,8 @@ router.post('/signup', (req, res, next) => {
                     })
                     .catch(err => console.log(err));
             }
-        })
+
+        });
     }
 });
 
