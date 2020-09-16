@@ -94,7 +94,13 @@ router.delete('/delete-user', (req, res, next) => {
                 const error = new Error(req.body.username + ' user not found.');
                 next(error);
             } else if(req.body.password == user.password && req.body.email == user.email) {
-                
+                User.deleteOne({
+                    username: user.username
+                }).then(() => {
+                    res.json({
+                        message: 'User successfully deleted.'
+                    });
+                });
             } else {
                 const error = new Error('Password or email not valid, please try again.');
                 next(error);
