@@ -3,6 +3,8 @@ const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
+const itemRoutes = require('./routes/itemRoutes');
+
 // MongoDB connection
 mongoose
     .connect(
@@ -22,7 +24,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 // routes
-app.use(require('./routes/index.js'));
+app.use('/item',itemRoutes);
 
 // starting the server
 app.listen(app.get('port'), () => {
