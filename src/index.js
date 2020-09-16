@@ -51,12 +51,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 // starting the server
-
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        // Only starts to listen after connecting to the database
-        app.listen(app.get('port'), () => {
-            console.log(`Server on port ${app.get('port')}`);
-        });
-    })
-    .catch(err => console.log(err));
+app.listen(app.get('port'), () => {
+    console.log(`Server on port ${app.get('port')}`);
+});
