@@ -1,6 +1,6 @@
 const express = require('express');
 const volleyball = require('volleyball');
-const auth = require('./routes/auth');
+const auth = require('./routes/authRoutes');
 const mongoose = require('mongoose');
 
 const app = express();

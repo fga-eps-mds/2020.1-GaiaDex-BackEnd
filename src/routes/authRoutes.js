@@ -2,7 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 
 const router = express.Router();
-const User = require('../../models/user');
+const User = require('../models/user');
 
 const schema = Joi.object({
     username: Joi.string().alphanum().min(4).max(30).required(),
