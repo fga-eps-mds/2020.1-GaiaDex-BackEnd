@@ -1,9 +1,17 @@
 version: '3'
 services:
     backend:
+        container_name: backend
+        restart: always
         build: .
         ports:
             - 3000:3000
-        container_name: backend
         volumes: 
-            - .:/app
+            - ./src:/app/src
+        links: 
+            - mongo
+    mongo:
+        container_name: mongo
+        image: mongo
+        ports: 
+            - 27017:27017
