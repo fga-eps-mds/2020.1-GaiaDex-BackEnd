@@ -67,8 +67,11 @@ router.put('/update-user', (req, res, next) => {
             if(!user) {
                 const error = new Error(req.body.username + ' user not found.');
                 next(error);
-            } else {
+            } else if(req.body.password == user.password && req.body.email == user.email) {
                 
+            } else {
+                const error = new Error('Password or email not valid, please try again.');
+                next(error);
             } 
         });
     }
@@ -90,8 +93,11 @@ router.delete('/delete-user', (req, res, next) => {
             if(!user) {
                 const error = new Error(req.body.username + ' user not found.');
                 next(error);
-            } else {
+            } else if(req.body.password == user.password && req.body.email == user.email) {
                 
+            } else {
+                const error = new Error('Password or email not valid, please try again.');
+                next(error);
             } 
         });
     }
