@@ -21,5 +21,11 @@ help:
 # clear3:
 # 	sudo docker volume prune
 
+run:
+	sudo docker-compose up --build
+
+down:
+	sudo docker-compose down
+
 bash:
 	sudo docker exec -it backend sh
