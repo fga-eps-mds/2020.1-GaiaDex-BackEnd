@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const userSchema = require('../schemas/userSchema');
+const updateUserSchema = require('../schemas/updateUserSchema');
 
 class UsersController {
     
@@ -50,9 +51,19 @@ class UsersController {
             password: request.body.updatedPassword,
             email: request.body.updatedEmail
         }
+
+        if(!newInfo.username) {
+            newInfo.username = oldInfo.username
+        } 
+        if(!newInfo.password) {
+            newInfo.password = oldInfo.password
+        }
+        if(!newInfo.email) {
+            newInfo.email = oldInfo.email
+        }
     
         // This validation returns null if there is no errors
-        const result = userSchema.validate(newInfo);
+        const result = updateUserSchema.validate(newInfo);
     
         if(result.error) {
             // if there is an error we throw it to the errorHandler
