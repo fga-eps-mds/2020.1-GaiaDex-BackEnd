@@ -53,8 +53,20 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.put('/update-user', (req, res, next) => {
+    const oldInfo = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email
+    }
+
+    const newInfo = {
+        username: req.body.updatedUsername,
+        password: req.body.updatedPassword,
+        email: req.body.updatedEmail
+    }
+
     // This validation returns null if there is no errors
-    const result = schema.validate(req.body);
+    const result = schema.validate(newInfo);
 
     if(result.error) {
         // if there is an error we throw it to the errorHandler
@@ -62,20 +74,31 @@ router.put('/update-user', (req, res, next) => {
         next(result.error);
     } else {
         User.findOne({
-            username: req.body.username
-        }).then( user => {
+            username: oldInfo.username
+        }).then(user => {
             if(!user) {
-                const error = new Error(req.body.username + ' user not found.');
+                const error = new Error(oldInfo.username + ' user not found.');
                 next(error);
-            } else if(req.body.password == user.password && req.body.email == user.email) {
-                
+            } else if(oldInfo.password == user.password && oldInfo.email == user.email) {
+                // Looking for a user with same username that is being received in the req
+                User.updateOne(
+                    { username: oldInfo.username},
+                    { $set: { 
+                        username: newInfo.username,
+                        password: newInfo.password,
+                        email: newInfo.email 
+                    }}
+                ).then( () => {
+                    response.json({
+                        message: 'User successfully updated.'
+                    })
+                });
             } else {
                 const error = new Error('Password or email not valid, please try again.');
                 next(error);
-            } 
+            }
         });
     }
-
 });
 
 router.delete('/delete-user', (req, res, next) => {
