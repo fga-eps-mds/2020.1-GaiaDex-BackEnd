@@ -52,7 +52,7 @@ router.post('/signup', (req, res, next) => {
     }
 });
 
-router.put('/update-user', (req, res, next) => {
+router.put('/update-user', (req, response, next) => {
     const oldInfo = {
         username: req.body.username,
         password: req.body.password,
