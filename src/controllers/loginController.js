@@ -1,6 +1,6 @@
 const express = require('express');
 
-const jasonwebtoken = require('jasonwebtoker');
+const jsonwebtoken = require('jsonwebtoker');
 
 const User = require('../models/User');
 
@@ -27,7 +27,7 @@ router.post('/login', async(req, res) => {
 
     user.password = undefined;
 
-    const token = jasonwebtoken.sign({id: user.id}, authConfig.secret,{
+    const token = jsonwebtoken.sign({id: user.id}, authConfig.secret,{
         expiresIn: 86400,
     }); 
 
