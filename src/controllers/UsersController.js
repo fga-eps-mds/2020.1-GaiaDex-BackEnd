@@ -1,19 +1,11 @@
-const { response } = require('express');
-const Joi = require('joi');
-
-const User = require("../models/user");
-
-const schema = Joi.object({
-    username: Joi.string().alphanum().min(4).max(30).required(),
-    password: Joi.string().min(8).required(),
-    email: Joi.string().email().required()
-});
+const User = require('../models/user');
+const userSchema = require('../schemas/userSchema');
 
 class UsersController {
     
     async signup(request, response, next) {
         // This validation returns null if there is no errors
-        const result = schema.validate(request.body);
+        const result = userSchema.validate(request.body);
     
         if(result.error) {
             // if there is an error we throw it to the errorHandler
@@ -60,7 +52,7 @@ class UsersController {
         }
     
         // This validation returns null if there is no errors
-        const result = schema.validate(newInfo);
+        const result = userSchema.validate(newInfo);
     
         if(result.error) {
             // if there is an error we throw it to the errorHandler
@@ -97,7 +89,7 @@ class UsersController {
 
     async delete(request, response, next) {
         // This validation returns null if there is no errors
-        const result = schema.validate(request.body);
+        const result = userSchema.validate(request.body);
     
         if(result.error) {
             // if there is an error we throw it to the errorHandler
