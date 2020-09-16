@@ -52,4 +52,31 @@ router.post('/signup', (req, res, next) => {
     }
 });
 
+router.put('/update-user', (req, res, next) => {
+    // This validation returns null if there is no errors
+    const result = schema.validate(req.body);
+
+    if(result.error) {
+        // if there is an error we throw it to the errorHandler
+        console.log(result.error);
+        next(result.error);
+    } else {
+
+    }
+
+});
+
+router.delete('/delete-user', (req, res, next) => {
+    // This validation returns null if there is no errors
+    const result = schema.validate(req.body);
+
+    if(result.error) {
+        // if there is an error we throw it to the errorHandler
+        console.log(result.error);
+        next(result.error);
+    } else {
+
+    }
+});
+
 module.exports = router;
