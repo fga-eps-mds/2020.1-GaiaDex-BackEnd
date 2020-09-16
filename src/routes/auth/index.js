@@ -61,7 +61,16 @@ router.put('/update-user', (req, res, next) => {
         console.log(result.error);
         next(result.error);
     } else {
-
+        User.findOne({
+            username: req.body.username
+        }).then( user => {
+            if(!user) {
+                const error = new Error(req.body.username + ' user not found.');
+                next(error);
+            } else {
+                
+            } 
+        });
     }
 
 });
@@ -75,7 +84,16 @@ router.delete('/delete-user', (req, res, next) => {
         console.log(result.error);
         next(result.error);
     } else {
-
+        User.findOne({
+            username: req.body.username
+        }).then( user => {
+            if(!user) {
+                const error = new Error(req.body.username + ' user not found.');
+                next(error);
+            } else {
+                
+            } 
+        });
     }
 });
 
