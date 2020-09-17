@@ -2,11 +2,14 @@ const express = require('express');
 
 const jsonwebtoken = require('jsonwebtoken');
 
-const User = require('../models/User');
+const User = require('../models/user');
 
 const router = express.Router();
 
-const authConfig = require('../config/auth');
+//const authConfig = require('../config/auth');
+const authConfig = {
+    "secret": "d41d8cd98f00b204e9800998ecf8427e" 
+};
 
 router.post('/login', async(req, res) => {
     const {email, password} = req.body;
