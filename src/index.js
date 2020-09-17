@@ -28,6 +28,7 @@ app.use('/item',itemRoutes);
 
 //controllers
 require('./controllers/loginController')(app);
+require('./controllers/logoutController')(app);
 
 // starting the server
 app.listen(app.get('port'), () => {
