@@ -29,9 +29,6 @@ app.use('/item',itemRoutes);
 //controllers
 require('./controllers/loginController')(app);
 
-//controllers
-require('./controllers/loginController')(app);
-
 // starting the server
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);

@@ -11,10 +11,14 @@ const authConfig = {
     "secret": "d41d8cd98f00b204e9800998ecf8427e" 
 };
 
-router.post('/login', async(req, res) => {
+router.post('/login', async(req, res) => {    
     const {email, password} = req.body;
 
     const user = await User.findOne({ email }).select('+password');
+    /*const user = {
+        "email": "asda@asd.com",
+        "password": "asdz"
+    };*/
 
     if(!user){
         
@@ -34,7 +38,7 @@ router.post('/login', async(req, res) => {
         expiresIn: 86400,
     }); 
 
-    res.send({ user, token });
+    res.send({user, token });
 });
 
 module.exports = app => app.use('/', router);
