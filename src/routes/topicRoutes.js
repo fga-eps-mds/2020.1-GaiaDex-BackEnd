@@ -1,6 +1,6 @@
 const express = require('express');
-const Plant = require('../model/Plant');
-const Topico = require('../model/Topico');
+const Plant = require('../models/Plant');
+const Topico = require('../models/Topico');
 
 const router = express.Router();
 //Criar um novo topico pelo id da planta

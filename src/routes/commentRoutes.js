@@ -1,7 +1,7 @@
 const express = require('express');
-const Plant = require('../model/Plant');
-const Topico = require('../model/Topico');
-const Comment = require('../model/Comment');
+const Plant = require('../models/Plant');
+const Topico = require('../models/Topico');
+const Comment = require('../models/Comment');
 
 const router = express.Router();
 

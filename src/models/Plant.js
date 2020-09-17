@@ -1,4 +1,4 @@
-const mongoose = require('../database/BancoMongo.js');
+const mongoose = require('../index.js');
 
 const PlantSchema = new mongoose.Schema({
     scientificName: {
@@ -31,14 +31,14 @@ const PlantSchema = new mongoose.Schema({
     },
     collection_count: {
         type: Number,
-        require: true,
+        require: true
     },
     extinction: {
         type: Boolean,
         require: true
     },
     profile_picture: {
-        type: Number,
+        type: String,
         require : true
     },   
     gbifID: {

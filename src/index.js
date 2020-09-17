@@ -8,17 +8,13 @@ const mongoose = require('mongoose');
 const itemRoutes = require('./routes/itemRoutes');
 
 // MongoDB connection
-mongoose
-    .connect(
-        'mongodb://mongo:27017/backend',
-        { useNewUrlParser: true }
-    )
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
 
-// settings
-app.set('port', process.env.PORT || 3000);
-app.set('json spaces', 2);
+
+mongoose.set('useCreateIndex', true);
+mongoose.connect('mongodb://localhost:27017/noderest', {useNewUrlParser : true, useUnifiedTopology: true});
+mongoose.Promise = global.Promise;
+
+module.exports = mongoose;
 
 // middlewares
 app.use(morgan('dev'));
@@ -29,10 +25,9 @@ app.use(express.json());
 app.use('/item',itemRoutes);
 
 
-//Controller
-require('./controller/plantController')(app);
-require('./controller/commentController')(app);
-require('./controller/topicController')(app);
+require('./routes/plantRoutes')(app);
+require('./routes/topicRoutes')(app);
+require('./routes/commentRoutes')(app);
 
 
 

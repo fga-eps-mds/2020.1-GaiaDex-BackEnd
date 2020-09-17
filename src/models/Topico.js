@@ -1,4 +1,4 @@
-const mongoose = require('../database/BancoMongo.js');
+const mongoose = require('../index.js');
 
 const TopicoSchema = new mongoose.Schema({
     plant:{
