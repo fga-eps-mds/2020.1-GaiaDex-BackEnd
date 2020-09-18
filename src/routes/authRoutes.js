@@ -11,129 +11,81 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/signup', (request, response, next) => {
-    // This validation returns null if there is no errors
-    const result = userSchema.validate(request.body);
+router.post('/signup', async(req, res, next) => {
 
-    if(result.error) {
-        // if there is an error we throw it to the errorHandler
-        console.log(result.error);
-        next(result.error);
-    } else {
-        // Looking for a user with same username that is being received in the req
-        User.findOne({
-            username: request.body.username
-        }).then(user => { 
+    try {
 
-            if(user) {
-                // If user is not undefined it means that there is already an user with the username
-                const error = new Error(user.username + ' username is already being used.');
-                next(error);
-            } else {
-                const user = new User({
-                    username: request.body.username,
-                    password: request.body.password,
-                    email: request.body.email
-                });
+        const newUserData = req.body;
+        const result = userSchema.validate(req.body);
 
-                user.save()
-                    .then( result => {
-                        response.send(result);
-                    })
-                    .catch(err => console.log(err));
-            }
-        });
+        if( await User.findOne({ username: newUserData.username}) ) {
+            const error = new Error('Username already being used.');
+            return next(error);
+        }
+
+        if( result.error ) {
+            return next(result.error);
+        }
+
+        const user = new User(newUserData);
+
+        user.save()
+            .then( result => {
+                return res.send(result);
+            })
+            .catch( err => next(err));
+
+    } catch(err) {
+        return next(err);
     }
+
 });
 
-router.put('/update-user', (request, response, next) => {
-    const oldInfo = {
-        username: request.body.username,
-        password: request.body.password,
-        email: request.body.email
-    }
+router.put('/update-user/:id', async(req, res, next) => {
 
-    const newInfo = {
-        username: request.body.updatedUsername,
-        password: request.body.updatedPassword,
-        email: request.body.updatedEmail
-    }
+    try {
 
-    if(!newInfo.username) {
-        newInfo.username = oldInfo.username
-    } 
-    if(!newInfo.password) {
-        newInfo.password = oldInfo.password
-    }
-    if(!newInfo.email) {
-        newInfo.email = oldInfo.email
-    }
+        const user = await User.findById(req.params.id);
+        const newData = req.body;
 
-    // This validation returns null if there is no errors
-    const result = userSchema.validate(newInfo);
+        if ( !newData.username ) {
+            newData.username = user.username;
+        }
+        if ( !newData.password ) {
+            newData.password = user.password;
+        }
+        if ( !newData.email ) {
+            newData.email = user.email;
+        }
 
-    if(result.error) {
-        // if there is an error we throw it to the errorHandler
-        console.log(result.error);
-        next(result.error);
-    } else {
-        User.findOne({
-            username: oldInfo.username
-        }).then(user => {
-            if(!user) {
-                const error = new Error(oldInfo.username + ' user not found.');
-                next(error);
-            } else if(oldInfo.password == user.password && oldInfo.email == user.email) {
-                // Looking for a user with same username that is being received in the req
-                User.updateOne(
-                    { username: oldInfo.username},
-                    { $set: { 
-                        username: newInfo.username,
-                        password: newInfo.password,
-                        email: newInfo.email 
-                    }}
-                ).then( () => {
-                    response.json({
-                        message: 'User successfully updated.'
-                    })
-                });
-            } else {
-                const error = new Error('Password or email not valid, please try again.');
-                next(error);
-            }
-        });
-    }
-});
+        const result = userSchema.validate(newData);
 
-router.delete('/delete-user', (request, response, next) => {
-    // This validation returns null if there is no errors
-    const result = userSchema.validate(request.body);
-
-    if(result.error) {
-        // if there is an error we throw it to the errorHandler
-        console.log(result.error);
-        next(result.error);
-    } else {
-        User.findOne({
-            username: request.body.username
-        }).then( user => {
-            if(!user) {
-                const error = new Error(request.body.username + ' user not found.');
-                next(error);
-            } else if(request.body.password == user.password && request.body.email == user.email) {
-                User.deleteOne({
-                    username: user.username
-                }).then(() => {
-                    response.json({
-                        message: 'User successfully deleted.'
+        if(result.error) {
+            return next(result.error);
+        }
+        
+        await User.findOneAndUpdate({_id: req.params.id}, req.body, { useFindAndModify: false})
+                    .then( () => {
+                        res.send({ message: 'User updated successfully.'});
                     });
-                });
-            } else {
-                const error = new Error('Password or email not valid, please try again.');
-                next(error);
-            } 
-        });
+
+    } catch(err) {
+        return next(err);
     }
+
+});
+
+router.delete('/delete-user/:id', async(req, res, next) => {
+    
+    try {
+        
+        await User.findByIdAndDelete(req.params.id);
+        return res.send({ message: 'User successfully deleted.' });
+
+    } catch(err) {
+        return next(err);
+    }
+
 });
 
 module.exports = router;

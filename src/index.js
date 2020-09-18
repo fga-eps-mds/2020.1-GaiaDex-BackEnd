@@ -1,11 +1,9 @@
 const express = require('express');
-const volleyball = require('volleyball');
 const auth = require('./routes/authRoutes');
 const mongoose = require('mongoose');
 
 const app = express();
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
 
@@ -23,13 +21,12 @@ app.set('port', process.env.PORT || 3000);
 app.set('json spaces', 2);
 
 // middlewares
-app.use(volleyball);
+app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 // routes
 app.use('/item',itemRoutes);
-app.use(require('./routes'));
 app.use('/auth', auth);
 
 // Error Handlers
