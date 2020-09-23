@@ -1,7 +1,9 @@
 const express = require('express');
+const auth = require('./routes/authRoutes');
+const mongoose = require('mongoose');
+
 const app = express();
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
 
@@ -25,6 +27,25 @@ app.use(express.json());
 
 // routes
 app.use('/item',itemRoutes);
+app.use('/auth', auth);
+
+// Error Handlers
+function notFound(req, res, next) {
+    res.status(404);
+    const error = new Error('Not Found - ' + req.originalUrl);
+    next(error);
+}
+
+function errorHandler(err, req, res, next) {
+    res.status(res.statusCode || 500);
+    res.json({
+        message: err.messege,
+        stack: err.stack
+    });
+}
+
+app.use(notFound);
+app.use(errorHandler);
 
 // starting the server
 app.listen(app.get('port'), () => {
