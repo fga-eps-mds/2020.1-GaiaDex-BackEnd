@@ -3,7 +3,6 @@ const router = express.Router();
 
 const Topic = require('../models/topic');
 const User = require('../models/user');
-const Comment = require('../models/comment');
 
 router.post('/create/:userId', async (req, res, next) => {
     
