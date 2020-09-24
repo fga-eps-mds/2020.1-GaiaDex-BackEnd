@@ -47,7 +47,7 @@ router.post('/login', async(req, res) => {
 
     const aToken = "Bearer "+token;
 
-    res.header('authToken', aToken);
+    res.header('authtoken', aToken);
     res.json({
         message: 'Auth token generated'
     }).redirect('/main');
@@ -55,7 +55,7 @@ router.post('/login', async(req, res) => {
 });
 
 router.get('/logout', async(req, res) => { 
-    const sessiontoken = req.headers.sessiontoken;
+    const sessiontoken = req.headers.authtoken;
 
     if(!sessiontoken){
         return res.status(401).send({Error: 'Token not provided'});
