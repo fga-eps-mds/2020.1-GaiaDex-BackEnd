@@ -11,7 +11,6 @@ const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const authRoutes = require('./routes/authRoutes');
 const topicRoutes = require('./routes/topicRoutes');
-const commentRoutes = require('./routes/commentRoutes');
 
 // MongoDB connection
 
