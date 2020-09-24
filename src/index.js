@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // MongoDB connection
 mongoose
@@ -25,6 +26,7 @@ app.use(express.json());
 
 // routes
 app.use('/item',itemRoutes);
+app.use('/auth',authRoutes);
 
 // starting the server
 app.listen(app.get('port'), () => {
