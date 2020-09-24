@@ -27,13 +27,16 @@ router.post('/create/:userId', async (req, res, next) => {
 
 });
 
-router.put('/update/:topicId', async (req, res, next) => {
+router.put('/update/:topicId', async (req, res) => {
 
     try {
 
         const topic = await Topic.findById(req.params.topicId);
 
-        if (!topic) return next(new Error('Topic not found.'));
+        if (!topic) {
+            const error = new Error('Topic not found.');
+            return next(error);
+        }
 
         const newData = req.body;
 
@@ -68,6 +71,30 @@ router.delete('/delete/:topicId', async (req, res, next) => {
 });
 
 router.get('/list_topics', async (req, res, next) => {
+    try {
+        const topic = await Topic.find().populate(['user']);
+
+        return res.send({ topic });
+    } catch (err) {
+        console.log(err);
+        return res.next({ error: 'Error loading topics.' });
+    }
+});
+
+router.delete('/delete/:topicId', async (req, res) => {
+    try {
+        await Topic.findByIdAndRemove(req.params.topicId).populate('user');
+
+        return res.send({
+            message: 'Topic successfully removed.'
+        });
+    } catch (err) {
+        console.log(err);
+        return res.next({ error: 'Error deleting topic.' });
+    }
+});
+
+router.get('/list_topics', async (req, res) => {
     try {
         const topic = await Topic.find().populate(['user']);
 
