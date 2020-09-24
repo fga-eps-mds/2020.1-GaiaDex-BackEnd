@@ -6,15 +6,22 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
+const plantRoutes = require('./routes/plantRoutes');
+const topicRoutes = require('./routes/topicRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 
 // MongoDB connection
 
-
-mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost:27017/noderest', {useNewUrlParser : true, useUnifiedTopology: true});
-mongoose.Promise = global.Promise;
-
-module.exports = mongoose;
+//mongodb://localhost:27017/noderest  => meu banco de dados local polupado
+//mongodb://mongo:27017/backend => banco de dados da develop
+mongoose
+    .connect('mongodb://localhost:27017/noderest',
+        { useNewUrlParser: true }
+        
+    )
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+ 
 
 // middlewares
 app.use(morgan('dev'));
@@ -23,11 +30,9 @@ app.use(express.json());
 
 // routes
 app.use('/item',itemRoutes);
-
-
-require('./routes/plantRoutes')(app);
-require('./routes/topicRoutes')(app);
-require('./routes/commentRoutes')(app);
+app.use('/plant',plantRoutes);
+app.use('/topic',topicRoutes);
+app.use('/comment',commentRoutes);
 
 
 

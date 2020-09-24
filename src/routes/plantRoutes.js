@@ -89,5 +89,4 @@ router.put('/:plantId', async (req , res) => {
    
 });
 
-
-module.exports = app => app.use('/plant' , router);
+module.exports = router;

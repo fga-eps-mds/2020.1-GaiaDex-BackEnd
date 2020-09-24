@@ -72,4 +72,4 @@ router.put('/:topicId', async (req , res) => {
     }
 });
 
-module.exports = app => app.use('/topic' , router);
+module.exports = router;

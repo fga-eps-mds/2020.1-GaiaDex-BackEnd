@@ -1,4 +1,4 @@
-const mongoose = require('../index.js');
+const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
     username: {
