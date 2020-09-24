@@ -21,11 +21,11 @@ const authConfig = {
 router.post('/login', async(req, res) => {    
     const {email, password} = req.body;
 
-    //const user = await User.findOne({ email }).select('+password');
-    const user = {
+    const user = await User.findOne({ email, password });
+    /*const user = {
         "email": "asda@asd.com",
         "password": "asdz"
-    };
+    };*/
 
     if(!user){
         
@@ -47,8 +47,11 @@ router.post('/login', async(req, res) => {
 
     const aToken = "Bearer "+token;
 
-    res.header("authToken", aToken);
-    res.redirect('/main');
+    res.header('authToken', aToken);
+    res.json({
+        message: 'Auth token generated'
+    }).redirect('/main');
+    
 });
 
 router.get('/logout', async(req, res) => { 
