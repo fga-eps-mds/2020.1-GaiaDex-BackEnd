@@ -12,10 +12,7 @@ router.post('/create/:userId', async (req, res, next) => {
         const topic = await Topic.create({...req.body, user: req.params.userId});
         const user = await User.findById(req.params.userId);
 
-        if (!user) {
-            const error = new Error('User not found.');
-            return next(error);
-        }
+        if (!user) return next( new Error('User not found.'));
 
         await topic.save();
 
@@ -37,10 +34,7 @@ router.put('/update/:topicId', async (req, res, next) => {
 
         const topic = await Topic.findById(req.params.topicId);
 
-        if (!topic) {
-            const error = new Error('Topic not found.');
-            return next(error);
-        }
+        if (!topic) return next(new Error('Topic not found.'));
 
         const newData = req.body;
 
@@ -106,6 +100,30 @@ router.post('/comment/:topicId/:userId', async (req, res, next) => {
         console.log(err);
         return res.next({ error: 'Error, it was not possible to comment.'});
     }
-})
+});
+
+router.put('/update_comment/:commentId', async (req, res, next) => {
+
+    try {
+
+        const comment = await Comment.findById(req.params.commentId);
+
+        if (!comment) return next(new Error('Comment not found.'));
+
+        const newData = req.body;
+
+        if (!newData.text) return next(new Error('Comment should not be empty.'));;
+    
+        await Comment.findOneAndUpdate({_id: req.params.commentId}, req.body, { useFindAndModify: false})
+        .then( () => {
+            res.send({ message: 'Comment updated successfully.'});
+        });
+
+    } catch (err) {
+        console.log(err);
+        return res.next({ error: 'Error updating comment.' });
+    }
+
+});
 
 module.exports = router;
