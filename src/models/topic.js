@@ -15,6 +15,10 @@ const topicSchema = new Schema({
         ref: 'User',
         require: true,
     },
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
