@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const PlantSchema = new mongoose.Schema({
     scientificName: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
     family_name: {
         type: String,
