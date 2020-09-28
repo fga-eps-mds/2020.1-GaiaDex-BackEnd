@@ -5,14 +5,10 @@ const Topico = require('../models/Topico');
 const router = express.Router();
 //Criar um novo topico pelo id da planta
 router.put('/:plantId', async (req , res) => {
-    
     try{
         const {topicos} = req.body;
-
         const plant = await Plant.findByIdAndUpdate(req.params.plantId,
             {},{ new: true}).populate('topicos');
-        
-
         await Promise.all(topicos.map(async topico =>{
             const plantTopic = new Topico({...topico,plant : plant._id});
 
@@ -20,10 +16,7 @@ router.put('/:plantId', async (req , res) => {
 
             plant.topicos.push(plantTopic);
         }));
-
         await plant.save();
-
-
         return res.send({ plant });
     }catch (err){
         return res.status(400).send({ error: 'Registration failed'});
@@ -33,7 +26,6 @@ router.put('/:plantId', async (req , res) => {
 router.get('/', async (req , res) => {
     try{
         const topics = await Topico.find();
-
         return res.send({ topics });
     }catch (err){
         return res.status(400).send({ error: 'Loading plants failed'});
@@ -43,7 +35,6 @@ router.get('/', async (req , res) => {
 router.get('/:topicId', async (req , res) => {
     try{
         const topico = await Topico.findById(req.params.topicId);
-
         return res.send({ topico });
     }catch (err){
         return res.status(400).send({ error: 'error when searching for this topic '});
@@ -53,7 +44,6 @@ router.get('/:topicId', async (req , res) => {
 router.delete('/:topicId', async (req , res) => {
     try{
         await Topico.findByIdAndRemove(req.params.topicId);
-
         return res.send();
     }catch (err){
         return res.status(400).send({ error: 'Error when Delete this topic'});
@@ -62,9 +52,7 @@ router.delete('/:topicId', async (req , res) => {
 //Dando upgrade topic por id
 router.put('/:topicId', async (req , res) => {
     try{
-        
         await Topico.findByIdAndUpdate(req.params.topicId,{description: 'marcos felipe'},{new : true});
-
         return res.send();
     }catch (err){
         console.log(err);

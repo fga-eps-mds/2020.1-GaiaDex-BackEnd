@@ -12,21 +12,19 @@ router.post('/register', async (req , res) => {
 
         const plant = await Plant.create({scientificName,family_name,gender_name,specie_name,common_name,usage,first_User,collection_count,extinction,profile_picture, gbifID,stateProvince});
 
-        await Promise.all(topicos.map(async topico =>{
-            const plantTopic = new Topico({...topico,plant : plant._id});
+        // await Promise.all(topicos.map(async topico =>{
+        //     const plantTopic = new Topico({...topico,plant : plant._id});
 
-            await plantTopic.save();
+        //     await plantTopic.save();
 
-            plant.topicos.push(plantTopic);
-        }));
+        //     plant.topicos.push(plantTopic);
+        // }));
 
         await plant.save();
 
-
         return res.send({ plant });
     }catch (err){
-        console.log(err);
-        return res.status(400).send({ error: 'Registration failed'});
+        return res.send(err);
     }
 });
 //Listagem de Todas as plantas
@@ -52,9 +50,9 @@ router.get('/:plantId', async (req , res) => {
 //Deletando planta por id
 router.delete('/:plantId', async (req , res) => {
     try{
-        await Plant.findByIdAndRemove(req.params.plantId);
+        const deleted = await Plant.findByIdAndRemove(req.params.plantId);
 
-        return res.send();
+        return res.send(deleted);
     }catch (err){
         return res.status(400).send({ error: 'Error when Delete this plant'});
     }
