@@ -15,13 +15,13 @@ const commentRoutes = require('./routes/commentRoutes');
 //mongodb://localhost:27017/noderest  => meu banco de dados local polupado
 //mongodb://mongo:27017/backend => banco de dados da develop
 mongoose
-    .connect('mongodb://localhost:27017/noderest',
+    .connect(
+        'mongodb://mongo:27017/backend',
         { useNewUrlParser: true }
-        
     )
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log(err));
- 
+
 
 // middlewares
 app.use(morgan('dev'));
