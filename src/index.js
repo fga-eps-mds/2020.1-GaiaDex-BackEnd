@@ -9,6 +9,7 @@ const itemRoutes = require('./routes/itemRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // MongoDB connection
 
@@ -33,13 +34,9 @@ app.use('/item',itemRoutes);
 app.use('/plant',plantRoutes);
 app.use('/topic',topicRoutes);
 app.use('/comment',commentRoutes);
-
-
+app.use('/auth',authRoutes);
 
 // starting the server
-app.listen(config.app.port, (err) => {
-    if (err)
-        console.log('Erro')
-
-    console.log(`Server on port ${config.app.port}`);
+app.listen(app.get('port'), () => {
+    console.log(`Server on port ${app.get('port')}`);
 });
