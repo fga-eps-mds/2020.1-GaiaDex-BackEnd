@@ -1,5 +1,3 @@
-require('dotenv').config();
-const config = require('./config')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -37,6 +35,7 @@ app.use('/comment',commentRoutes);
 app.use('/auth',authRoutes);
 
 // starting the server
+app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
 });
