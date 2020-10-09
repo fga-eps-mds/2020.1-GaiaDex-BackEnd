@@ -18,25 +18,24 @@ router.post('/signup', async(req, res, next) => {
         const newUserData = req.body;
         const result = userSchema.validate(req.body);
 
-        if( await User.findOne({ username: newUserData.username}) ) {
-            const error = new Error('Username already being used.');
-            return next(error);
-        }
+        await User.findOne({ username: newUserData.username});
 
         if( result.error ) {
-            return next(result.error);
+            return res.status(400).send({ error: 'Error while signing up. ' + result.error})
         }
 
         const user = new User(newUserData);
 
         user.save()
             .then( result => {
-                return res.send(result);
+                return res.send(user);
             })
-            .catch( err => next(err));
+            .catch(err => {
+                return res.status(400).send({ error: 'Error while signing up. ' + err});
+            });
 
     } catch(err) {
-        return next(err);
+        return res.status(400).send({ error: 'Error while signing up.'});
     }
 
 });
@@ -67,10 +66,13 @@ router.put('/update-user/:id', async(req, res, next) => {
         await User.findOneAndUpdate({_id: req.params.id}, req.body, { useFindAndModify: false})
                     .then( () => {
                         res.send({ message: 'User updated successfully.'});
+                    })
+                    .catch(err => {
+                        return res.status(400).send({ error: 'Error while updating user. ' + err});
                     });
 
     } catch(err) {
-        return next(err);
+        return res.status(400).send({ error: 'Error while updating user.' + err});
     }
 
 });
@@ -83,7 +85,7 @@ router.delete('/delete-user/:id', async(req, res, next) => {
         return res.send({ message: 'User successfully deleted.' });
 
     } catch(err) {
-        return next(err);
+        return res.status(400).send({ error: 'Error while deleting user. ' + err});
     }
 
 });

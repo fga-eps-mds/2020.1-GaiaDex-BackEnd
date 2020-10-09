@@ -19,7 +19,7 @@ router.post('/create/:userId', async (req, res, next) => {
         return res.send({ topic });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while creating topic.'});
+        return res.status(400).send({ error: 'Error while creating topic.' + err});
     }
 
 });
@@ -51,7 +51,7 @@ router.put('/update/:topicId', async (req, res, next) => {
 router.delete('/delete/:topicId', async (req, res, next) => {
     try {
 
-        await Topic.findByIdAndRemove(req.params.topicId).populate('user');
+        await Topic.findByIdAndRemove(req.params.topicId).populate('user')
 
         return res.send({
             message: 'Topic successfully removed.'
