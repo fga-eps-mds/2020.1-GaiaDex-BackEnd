@@ -11,8 +11,6 @@ router.post('/create/:userId', async (req, res, next) => {
         const topic = await Topic.create({...req.body, user: req.params.userId});
         const user = await User.findById(req.params.userId);
 
-        if (!user) return next( new Error('User not found.'));
-
         await topic.save();
 
         user.topics.push(topic);
@@ -21,8 +19,7 @@ router.post('/create/:userId', async (req, res, next) => {
         return res.send({ topic });
 
     } catch (err) {
-        console.log(err);
-        return next({ error: 'Error creating topic.' });
+        return res.status(400).send({ error: 'Error while creating topic.'});
     }
 
 });
@@ -32,8 +29,6 @@ router.put('/update/:topicId', async (req, res, next) => {
     try {
 
         const topic = await Topic.findById(req.params.topicId);
-
-        if (!topic) return next(new Error('Topic not found.'));
 
         const newData = req.body;
 
@@ -48,33 +43,35 @@ router.put('/update/:topicId', async (req, res, next) => {
         });
 
     } catch (err) {
-        console.log(err);
-        return res.next({ error: 'Error updating topic.' });
+        return res.status(400).send({ error: 'Error while updating topic.'});
     }
 
 });
 
 router.delete('/delete/:topicId', async (req, res, next) => {
     try {
+
         await Topic.findByIdAndRemove(req.params.topicId).populate('user');
 
         return res.send({
             message: 'Topic successfully removed.'
         });
+
     } catch (err) {
-        console.log(err);
-        return res.next({ error: 'Error deleting topic.' });
+        return res.status(400).send({ error: 'Error while deleting topic.'});
     }
 });
 
 router.get('/list_topics', async (req, res, next) => {
     try {
+
         const topic = await Topic.find().populate(['user']);
 
         return res.send({ topic });
+
     } catch (err) {
         console.log(err);
-        return res.next({ error: 'Error loading topics.' });
+        return res.status(400).send({ error: 'Error while listing topics.'});
     }
 });
 

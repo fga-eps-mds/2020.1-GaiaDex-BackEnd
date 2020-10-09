@@ -1,5 +1,4 @@
 require('dotenv').config();
-const config = require('./config')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -10,9 +9,6 @@ const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const authRoutes = require('./routes/authRoutes');
-const topicRoutes = require('./routes/topicRoutes');
-const commentRoutes = require('./routes/commentRoutes');
-
 // MongoDB connection
 
 //mongodb://localhost:27017/noderest  => meu banco de dados local polupado
@@ -39,6 +35,7 @@ app.use('/comment',commentRoutes);
 app.use('/auth',authRoutes);
 
 // starting the server
+app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
 });
