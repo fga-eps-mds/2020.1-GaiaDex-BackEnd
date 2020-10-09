@@ -5,40 +5,36 @@ const Topic = require('../models/topic');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 
-router.post('/create/:topicId/:userId', async (req, res, next) => {
+router.post('/create/:topicId/:userId', async (req, res) => {
     try {
 
         const comment = await Comment.create({...req.body, user: req.params.userId, topic: req.params.topicId});
         const user = await User.findById(req.params.userId);
         const topic = await Topic.findById(req.params.topicId);
 
-        if (!user) return next(new Error('User not found.'));
-        if (!topic) return next(new Error('Topic not found.'));
-
         await comment.save();
 
         topic.comments.push(comment);
+        await topic.save();
+
+        user.comments.push(comment);
         await topic.save();
     
         return res.send({ message: 'Comment successfully registered.' });
 
     } catch (err) {
-        console.log(err);
-        return res.next({ error: 'Error, it was not possible to comment.'});
+        return res.status(400).send({ error: 'Error while commenting.' + err});
     }
 });
 
-router.put('/update/:commentId', async (req, res, next) => {
+router.put('/update/:commentId', async (req, res) => {
 
     try {
 
-        const comment = await Comment.findById(req.params.commentId);
-
-        if (!comment) return next(new Error('Comment not found.'));
-
+        await Comment.findById(req.params.commentId);
         const newData = req.body;
 
-        if (!newData.text) return next(new Error('Comment should not be empty.'));;
+        if ( !newData.text ) return res.status(400).send({ error: 'Comment should not be empty'});
     
         await Comment.findOneAndUpdate({_id: req.params.commentId}, req.body, { useFindAndModify: false})
         .then( () => {
@@ -46,8 +42,7 @@ router.put('/update/:commentId', async (req, res, next) => {
         });
 
     } catch (err) {
-        console.log(err);
-        return res.next({ error: 'Error updating comment.' });
+        return res.status(400).send({ error: 'Error while updating comment.' + err});
     }
 
 });

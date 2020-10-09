@@ -1,36 +1,32 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const CommentSchema = new mongoose.Schema({
-    username: {
+    text: {
         type: String,
-        require : true
+        require: true,
     },
-    message: {
-        type: String,
-        require: true
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        require: true,
     },
-    vote_count:{
+    topic: {
+        type: Schema.Types.ObjectId,
+        ref: 'Topic',
+        require: true,
+    },
+    likes: {
         type: Number,
-        require:true
-    }
-
+        default: 0
+    },
+    dislikes: {
+        type: Number,
+        default: 0
+    },
 });
 
 
-const Comment = mongoose.model('comment',CommentSchema);
+const Comment = mongoose.model('Comment',CommentSchema);
 
 module.exports = Comment;
-//Exemplo de teste insominia
-//{
-//	"scientificName":"scientificName",
-//	"family_name":"family_name",
-//	"gender_name":"gender_name",
-//	"specie_name":"specie_name",
-//	"usage":"usage",
-//	"first_User":"first_User",
-//	"collection_count":"17",
-//	"extinction":"1",
-//	"profile_picture":"7",
-//	"gbifID":"17",
-//	"stateProvince":"brasilia"
-//}	
