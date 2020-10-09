@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/signup', async(req, res, next) => {
+router.post('/signup', async(req, res) => {
 
     try {
 
@@ -20,14 +20,12 @@ router.post('/signup', async(req, res, next) => {
 
         await User.findOne({ username: newUserData.username});
 
-        if( result.error ) {
-            return res.status(400).send({ error: 'Error while signing up. ' + result.error})
-        }
+        if ( result.error ) return res.status(400).send({ error: 'Error while signing up. ' + result.error});
 
         const user = new User(newUserData);
 
         user.save()
-            .then( result => {
+            .then( () => {
                 return res.send(user);
             })
             .catch(err => {
@@ -40,28 +38,20 @@ router.post('/signup', async(req, res, next) => {
 
 });
 
-router.put('/update-user/:id', async(req, res, next) => {
+router.put('/update_user/:id', async(req, res) => {
 
     try {
 
         const user = await User.findById(req.params.id);
         const newData = req.body;
 
-        if ( !newData.username ) {
-            newData.username = user.username;
-        }
-        if ( !newData.password ) {
-            newData.password = user.password;
-        }
-        if ( !newData.email ) {
-            newData.email = user.email;
-        }
+        if ( !newData.username ) newData.username = user.username;
+        if ( !newData.password ) newData.password = user.password;
+        if ( !newData.email ) newData.email = user.email;
 
         const result = userSchema.validate(newData);
 
-        if(result.error) {
-            return next(result.error);
-        }
+        if ( result.error ) return res.status(400).send(result.error);
         
         await User.findOneAndUpdate({_id: req.params.id}, req.body, { useFindAndModify: false})
                     .then( () => {
@@ -77,7 +67,7 @@ router.put('/update-user/:id', async(req, res, next) => {
 
 });
 
-router.delete('/delete-user/:id', async(req, res, next) => {
+router.delete('/delete_user/:id', async(req, res) => {
     
     try {
         

@@ -4,7 +4,7 @@ const router = express.Router();
 const Topic = require('../models/topic');
 const User = require('../models/user');
 
-router.post('/create/:userId', async (req, res, next) => {
+router.post('/create/:userId', async (req, res) => {
     
     try {
 
@@ -24,7 +24,7 @@ router.post('/create/:userId', async (req, res, next) => {
 
 });
 
-router.put('/update/:topicId', async (req, res, next) => {
+router.put('/update/:topicId', async (req, res) => {
 
     try {
 
@@ -48,7 +48,7 @@ router.put('/update/:topicId', async (req, res, next) => {
 
 });
 
-router.delete('/delete/:topicId', async (req, res, next) => {
+router.delete('/delete/:topicId', async (req, res) => {
     try {
 
         await Topic.findByIdAndRemove(req.params.topicId).populate('user')
@@ -62,7 +62,7 @@ router.delete('/delete/:topicId', async (req, res, next) => {
     }
 });
 
-router.get('/list_topics', async (req, res, next) => {
+router.get('/list', async (req, res) => {
     try {
 
         const topic = await Topic.find().populate(['user']);
@@ -70,7 +70,32 @@ router.get('/list_topics', async (req, res, next) => {
         return res.send({ topic });
 
     } catch (err) {
-        console.log(err);
+        return res.status(400).send({ error: 'Error while listing topics.'});
+    }
+});
+
+router.post('/like/:topicId', async (req, res) => {
+    try {
+
+        await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { likes: 1 }}, { useFindAndModify: false})
+        .then( () => {
+            res.send({ message: 'Liked!'});
+        });
+        
+    } catch (err) {
+        return res.status(400).send({ error: 'Error while listing topics.'});
+    }
+});
+
+router.post('/dislike/:topicId', async (req, res) => {
+    try {
+
+        await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { dislikes: 1 }}, { useFindAndModify: false})
+        .then( () => {
+            res.send({ message: 'Disliked!'});
+        });
+        
+    } catch (err) {
         return res.status(400).send({ error: 'Error while listing topics.'});
     }
 });
