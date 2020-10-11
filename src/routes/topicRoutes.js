@@ -17,7 +17,7 @@ router.post('/create/:plantId/:userId', async (req, res) => {
 
         if ( result.error ) return res.status(400).send({ error: 'Error while creating topic. ' + result.error});
 
-        const topic = await Topic.create({...req.body, user: req.params.userId});
+        const topic = await Topic.create({...req.body, user: req.params.userId, plant: req.params.plantId});
 
         await topic.save();
 
@@ -65,14 +65,31 @@ router.put('/update/:topicId', async (req, res) => {
 router.delete('/delete/:topicId', async (req, res) => {
     try {
 
-        await Topic.findByIdAndRemove(req.params.topicId).populate('user')
+        const topic = await Topic.findById(req.params.topicId);
+        const user = await User.findById(topic.user);
+        const plant = await Plant.findById(topic.plant);
+
+        const indexAtUser = user.topics.indexOf(req.params.topicId);
+        const indexAtPlant = plant.topics.indexOf(req.params.topicId);
+
+        if (indexAtUser > -1) {
+            user.topics.splice(indexAtUser, 1);
+        }
+        if (indexAtPlant > -1) {
+            plant.topics.splice(indexAtPlant, 1);
+        }
+
+        user.save();
+        plant.save();
+
+        await Topic.findByIdAndRemove(req.params.topicId, { useFindAndModify: false });
 
         return res.send({
             message: 'Topic successfully removed.'
         });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while deleting topic.'});
+        return res.status(400).send({ error: 'Error while deleting topic.' + err });
     }
 });
 
