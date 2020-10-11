@@ -4,14 +4,20 @@ const router = express.Router();
 const Topic = require('../models/Topic');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
+const topicSchema = require('../schemas/topicSchema');
 
 router.post('/create/:plantId/:userId', async (req, res) => {
     
     try {
 
-        const topic = await Topic.create({...req.body, user: req.params.userId});
         const user = await User.findById(req.params.userId);
         const plant = await Plant.findById(req.params.plantId);
+
+        const result = topicSchema.validate(req.body);
+
+        if ( result.error ) return res.status(400).send({ error: 'Error while creating topic. ' + result.error});
+
+        const topic = await Topic.create({...req.body, user: req.params.userId});
 
         await topic.save();
 
@@ -39,10 +45,13 @@ router.put('/update/:topicId', async (req, res) => {
 
         if (!newData.title) newData.title = topic.title;
         if (!newData.description) newData.description = topic.description;
-        if (!newData.completed) newData.completed = topic.completed;
 
+        const result = topicSchema.validate(newData);
+        if ( result.error ) return res.status(400).send({ error: 'Error while creating topic. ' + result.error});
+        
+        if (!newData.completed) newData.completed = topic.completed;
     
-        await Topic.findOneAndUpdate({_id: req.params.topicId}, req.body, { useFindAndModify: false})
+        await Topic.findOneAndUpdate({_id: req.params.topicId}, newData, { useFindAndModify: false})
         .then( () => {
             res.send({ message: 'Topic updated successfully.'});
         });

@@ -8,6 +8,8 @@ const Comment = require('../models/Comment');
 router.post('/create/:topicId/:userId', async (req, res) => {
     try {
 
+        if ( !req.body.text ) return res.status(400).send({ error: 'Comment should not be empty'});
+
         const comment = await Comment.create({...req.body, user: req.params.userId, topic: req.params.topicId});
         const topic = await Topic.findById(req.params.topicId);
 
