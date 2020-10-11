@@ -3,18 +3,23 @@ const router = express.Router();
 
 const Topic = require('../models/topic');
 const User = require('../models/user');
+const Plant = require('../models/Plant');
 
-router.post('/create/:userId', async (req, res) => {
+router.post('/create/:plantId/:userId', async (req, res) => {
     
     try {
 
         const topic = await Topic.create({...req.body, user: req.params.userId});
         const user = await User.findById(req.params.userId);
+        const plant = await Plant.findById(req.params.plantId);
 
         await topic.save();
 
         user.topics.push(topic);
         await user.save();
+
+        plant.topics.push(topic);
+        await plant.save();
     
         return res.send({ topic });
 

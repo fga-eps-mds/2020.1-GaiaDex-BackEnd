@@ -10,6 +10,11 @@ const topicSchema = new Schema({
         type: String,
         require: true,
     },
+    plant:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Plant',
+        require:true
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
