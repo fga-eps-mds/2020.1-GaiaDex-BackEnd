@@ -33,7 +33,7 @@ router.post('/signup', async(req, res) => {
             });
 
     } catch(err) {
-        return res.status(400).send({ error: 'Error while signing up.'});
+        return res.status(400).send({ error: 'Error while signing up.' + err });
     }
 
 });
@@ -75,7 +75,7 @@ router.delete('/delete/:id', async(req, res) => {
         return res.send({ message: 'User successfully deleted.' });
 
     } catch(err) {
-        return res.status(400).send({ error: 'Error while deleting user. ' + err});
+        return res.status(400).send({ error: 'Error while deleting user. ' + err });
     }
 
 });

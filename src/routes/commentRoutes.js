@@ -40,7 +40,7 @@ router.put('/update/:commentId', async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while updating comment.' + err});
+        return res.status(400).send({ error: 'Error while updating comment.' + err });
     }
 
 });
@@ -49,14 +49,25 @@ router.delete('/delete/:commentId', async (req, res) => {
 
     try {
 
-        await Comment.findByIdAndRemove(req.params.commentId).populate('user')
+        const comment = await Comment.findById(req.params.commentId);
+        const topic = await Topic.findById(comment.topic);
+
+        const index = topic.comments.indexOf(req.params.commentId);
+
+        if (index > -1) {
+            topic.comments.splice(index, 1);
+        }
+
+        topic.save();
+
+        await Comment.findByIdAndRemove(req.params.commentId).populate('user');
 
         return res.send({
             message: 'Comment successfully removed.'
         });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while deleting topic.'});
+        return res.status(400).send({ error: 'Error while deleting topic.' + err });
     }
 
 });
@@ -70,7 +81,7 @@ router.post('/like/:commentId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while liking comment.'});
+        return res.status(400).send({ error: 'Error while liking comment.' + err });
     }
 });
 
@@ -83,7 +94,7 @@ router.post('/dislike/:commentId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while linking comment.'});
+        return res.status(400).send({ error: 'Error while linking comment.' + err });
     }
 });
 

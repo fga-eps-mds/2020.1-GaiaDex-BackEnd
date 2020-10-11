@@ -30,7 +30,7 @@ router.post('/create/:plantId/:userId', async (req, res) => {
         return res.send({ topic });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while creating topic.' + err});
+        return res.status(400).send({ error: 'Error while creating topic.' + err });
     }
 
 });
@@ -57,7 +57,7 @@ router.put('/update/:topicId', async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while updating topic.'});
+        return res.status(400).send({ error: 'Error while updating topic.' + err });
     }
 
 });
@@ -101,7 +101,7 @@ router.get('/list', async (req, res) => {
         return res.send({ topic });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while listing topics.'});
+        return res.status(400).send({ error: 'Error while listing topics.' + err });
     }
 });
 
@@ -114,7 +114,7 @@ router.post('/like/:topicId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while liking topic.'});
+        return res.status(400).send({ error: 'Error while liking topic.' + err });
     }
 });
 
@@ -127,7 +127,7 @@ router.post('/dislike/:topicId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while dislikinng topic.'});
+        return res.status(400).send({ error: 'Error while dislikinng topic.' + err });
     }
 });
 
