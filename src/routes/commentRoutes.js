@@ -9,15 +9,11 @@ router.post('/create/:topicId/:userId', async (req, res) => {
     try {
 
         const comment = await Comment.create({...req.body, user: req.params.userId, topic: req.params.topicId});
-        const user = await User.findById(req.params.userId);
         const topic = await Topic.findById(req.params.topicId);
 
         await comment.save();
 
         topic.comments.push(comment);
-        await topic.save();
-
-        user.comments.push(comment);
         await topic.save();
     
         return res.send({ message: 'Comment successfully registered.' });
@@ -43,6 +39,22 @@ router.put('/update/:commentId', async (req, res) => {
 
     } catch (err) {
         return res.status(400).send({ error: 'Error while updating comment.' + err});
+    }
+
+});
+
+router.delete('/update/:commentId', async (req, res) => {
+
+    try {
+
+        await Comment.findByIdAndRemove(req.params.commentId).populate('user')
+
+        return res.send({
+            message: 'Comment successfully removed.'
+        });
+
+    } catch (err) {
+        return res.status(400).send({ error: 'Error while deleting topic.'});
     }
 
 });
