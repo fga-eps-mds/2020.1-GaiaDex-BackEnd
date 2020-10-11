@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const User = require('../models/user');
+const User = require('../models/User');
 const userSchema = require('../schemas/userSchema');
 
 router.get('/', (req, res) => {
@@ -38,7 +38,7 @@ router.post('/signup', async(req, res) => {
 
 });
 
-router.put('/update_user/:id', async(req, res) => {
+router.put('/update/:id', async(req, res) => {
 
     try {
 
@@ -67,7 +67,7 @@ router.put('/update_user/:id', async(req, res) => {
 
 });
 
-router.delete('/delete_user/:id', async(req, res) => {
+router.delete('/delete/:id', async(req, res) => {
     
     try {
         

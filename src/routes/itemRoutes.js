@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const Item = require('../models/item');
+const Item = require('../models/Item');
 const ItemSchema = require('../schemas/itemSchema');
 
 // Get all

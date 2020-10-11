@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const Topic = require('../models/topic');
-const User = require('../models/user');
-const Comment = require('../models/comment');
+const Topic = require('../models/Topic');
+const User = require('../models/User');
+const Comment = require('../models/Comment');
 
 router.post('/create/:topicId/:userId', async (req, res) => {
     try {
@@ -43,7 +43,7 @@ router.put('/update/:commentId', async (req, res) => {
 
 });
 
-router.delete('/update/:commentId', async (req, res) => {
+router.delete('/delete/:commentId', async (req, res) => {
 
     try {
 
@@ -57,6 +57,32 @@ router.delete('/update/:commentId', async (req, res) => {
         return res.status(400).send({ error: 'Error while deleting topic.'});
     }
 
+});
+
+router.post('/like/:commentId', async (req, res) => {
+    try {
+
+        await Comment.findOneAndUpdate({_id: req.params.commentId}, { $inc: { likes: 1 }}, { useFindAndModify: false})
+        .then( () => {
+            res.send({ message: 'Liked!'});
+        });
+        
+    } catch (err) {
+        return res.status(400).send({ error: 'Error while liking comment.'});
+    }
+});
+
+router.post('/dislike/:commentId', async (req, res) => {
+    try {
+
+        await Comment.findOneAndUpdate({_id: req.params.commentId}, { $inc: { dislikes: 1 }}, { useFindAndModify: false})
+        .then( () => {
+            res.send({ message: 'Disliked!'});
+        });
+        
+    } catch (err) {
+        return res.status(400).send({ error: 'Error while linking comment.'});
+    }
 });
 
 module.exports = router;

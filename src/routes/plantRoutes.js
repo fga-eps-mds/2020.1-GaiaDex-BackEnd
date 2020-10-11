@@ -1,7 +1,7 @@
 const express = require('express');
 
 const Plant = require('../models/Plant');
-const Topico = require('../models/Topico');
+const Topic = require('../models/Topic');
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ router.post('/register', async (req , res) => {
 //Listagem de Todas as plantas
 router.get('/', async (req , res) => {
     try{
-        const plants = await Plant.find().populate('topicos');
+        const plants = await Plant.find().populate('topics');
 
         return res.send({ plants });
     }catch (err){
@@ -40,7 +40,7 @@ router.get('/', async (req , res) => {
 //Procurando planta por id
 router.get('/:plantId', async (req , res) => {
     try{
-        const plant = await Plant.findById(req.params.plantId).populate('topicos');
+        const plant = await Plant.findById(req.params.plantId).populate('topics');
 
         return res.send({ plant });
     }catch (err){
@@ -66,15 +66,15 @@ router.put('/:plantId', async (req , res) => {
             const plant = await Plant.findByIdAndUpdate(req.params.plantId,
                 {scientificName,family_name,gender_name,specie_name,common_name,usage,first_User,collection_count,extinction,profile_picture, gbifID,stateProvince},{ new: true});
             
-            plant.topicos = [];
-            await Topico.remove({plant: plant._id});
+            plant.topics = [];
+            await Topic.remove({plant: plant._id});
 
-            await Promise.all(topicos.map(async topico =>{
-                const plantTopic = new Topico({...topico,plant : plant._id});
+            await Promise.all(topics.map(async topic =>{
+                const plantTopic = new Topic({...topic,plant : plant._id});
     
                 await plantTopic.save();
     
-                plant.topicos.push(plantTopic);
+                plant.topics.push(plantTopic);
             }));
     
             await plant.save();

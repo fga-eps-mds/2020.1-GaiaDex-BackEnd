@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const Topic = require('../models/topic');
-const User = require('../models/user');
+const Topic = require('../models/Topic');
+const User = require('../models/User');
 const Plant = require('../models/Plant');
 
 router.post('/create/:plantId/:userId', async (req, res) => {
@@ -88,7 +88,7 @@ router.post('/like/:topicId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while listing topics.'});
+        return res.status(400).send({ error: 'Error while liking topic.'});
     }
 });
 
@@ -101,7 +101,7 @@ router.post('/dislike/:topicId', async (req, res) => {
         });
         
     } catch (err) {
-        return res.status(400).send({ error: 'Error while listing topics.'});
+        return res.status(400).send({ error: 'Error while dislikinng topic.'});
     }
 });
 
