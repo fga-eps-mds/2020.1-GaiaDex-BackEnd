@@ -22,10 +22,11 @@ router.post('/login', async(req, res) => {
     const {email, password} = req.body;
 
     const user = await User.findOne({ email, password });
-    /*const user = {
-        "email": "asda@asd.com",
-        "password": "asdz"
-    };*/
+    //Para testar estava utilizando a estrutura abaixo
+    // const user = {
+    //     "email": "asda@asd.com",
+    //     "password": "asdz"
+    // };
 
     if(!user){
         
@@ -33,7 +34,7 @@ router.post('/login', async(req, res) => {
 
     }
 
-    if(!await password == user.password){
+    if(await password != user.password){
         
         return res.status(400).send({ Error: 'Incorrect password'});
 
