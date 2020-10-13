@@ -8,7 +8,6 @@ const topicSchema = new Schema({
     },
     description: {
         type: String,
-        require: true,
     },
     plant:{
         type:mongoose.Schema.Types.ObjectId,
@@ -35,11 +34,6 @@ const topicSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    },
-    completed: {
-        type: Boolean,
-        require: true,
-        default: false,
     },
 });
 
