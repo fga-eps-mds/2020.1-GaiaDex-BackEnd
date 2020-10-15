@@ -5,6 +5,8 @@ const User = require('../models/User');
 const Plant = require('../models/Plant');
 const Favorite = require('../models/Favorite');
 
+const favoriteSchema = require('../schemas/favoriteSchema');
+
 router.get('/', async (req, res) => {
     res.send({ message: 'User Backyard.'});
 });
@@ -57,5 +59,23 @@ router.get('/plant/:userId/:favoriteId', async (req, res) => {
         return res.status(400).send({ error: 'Error while searching for plant.' + err});
     }
 });
+
+router.put ('/plant/:favoriteId', async (req, res) => {
+
+    try {
+        
+        const newNick = req.body;
+
+        const result = favoriteSchema.validate(newNick);
+        if ( result.error ) return res.status(400).send({ error: 'Error while creating topic. ' + result.error});
+
+        await Favorite.findOneAndUpdate({_id: req.params.favoriteId}, newNick, { useFindAndModify: false});
+
+        return res.send({ message: 'Favorite plant updated successfully.'});
+
+    } catch (err) {
+        return res.status(400).send({ error: 'Error while updating favorite plant.' + err });
+    }
+})
 
 module.exports = router;
