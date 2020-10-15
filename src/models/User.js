@@ -14,6 +14,11 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Favorites',
+        require: true,
+    }],
     topics: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Topics',
