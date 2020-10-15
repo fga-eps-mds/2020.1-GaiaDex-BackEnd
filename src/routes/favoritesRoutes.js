@@ -18,7 +18,7 @@ router.post('/add/:userId/:plantId', async (req, res) => {
         const user = await User.findById(req.params.userId);
         const plant = await Plant.findById(req.params.plantId);
         
-        const favorite = await Favorite.create({nickname: req.body.nickname, plant: plant});
+        const favorite = await Favorite.create({user: user, nickname: req.body.nickname, plant: plant});
 
         user.favorites.push(favorite);
         user.save()
@@ -76,6 +76,34 @@ router.put ('/plant/:favoriteId', async (req, res) => {
     } catch (err) {
         return res.status(400).send({ error: 'Error while updating favorite plant.' + err });
     }
-})
+});
+
+router.delete('/delete/:favoriteId', async (req, res) => {
+
+    try {
+
+        const favorite = await Favorite.findById(req.params.favoriteId);
+        const user = await User.findById(favorite.user);
+
+        const index = user.favorites.indexOf(req.params.favoriteId);
+
+        if (index > -1) {
+            user.favorites.splice(index, 1);
+        }
+
+        user.save();
+
+        await Favorite.findByIdAndRemove(req.params.favoriteId, { useFindAndModify: false });
+
+        return res.send({
+            message: 'Favorite successfully removed.'
+        });
+
+        return res.send({ user });
+
+    } catch(err) {
+        return res.status(400).send({ error: 'Error while updating favorite plant.' + err });
+    }
+});
 
 module.exports = router;
