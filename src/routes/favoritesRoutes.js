@@ -17,6 +17,9 @@ router.post('/add/:userId/:plantId', async (req, res) => {
         
         const user = await User.findById(req.params.userId);
         const plant = await Plant.findById(req.params.plantId);
+
+        const result = favoriteSchema.validate({ nickname: req.body.nickname});
+        if ( result.error ) return res.status(400).send({ error: 'Error while adding favorite. ' + result.error});
         
         const favorite = await Favorite.create({user: user, nickname: req.body.nickname, plant: plant});
 
@@ -67,7 +70,7 @@ router.put ('/plant/:favoriteId', async (req, res) => {
         const newNick = req.body;
 
         const result = favoriteSchema.validate(newNick);
-        if ( result.error ) return res.status(400).send({ error: 'Error while creating topic. ' + result.error});
+        if ( result.error ) return res.status(400).send({ error: 'Error while adding favorite. ' + result.error});
 
         await Favorite.findOneAndUpdate({_id: req.params.favoriteId}, newNick, { useFindAndModify: false});
 
