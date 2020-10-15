@@ -3,7 +3,6 @@ const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
-const itemRoutes = require('./routes/itemRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
@@ -27,7 +26,6 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 // routes
-app.use('/item',itemRoutes);
 app.use('/plant',plantRoutes);
 app.use('/topic',topicRoutes);
 app.use('/comment',commentRoutes);
