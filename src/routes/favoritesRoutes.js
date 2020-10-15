@@ -31,4 +31,31 @@ router.post('/add/:userId/:plantId', async (req, res) => {
 
 });
 
+router.get('/plant/:userId/:favoriteId', async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.params.userId);
+        const index = user.favorites.indexOf(req.params.favoriteId);
+
+        if (index > -1) {
+            const favorite = await Favorite.findById(req.params.favoriteId);
+            return res.send({
+                nickname: favorite.nickname,
+                plant: favorite.plant,
+                creation: favorite.createdAt
+            });
+        } else {
+            return res.send({
+                message: "Favorite plant not found."
+            });
+        }
+        
+
+    } catch(err) {
+        console.log(err);
+        return res.status(400).send({ error: 'Error while searching for plant.' + err});
+    }
+});
+
 module.exports = router;
