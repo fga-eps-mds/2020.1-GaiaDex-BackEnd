@@ -50,14 +50,13 @@ const PlantSchema = new mongoose.Schema({
         type: String,
         require : true
     },
-    topicos: [{
+    topics: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'topic',
-  
+        ref: 'Topic',
     }],
 });
 
 
-const Plant = mongoose.model('plant',PlantSchema);
+const Plant = mongoose.model('Plant',PlantSchema);
 
 module.exports = Plant;

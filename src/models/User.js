@@ -13,7 +13,12 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true
-    }
+    },
+    topics: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Topics',
+        require: true,
+    }]
 });
 
 const User = mongoose.model('User', userSchema);
