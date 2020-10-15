@@ -7,6 +7,7 @@ const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const authRoutes = require('./routes/authRoutes');
+const favoritesRoutes = require('./routes/favoritesRoutes');
 // MongoDB connection
 
 //mongodb://localhost:27017/noderest  => meu banco de dados local polupado
@@ -30,6 +31,7 @@ app.use('/plant',plantRoutes);
 app.use('/topic',topicRoutes);
 app.use('/comment',commentRoutes);
 app.use('/auth',authRoutes);
+app.use('/favorites',favoritesRoutes);
 
 // starting the server
 app.set('port', process.env.PORT || 3000);
