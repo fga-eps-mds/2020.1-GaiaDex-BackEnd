@@ -11,6 +11,10 @@ const favoriteSchema = new Schema({
         ref: 'Plants',
         require: true,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const Favorite = mongoose.model('Favorites', favoriteSchema);
