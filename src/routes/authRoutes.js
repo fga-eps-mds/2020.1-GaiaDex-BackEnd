@@ -7,23 +7,16 @@ const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models/user');
 
 const userSchema = require('../schemas/userSchema');
-const auth = require('./auth');
+const {auth,authConfig} = require('./auth');
 
 
-const authConfig = {
-    "secret": "d41d8cd98f00b204e9800998ecf8427e"  
-};
 
 router.post('/login', async(req, res) => {    
+
     const {email, password} = req.body;
 
     const user = await User.findOne({ email, password });
-    //Para testar estava utilizando a estrutura abaixo
-    // const user = {
-    //     "email": "asda@asd.com",
-    //     "password": "asdz"
-    // };
-
+  
     if(!user){
         
         return res.status(400).send({Error: 'User not found'});

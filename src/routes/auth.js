@@ -1,13 +1,13 @@
 
 //confere se o token é valido
-
+require('dotenv').config();
 const jsonwebtoken = require('jsonwebtoken');
 
 const authConfig = {
-    "secret": "d41d8cd98f00b204e9800998ecf8427e" 
+    "secret": process.env.SECRET 
     
 };
-module.exports = (req, res, next) => {
+function auth(req, res, next) {
     const sessiontoken = req.headers.authtoken;
 
     if(!sessiontoken){
@@ -35,3 +35,4 @@ module.exports = (req, res, next) => {
         
     });
 }
+module.exports = {authConfig,auth}

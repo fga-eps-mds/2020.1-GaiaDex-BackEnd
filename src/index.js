@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
+
 
 // MongoDB connection
 mongoose
@@ -28,7 +28,7 @@ app.use(express.json());
 // routes
 app.use('/item',itemRoutes);
 app.use('/auth',authRoutes);
-app.use('/user',userRoutes);
+
 
 // starting the server
 app.listen(app.get('port'), () => {
