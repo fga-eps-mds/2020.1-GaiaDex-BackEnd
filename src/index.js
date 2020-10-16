@@ -5,11 +5,12 @@ const mongoose = require('mongoose');
 
 const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // MongoDB connection
 mongoose
     .connect(
-        'mongodb://mongo:27017/backend',
+        'mongodb://localhost:27017/noderest',
         { useNewUrlParser: true }
     )
     .then(() => console.log('MongoDB Connected'))
@@ -27,6 +28,7 @@ app.use(express.json());
 // routes
 app.use('/item',itemRoutes);
 app.use('/auth',authRoutes);
+app.use('/user',userRoutes);
 
 // starting the server
 app.listen(app.get('port'), () => {
