@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const jsonwebtoken = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/User');
 const userSchema = require('../schemas/userSchema');
 const {auth,authConfig} = require('./auth');
 
 
-router.post('/login', async(req, res) => {
+router.post('/login', async(req, res ,next) => {
   try{
     const {email, password} = req.body;
     const user = await User.findOne({ email, password });
