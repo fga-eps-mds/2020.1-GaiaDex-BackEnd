@@ -24,6 +24,11 @@ const userSchema = new Schema({
       require: true,
     },
   ],
+  myPlants: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MyPlants',
+      require: true,
+  }]
 });
 
 const User = mongoose.model('User', userSchema);
