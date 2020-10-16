@@ -21,13 +21,12 @@ const userSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Topics',
       require: true,
-    },
-  ],
-    myPlants: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "MyPlants",
-        require: true,
-    }]
+    }],
+  myPlants: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MyPlants',
+      require: true,
+  }]
 });
 
 const User = mongoose.model("User", userSchema);
