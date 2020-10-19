@@ -3,7 +3,6 @@ const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
-
 const authRoutes = require('./routes/authRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
