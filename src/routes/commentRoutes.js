@@ -8,7 +8,8 @@ const Comment = require('../models/Comment');
 
 router.post('/create/:topicId/:userId', async (req, res) => {
   try {
-    if (!req.body.text) return res.status(400).send({ error: 'Comment should not be empty' });
+    if (!req.body.text)
+      return res.status(400).send({ error: 'Comment should not be empty' });
 
     const comment = await Comment.create({
       ...req.body,
@@ -33,7 +34,8 @@ router.put('/update/:commentId', async (req, res) => {
     await Comment.findById(req.params.commentId);
     const newData = req.body;
 
-    if (!newData.text) return res.status(400).send({ error: 'Comment should not be empty' });
+    if (!newData.text)
+      return res.status(400).send({ error: 'Comment should not be empty' });
 
     await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
       useFindAndModify: false,
@@ -41,7 +43,9 @@ router.put('/update/:commentId', async (req, res) => {
       res.send({ message: 'Comment updated successfully.' });
     });
   } catch (err) {
-    return res.status(400).send({ error: `Error while updating comment.${err}` });
+    return res
+      .status(400)
+      .send({ error: `Error while updating comment.${err}` });
   }
 });
 
@@ -92,7 +96,9 @@ router.post('/dislike/:commentId', async (req, res) => {
       res.send({ message: 'Disliked!' });
     });
   } catch (err) {
-    return res.status(400).send({ error: `Error while linking comment.${err}` });
+    return res
+      .status(400)
+      .send({ error: `Error while linking comment.${err}` });
   }
 });
 

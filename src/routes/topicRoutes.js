@@ -15,7 +15,9 @@ router.post('/create/:plantId/:userId', async (req, res) => {
     const result = topicSchema.validate(req.body);
 
     if (result.error)
-      return res.status(400).send({ error: `Error while creating topic. ${result.error}` });
+      return res
+        .status(400)
+        .send({ error: `Error while creating topic. ${result.error}` });
 
     const topic = await Topic.create({
       ...req.body,
@@ -48,7 +50,9 @@ router.put('/update/:topicId', async (req, res) => {
 
     const result = topicSchema.validate(newData);
     if (result.error)
-      return res.status(400).send({ error: `Error while creating topic. ${result.error}` });
+      return res
+        .status(400)
+        .send({ error: `Error while creating topic. ${result.error}` });
 
     await Topic.findOneAndUpdate({ _id: req.params.topicId }, newData, {
       useFindAndModify: false,
@@ -79,7 +83,9 @@ router.delete('/delete/:topicId', async (req, res) => {
     user.save();
     plant.save();
 
-    await Topic.findByIdAndRemove(req.params.topicId, { useFindAndModify: false });
+    await Topic.findByIdAndRemove(req.params.topicId, {
+      useFindAndModify: false,
+    });
 
     return res.send({
       message: 'Topic successfully removed.',
@@ -123,7 +129,9 @@ router.post('/dislike/:topicId', async (req, res) => {
       res.send({ message: 'Disliked!' });
     });
   } catch (err) {
-    return res.status(400).send({ error: `Error while dislikinng topic.${err}` });
+    return res
+      .status(400)
+      .send({ error: `Error while dislikinng topic.${err}` });
   }
 });
 

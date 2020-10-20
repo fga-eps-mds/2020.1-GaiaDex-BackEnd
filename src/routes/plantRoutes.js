@@ -71,7 +71,9 @@ router.get('/:plantId', async (req, res) => {
 
     return res.send({ plant });
   } catch (err) {
-    return res.status(400).send({ error: 'error when searching for this plant ' });
+    return res
+      .status(400)
+      .send({ error: 'error when searching for this plant ' });
   }
 });
 // Deletando planta por id

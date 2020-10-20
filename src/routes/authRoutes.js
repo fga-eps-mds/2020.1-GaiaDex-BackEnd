@@ -40,7 +40,9 @@ router.post('/signup', async (req, res) => {
     await User.findOne({ username: newUserData.username });
 
     if (result.error)
-      return res.status(400).send({ error: `Error while signing up. ${result.error}` });
+      return res
+        .status(400)
+        .send({ error: `Error while signing up. ${result.error}` });
 
     const user = new User(newUserData);
     await user.save();
@@ -64,7 +66,9 @@ router.put('/update/:id', auth, async (req, res) => {
 
     if (result.error) return res.status(400).send(result.error);
 
-    await User.findOneAndUpdate({ _id: req.params.id }, req.body, { useFindAndModify: false });
+    await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+      useFindAndModify: false,
+    });
 
     res.send({ message: 'User updated successfully.' });
   } catch (err) {
