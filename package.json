@@ -11,10 +11,12 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "npx eslint . --fix", "git add"
+      "npx eslint . --fix",
+      "git add"
     ],
     "src/*.{js,jsx}": [
-      "npx eslint . --fix", "git add"
+      "npx eslint . --fix",
+      "git add"
     ]
   },
   "husky": {
@@ -111,6 +113,7 @@
     "destroy": "^1.0.4",
     "doctrine": "^3.0.0",
     "dot-prop": "^6.0.0",
+    "axios": "^0.20.0",
     "dotenv": "^8.2.0",
     "duplexer3": "^0.1.4",
     "ecdsa-sig-formatter": "^1.0.11",
@@ -204,6 +207,7 @@
     "is-yarn-global": "^0.3.0",
     "isarray": "^2.0.5",
     "isexe": "^2.0.0",
+    "form-data": "^3.0.0",
     "joi": "^17.2.1",
     "js-tokens": "^6.0.0",
     "js-yaml": "^3.14.0",
