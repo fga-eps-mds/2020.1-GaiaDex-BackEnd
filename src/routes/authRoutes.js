@@ -13,7 +13,7 @@ router.post('/login', async (req, res, next) => {
     if (!user) {
       return res.status(400).send({ Error: 'User not found' });
     }
-    if ((await password) != user.password) {
+    if (password !== user.password) {
       return res.status(400).send({ Error: 'Incorrect password' });
     }
     user.password = undefined;
@@ -22,13 +22,13 @@ router.post('/login', async (req, res, next) => {
     });
     const aToken = `Bearer ${token}`;
     res.header('authtoken', aToken);
-    res
+    return res
       .json({
         message: 'Auth token generated',
       })
       .redirect('/main');
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -70,7 +70,7 @@ router.put('/update/:id', auth, async (req, res) => {
       useFindAndModify: false,
     });
 
-    res.send({ message: 'User updated successfully.' });
+    return res.send({ message: 'User updated successfully.' });
   } catch (err) {
     return res.status(400).send({ error: `Error while updating user.${err}` });
   }

@@ -1,6 +1,6 @@
 // confere se o token é valido
 require('dotenv').config();
-const jsonwebtoken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const authConfig = {
   secret: process.env.SECRET,
@@ -24,12 +24,13 @@ function auth(req, res, next) {
     return res.status(401).send({ Error: 'Token malformated' });
   }
 
-  jsonwebtoken.verify(token, authConfig.secret, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ Error: 'Token invalid' });
-    }
-    req.userId = decoded.id;
+  try {
+    const { userId } = jwt.verify(token, authConfig.secret);
+    req.userId = userId;
     return next();
-  });
+  } catch (err) {
+    req.redirect('/login_page');
+    return res.status(400);
+  }
 }
 module.exports = { authConfig, auth };

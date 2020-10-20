@@ -56,9 +56,8 @@ router.put('/update/:topicId', async (req, res) => {
 
     await Topic.findOneAndUpdate({ _id: req.params.topicId }, newData, {
       useFindAndModify: false,
-    }).then(() => {
-      res.send({ message: 'Topic updated successfully.' });
     });
+    return res.send({ message: 'Topic updated successfully.' });
   } catch (err) {
     return res.status(400).send({ error: `Error while updating topic.${err}` });
   }
@@ -111,9 +110,8 @@ router.post('/like/:topicId', async (req, res) => {
       { _id: req.params.topicId },
       { $inc: { likes: 1 } },
       { useFindAndModify: false }
-    ).then(() => {
-      res.send({ message: 'Liked!' });
-    });
+    );
+    return res.send({ message: 'Liked!' });
   } catch (err) {
     return res.status(400).send({ error: `Error while liking topic.${err}` });
   }
@@ -125,9 +123,8 @@ router.post('/dislike/:topicId', async (req, res) => {
       { _id: req.params.topicId },
       { $inc: { dislikes: 1 } },
       { useFindAndModify: false }
-    ).then(() => {
-      res.send({ message: 'Disliked!' });
-    });
+    );
+    return res.send({ message: 'Disliked!' });
   } catch (err) {
     return res
       .status(400)

@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 const Topic = require('../models/Topic');
-const User = require('../models/User');
 const Comment = require('../models/Comment');
 
 router.post('/create/:topicId/:userId', async (req, res) => {
@@ -39,9 +38,8 @@ router.put('/update/:commentId', async (req, res) => {
 
     await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
       useFindAndModify: false,
-    }).then(() => {
-      res.send({ message: 'Comment updated successfully.' });
     });
+    return res.send({ message: 'Comment updated successfully.' });
   } catch (err) {
     return res
       .status(400)
@@ -78,9 +76,8 @@ router.post('/like/:commentId', async (req, res) => {
       { _id: req.params.commentId },
       { $inc: { likes: 1 } },
       { useFindAndModify: false }
-    ).then(() => {
-      res.send({ message: 'Liked!' });
-    });
+    );
+    return res.send({ message: 'Liked!' });
   } catch (err) {
     return res.status(400).send({ error: `Error while liking comment.${err}` });
   }
@@ -92,9 +89,8 @@ router.post('/dislike/:commentId', async (req, res) => {
       { _id: req.params.commentId },
       { $inc: { dislikes: 1 } },
       { useFindAndModify: false }
-    ).then(() => {
-      res.send({ message: 'Disliked!' });
-    });
+    );
+    return res.send({ message: 'Disliked!' });
   } catch (err) {
     return res
       .status(400)
