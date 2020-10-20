@@ -1,6 +1,6 @@
 linters:
     eslint:
-        config: './eslint.config'
+        config: './.eslintrc.json'
 
 files:
   ignore:
