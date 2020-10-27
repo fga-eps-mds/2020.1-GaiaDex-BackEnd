@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const authConfig = {
-    "secret": "59b2ee8d99ffea68cecc48a56f303d65" 
+    "secret": process.env.SECRET
     
 };
 function auth(req, res, next) {
