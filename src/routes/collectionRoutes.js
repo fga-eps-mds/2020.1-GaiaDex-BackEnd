@@ -17,13 +17,17 @@ router.get('/:userId', async(req, res) =>{
         const length = user.myPlants.length;
         console.log(user.myPlants.length);
         if(length > 0) {
+            var plantArray=[];
             //mostra todas as plantas
             for(var index = 0; index < user.myPlants.length; index++) {
                 var myplant = await MyPlant.findById(user.myPlants[index]);
                 var typePlant = await Plant.findById(myplant.plant);
-                res.send(myplant.nickname);
+                var objplant = "{\"nickname\" : \"" + myplant.nickname + "\", \"common_name\" : \"" + typePlant.common_name + "\"}"
+                var objplant = JSON.parse(objplant);
+                plantArray.push(objplant);
                 //res.send(Object.values());
             }
+            res.send(plantArray);
             //return res.send(user.myPlants[0]);
             //return res.send({message: "collection!!"})
 
