@@ -1,17 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const User = require('../models/User');
-const Plant = require('../models/Plant');
-const MyPlant = require('../models/MyPlant');
+const User = require("../models/User");
+const Plant = require("../models/Plant");
+const MyPlant = require("../models/MyPlant");
 
-const myPlantSchema = require('../schemas/myPlantSchema');
+const myPlantSchema = require("../schemas/myPlantSchema");
 
-router.get('/', async (req, res) => {
-    res.send({ message: 'User Backyard.'});
+router.get("/", async (req, res) => {
+    res.send({ message: "User Backyard."});
 });
 
-router.post('/add/:userId/:plantId', async (req, res) => {
+router.post("/add/:userId/:plantId", async (req, res) => {
 
     try {
         
@@ -43,7 +43,7 @@ router.post('/add/:userId/:plantId', async (req, res) => {
 
 });
 
-router.get('/:userId/:myPlantId', async (req, res) => {
+router.get("/:userId/:myPlantId", async (req, res) => {
 
     try {
 
@@ -64,30 +64,31 @@ router.get('/:userId/:myPlantId', async (req, res) => {
         }
 
     } catch(err) {
-        console.log(err);
-        return res.status(400).send({ error: 'Error while searching for plant.' + err});
+        return res.status(400).send({ error: "Error while searching for plant." + err});
     }
 });
 
-router.put('/edit/:myPlantId', async (req, res) => {
+router.put("/edit/:myPlantId", async (req, res) => {
 
     try {
         
         const newNick = req.body;
 
         const result = myPlantSchema.validate(newNick);
-        if ( result.error ) return res.status(400).send({ error: 'Error while editing plant. ' + result.error});
+        if ( result.error ) {
+            return res.status(400).send({ error: "Error while editing plant. " + result.error});
+        }
 
         await MyPlant.findOneAndUpdate({_id: req.params.myPlantId}, newNick, { useFindAndModify: false});
 
-        return res.send({ message: 'Backyard plant updated successfully.'});
+        return res.send({ message: "Backyard plant updated successfully."});
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error while updating backyard plant.' + err });
+        return res.status(400).send({ error: "Error while updating backyard plant." + err });
     }
 });
 
-router.delete('/delete/:myPlantId', async (req, res) => {
+router.delete("/delete/:myPlantId", async (req, res) => {
 
     try {
 
@@ -105,11 +106,11 @@ router.delete('/delete/:myPlantId', async (req, res) => {
         await MyPlant.findByIdAndRemove(req.params.myPlantId, { useFindAndModify: false });
 
         return res.send({
-            message: 'Plant successfully removed from backyard.'
+            message: "Plant successfully removed from backyard."
         });
 
     } catch(err) {
-        return res.status(400).send({ error: 'Error while deleting plant from backyard.' + err });
+        return res.status(400).send({ error: "Error while deleting plant from backyard." + err });
     }
 });
 

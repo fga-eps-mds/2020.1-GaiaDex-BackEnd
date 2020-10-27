@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const myPlantSchema = new mongoose.Schema({
@@ -8,12 +8,12 @@ const myPlantSchema = new mongoose.Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         require: true,
     },
     plant:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Plant',
+        ref:"Plant",
         require:true
     },
     createdAt: {
@@ -23,6 +23,6 @@ const myPlantSchema = new mongoose.Schema({
 });
 
 
-const myPlant = mongoose.model('MyPlants', myPlantSchema);
+const myPlant = mongoose.model("MyPlants", myPlantSchema);
 
 module.exports = myPlant;

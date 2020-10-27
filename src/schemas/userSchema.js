@@ -6,8 +6,8 @@ const userSchema = Joi.object({
   passwordConfirmation: Joi.string()
     .min(8)
     .required()
-    .valid(Joi.ref('password'))
-    .error(new Error('Password confirmation does not match.')),
+    .valid(Joi.ref("password"))
+    .error(new Error("Password confirmation does not match.")),
   email: Joi.string().email().required(),
 });
 
