@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   username: {
@@ -24,13 +23,13 @@ const userSchema = new Schema({
       require: true,
     },
   ],
-  myPlants: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'MyPlants',
-      require: true,
-  }]
+    myPlants: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MyPlants",
+        require: true,
+    }]
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
