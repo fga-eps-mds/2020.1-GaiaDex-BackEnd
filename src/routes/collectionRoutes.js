@@ -2,10 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+
+const Collection = require('../models/Collection');
 const User = require('../models/User');
 const MyPlant = require('../models/myPlant');
 const Plant = require('../models/Plant');
-const plantNotification = require('../models/plantNotification');
 
 router.get('/', async (req, res) => {
   res.send({ message: 'collection' });
