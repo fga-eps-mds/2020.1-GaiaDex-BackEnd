@@ -20,7 +20,7 @@ router.get('/:userId', async(req, res) =>{
             for(var index = 0; index < user.myPlants.length; index++) {
                 var myplant = await MyPlant.findById(user.myPlants[index]);
                 var typePlant = await Plant.findById(myplant.plant);
-                var objplant = "{\"nickname\" : \"" + myplant.nickname + "\", \"common_name\" : \"" + typePlant.common_name + "\", \"profile_picture\" : \"" + typePlant.profile_picture + "\"}";
+                var objplant = "{\"nickname\" : \"" + myplant.nickname + "\", \"commonName\" : \"" + typePlant.commonName + "\", \"profilePicture\" : \"" + typePlant.profilePicture + "\"}";
                 var objplant = JSON.parse(objplant);
                 plantArray.push(objplant);
             }
