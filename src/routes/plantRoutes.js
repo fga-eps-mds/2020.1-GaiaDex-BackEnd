@@ -2,8 +2,6 @@ const express = require('express');
 
 const Plant = require('../models/Plant');
 const Topic = require('../models/Topic');
-const myPlant = require('../models/myPlant');
-const User = require('../models/User');
 
 const router = express.Router();
 
