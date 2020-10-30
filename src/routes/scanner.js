@@ -37,7 +37,7 @@ router.post('/',async(req,res,next) => {
         const response = await axios.post(`https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`,form, {headers: form.getHeaders()});
         fs.unlinkSync(filePath);
         
-        res.send(response.data);
+        res.send(response.data.results);
     }catch(err){
         if(Array.isArray(err)) res.status(400).send({errors : err});
         next(err);
