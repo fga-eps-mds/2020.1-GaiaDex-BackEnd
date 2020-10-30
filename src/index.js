@@ -32,7 +32,7 @@ app.use('/comment',commentRoutes);
 app.use('/scanner',scanner);
 
 // starting the server
-app.set('port', process.env.PORT || 2000);
+app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), () => {
   console.log(`Server on port ${app.get('port')}`);
 });
