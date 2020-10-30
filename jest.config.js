@@ -59,7 +59,7 @@ module.exports = {
   globalTeardown: '<rootDir>/__tests__/teardown.js',
   setupFilesAfterEnv: ['<rootDir>/__tests__/setupAfterEnv.js'],
   testEnvironment: '<rootDir>/__tests__/environment.js',
-  testMatch: ['**/__tests__/**/*.test.js']
+  testMatch: ['**/__tests__/**/*.test.js'],
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: undefined,
 
