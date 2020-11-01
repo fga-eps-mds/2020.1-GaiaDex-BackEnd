@@ -84,16 +84,4 @@ router.delete('/delete/:id', auth, async (req, res) => {
     return res.status(400).send({ error: `Error while deleting user. ${err}` });
   }
 });
-
-// //REMOVER ESSA ROTA POIS ELA EU CRIEI PARA APRENDIZADO
-// router.get('/list/:UserID', async(req, res) =>{
-//   try{
-//       //id do faco400: 5f8e17bbc1222a0028041272
-//       //const {username} = "faco400"
-//       //const teste = await User.find().populate('username');
-//   }catch(err){
-//       return res.status(400).send({error: 'Error visualizing collection' + err});
-//   }
-// })
-
 module.exports = router;
