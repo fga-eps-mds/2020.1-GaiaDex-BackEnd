@@ -23,7 +23,6 @@ mongoose
   })
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log(err));
-
 // middlewares
 app.use(express.json({ limit: 20*1024*1024}));
 app.use(morgan('dev'));
