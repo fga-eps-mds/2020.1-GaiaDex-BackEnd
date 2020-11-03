@@ -14,9 +14,19 @@ const scanner = require('./routes/scanner')
 // mongodb://localhost:27017/noderest  => meu banco de dados local polupado
 // mongodb://mongo:27017/backend => banco de dados da develop
 mongoose
+<<<<<<< HEAD
   .connect('mongodb://localhost:27017/noderest', { useNewUrlParser: true })
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log(err));
+=======
+    .connect(
+        'mongodb://mongo:27017/backend',
+        { useNewUrlParser: true }
+    )
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+
+>>>>>>> 816d47f (adding some changes to err treatment)
 
 // middlewares
 app.use(express.json({ limit: 20*1024*1024}));
