@@ -124,7 +124,7 @@ router.put('/:plantId', async (req, res) => {
         gbifID,
         stateProvince,
       },
-      { new: true }
+      { new: true },
     );
 
     plant.topics = [];
@@ -137,7 +137,7 @@ router.put('/:plantId', async (req, res) => {
         await plantTopic.save();
 
         plant.topics.push(plantTopic);
-      })
+      }),
     );
 
     await plant.save();
