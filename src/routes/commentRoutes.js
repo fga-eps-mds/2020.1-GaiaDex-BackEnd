@@ -7,7 +7,8 @@ const Comment = require('../models/Comment');
 
 router.post('/create/:topicId/:userId', async (req, res) => {
   try {
-    if (!req.body.text) return res.status(400).send({ error: 'Comment should not be empty' });
+    if (!req.body.text)
+      return res.status(400).send({ error: 'Comment should not be empty' });
 
     const comment = await Comment.create({
       ...req.body,
@@ -32,7 +33,8 @@ router.put('/update/:commentId', async (req, res) => {
     await Comment.findById(req.params.commentId);
     const newData = req.body;
 
-    if (!newData.text) return res.status(400).send({ error: 'Comment should not be empty' });
+    if (!newData.text)
+      return res.status(400).send({ error: 'Comment should not be empty' });
 
     await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
       useFindAndModify: false,
@@ -73,7 +75,7 @@ router.post('/like/:commentId', async (req, res) => {
     await Comment.findOneAndUpdate(
       { _id: req.params.commentId },
       { $inc: { likes: 1 } },
-      { useFindAndModify: false },
+      { useFindAndModify: false }
     );
     return res.send({ message: 'Liked!' });
   } catch (err) {
@@ -86,7 +88,7 @@ router.post('/dislike/:commentId', async (req, res) => {
     await Comment.findOneAndUpdate(
       { _id: req.params.commentId },
       { $inc: { dislikes: 1 } },
-      { useFindAndModify: false },
+      { useFindAndModify: false }
     );
     return res.send({ message: 'Disliked!' });
   } catch (err) {

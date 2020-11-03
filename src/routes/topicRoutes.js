@@ -111,7 +111,7 @@ router.post('/like/:topicId', async (req, res) => {
     await Topic.findOneAndUpdate(
       { _id: req.params.topicId },
       { $inc: { likes: 1 } },
-      { useFindAndModify: false },
+      { useFindAndModify: false }
     );
     return res.send({ message: 'Liked!' });
   } catch (err) {
@@ -124,7 +124,7 @@ router.post('/dislike/:topicId', async (req, res) => {
     await Topic.findOneAndUpdate(
       { _id: req.params.topicId },
       { $inc: { dislikes: 1 } },
-      { useFindAndModify: false },
+      { useFindAndModify: false }
     );
     return res.send({ message: 'Disliked!' });
   } catch (err) {
