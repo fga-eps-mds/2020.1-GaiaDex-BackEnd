@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const topicSchema = Joi.object({
   title: Joi.string().min(4).max(30).required(),

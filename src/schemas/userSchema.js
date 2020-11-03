@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const userSchema = Joi.object({
   username: Joi.string().alphanum().min(4).max(30).required(),
@@ -6,8 +6,8 @@ const userSchema = Joi.object({
   passwordConfirmation: Joi.string()
     .min(8)
     .required()
-    .valid(Joi.ref("password"))
-    .error(new Error("Password confirmation does not match.")),
+    .valid(Joi.ref('password'))
+    .error(new Error('Password confirmation does not match.')),
   email: Joi.string().email().required(),
 });
 

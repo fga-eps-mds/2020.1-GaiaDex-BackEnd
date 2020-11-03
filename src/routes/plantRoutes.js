@@ -1,12 +1,12 @@
-const express = require("express");
+const express = require('express');
 
-const Plant = require("../models/Plant");
-const Topic = require("../models/Topic");
+const Plant = require('../models/Plant');
+const Topic = require('../models/Topic');
 
 const router = express.Router();
 
 // registro de uma nova planta
-router.post("/register", async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     const {
       scientificName,
@@ -53,44 +53,40 @@ router.post("/register", async (req, res) => {
     return res.send(err);
   }
 });
-
 // Listagem de Todas as plantas
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const plants = await Plant.find().populate("topics");
+    const plants = await Plant.find().populate('topics');
 
     return res.send({ plants });
   } catch (err) {
-    return res.status(400).send({ error: "Loading plants failed" });
+    return res.status(400).send({ error: 'Loading plants failed' });
   }
 });
-
 // Procurando planta por id
-router.get("/:plantId", async (req, res) => {
+router.get('/:plantId', async (req, res) => {
   try {
-    const plant = await Plant.findById(req.params.plantId).populate("topics");
+    const plant = await Plant.findById(req.params.plantId).populate('topics');
 
     return res.send({ plant });
   } catch (err) {
     return res
       .status(400)
-      .send({ error: "error when searching for this plant " });
+      .send({ error: 'error when searching for this plant ' });
   }
 });
-
 // Deletando planta por id
-router.delete("/:plantId", async (req, res) => {
+router.delete('/:plantId', async (req, res) => {
   try {
     const deleted = await Plant.findByIdAndRemove(req.params.plantId);
 
     return res.send(deleted);
   } catch (err) {
-    return res.status(400).send({ error: "Error when Delete this plant" });
+    return res.status(400).send({ error: 'Error when Delete this plant' });
   }
 });
-
 // Dando upgrade planta por id
-router.put("/:plantId", async (req, res) => {
+router.put('/:plantId', async (req, res) => {
   try {
     const {
       scientificName,
@@ -144,7 +140,7 @@ router.put("/:plantId", async (req, res) => {
 
     return res.send({ plant });
   } catch (err) {
-    return res.status(400).send({ error: "Registration failed" });
+    return res.status(400).send({ error: 'Registration failed' });
   }
 });
 
