@@ -16,7 +16,6 @@ const PlantSchema = new mongoose.Schema({
   },
   specie_name: {
     type: String,
-    require: true,
   },
   common_name: {
     type: String,
@@ -24,23 +23,23 @@ const PlantSchema = new mongoose.Schema({
   },
   usage: {
     type: String,
-    require: true,
+
   },
   first_User: {
     type: String,
-    require: true,
+
   },
   collection_count: {
     type: Number,
-    require: true,
+
   },
   extinction: {
     type: Boolean,
-    require: true,
+
   },
   profile_picture: {
     type: String,
-    require: true,
+
   },
   gbifID: {
     type: Number,
@@ -48,7 +47,7 @@ const PlantSchema = new mongoose.Schema({
   },
   stateProvince: {
     type: String,
-    require: true,
+
   },
   topics: [
     {

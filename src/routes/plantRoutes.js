@@ -48,23 +48,6 @@ router.post('/register', async (req, res) => {
 
     await plant.save();
 
-<<<<<<< HEAD
-    return res.send({ plant });
-  } catch (err) {
-    return res.send(err);
-  }
-});
-
-// Listagem de Todas as plantas
-router.get('/', async (req, res) => {
-  try {
-    const plants = await Plant.find().populate('topics');
-
-    return res.send({ plants });
-  } catch (err) {
-    return res.status(400).send({ error: 'Loading plants failed' });
-  }
-=======
         return res.send({ plant });
     }catch (err){
         if (err.code == 11000){
@@ -85,7 +68,6 @@ router.get('/', async (req , res) => {
     }catch (err){
         return res.status(400).send({ error: 'Loading plants failed'});
     }
->>>>>>> 816d47f (adding some changes to err treatment)
 });
 
 // Procurando planta por id
@@ -100,18 +82,6 @@ router.get('/:plantId', async (req, res) => {
       .send({ error: 'error when searching for this plant ' });
   }
 });
-<<<<<<< HEAD
-
-// Deletando planta por id
-router.delete('/:plantId', async (req, res) => {
-  try {
-    const deleted = await Plant.findByIdAndRemove(req.params.plantId);
-
-    return res.send(deleted);
-  } catch (err) {
-    return res.status(400).send({ error: 'Error when Delete this plant' });
-  }
-=======
 //Detando planta por id
 router.delete('/:plantId', async (req , res) => {
     try{
@@ -121,7 +91,6 @@ router.delete('/:plantId', async (req , res) => {
     }catch (err){
         return res.status(400).send({ error: 'Error when Delete this plant'});
     }
->>>>>>> 816d47f (adding some changes to err treatment)
 });
 
 // Dando upgrade planta por id
