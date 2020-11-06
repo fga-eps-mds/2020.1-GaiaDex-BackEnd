@@ -40,6 +40,7 @@ router.post('/',async(req,res,next) => {
 			}
         );
         fs.unlinkSync(filePath);
+        
         res.send(response.data);
     }catch(err){
         if(Array.isArray(err)) res.status(400).send({errors : err});
