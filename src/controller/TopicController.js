@@ -4,7 +4,7 @@ const Plant = require('../models/Plant');
 const topicSchema = require('../schemas/topicSchema');
 
 class TopicController {
-  async create(req, res) {
+  async createTopic(req, res) {
     try {
       const user = await User.findById(req.params.userId);
       const plant = await Plant.findById(req.params.plantId);
@@ -38,7 +38,7 @@ class TopicController {
     }
   }
 
-  async update(req, res) {
+  async updateTopic(req, res) {
     try {
       const topic = await Topic.findById(req.params.topicId);
 
@@ -64,7 +64,7 @@ class TopicController {
     }
   }
 
-  async delete(req, res) {
+  async deleteTopic(req, res) {
     try {
       const topic = await Topic.findById(req.params.topicId);
       const user = await User.findById(topic.user);
@@ -87,7 +87,7 @@ class TopicController {
         useFindAndModify: false,
       });
 
-      return res.send({
+      return res.status(200).send({
         message: 'Topic successfully removed.',
       });
     } catch (err) {
@@ -97,7 +97,7 @@ class TopicController {
     }
   }
 
-  async list(req, res) {
+  async listTopics(req, res) {
     try {
       const topic = await Topic.find().populate(['user']);
 
@@ -109,7 +109,7 @@ class TopicController {
     }
   }
 
-  async like(req, res) {
+  async likeTopic(req, res) {
     try {
       await Topic.findOneAndUpdate(
         { _id: req.params.topicId },
@@ -122,7 +122,7 @@ class TopicController {
     }
   }
 
-  async dislike(req, res) {
+  async dislikeTopic(req, res) {
     try {
       await Topic.findOneAndUpdate(
         { _id: req.params.topicId },
