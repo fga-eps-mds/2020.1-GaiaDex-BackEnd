@@ -107,8 +107,8 @@ router.get('/list', async (req, res) => {
 router.get('/find/:topicId', async (req, res) => {
     try {
 
-        const topic = await Topic.findById(req.params.topicId).populate(['user']);
-
+        const topic = await Topic.findById(req.params.topicId)
+          .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
         return res.send({ topic });
 
     } catch (err) {
@@ -120,6 +120,7 @@ router.post('/like/:topicId', async (req, res) => {
     try {
 
         const topic = await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { likes: 1 }}, { useFindAndModify: false})
+        .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
         res.send(topic)
         
     } catch (err) {
@@ -131,6 +132,7 @@ router.post('/dislike/:topicId', async (req, res) => {
     try {
 
         const topic = await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { dislikes: 1 }}, { useFindAndModify: false})
+        .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
         res.send(topic)
         
         
