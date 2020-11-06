@@ -5,11 +5,6 @@ const UserModel = require('../../src/models/User');
 const PlantModel = require('../../src/models/Plant');
 
 // Hypotetical variables
-const topic = new TopicModel({
-  title: 'test',
-  description: 'test'
-});
-topic.save()
 
 const user = new UserModel({
   username: 'username',
@@ -35,6 +30,14 @@ const plant = new PlantModel({
   topicos: []
 });
 plant.save();
+
+const topic = new TopicModel({
+  title: 'test',
+  description: 'test',
+  user: `${user.id}`,
+  plant: `${plant.id}`
+});
+topic.save();
 
 const request = supertest(app);
 
@@ -90,4 +93,21 @@ describe('topic/', () => {
 
     expect(response.status).toBe(400);
   });
+
+  // Like
+  it('Should be able to like a topic.', async () => {
+
+    const response = await request.post(`/topic/like/${topic.id}/`);
+
+    expect(response.status).toBe(200); 
+  });
+
+  // Dislike
+  it('Should be able to dislike a topic.', async () => {
+
+    const response = await request.post(`/topic/dislike/${topic.id}/`);
+
+    expect(response.status).toBe(200); 
+  });
+
 });
