@@ -5,7 +5,6 @@ const topicRoutes = require('./routes/topicRoutes');
 
 const routes = new express.Router();
 
-
 // const commentRoutes = require('./routes/commentRoutes');
 
 routes.use('/auth', authRoutes);
