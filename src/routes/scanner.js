@@ -26,18 +26,21 @@ router.post('/',async(req,res,next) => {
         if (erros.length) throw erros;
         const fileFormat = mime.split("/").pop();
         const filePath = path.join(__dirname, '..', `${filename}.${fileFormat}`);
-
         fs.writeFileSync(filePath, data, {encoding: 'base64'});
-
         const form = new FormData();
         form.append('organs', plantType);
         const stream = await openFileReadStream(filePath);
-        form.append('images', stream);
 
-        const response = await axios.post(`https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`,form, {headers: form.getHeaders()});
+        form.append('images', stream);
+  
+        const response = await axios.post(
+			`https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`,
+			form, {
+				headers: form.getHeaders()
+			}
+        );
         fs.unlinkSync(filePath);
-        
-        res.send(response.data.results);
+        res.send(response.data);
     }catch(err){
         if(Array.isArray(err)) res.status(400).send({errors : err});
         next(err);
