@@ -11,10 +11,12 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "npx eslint . --fix", "git add"
+      "npx eslint . --fix",
+      "git add"
     ],
     "src/*.{js,jsx}": [
-      "npx eslint . --fix", "git add"
+      "npx eslint . --fix",
+      "git add"
     ]
   },
   "husky": {
