@@ -15,14 +15,22 @@ router.post('/create/:topicId/:userId', async (req, res) => {
       user: req.params.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId);
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
 
     await comment.save();
 
     topic.comments.push(comment);
     await topic.save();
-
-    return res.send({ message: 'Comment successfully registered.' });
+    const topicCorrect = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(topicCorrect);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
