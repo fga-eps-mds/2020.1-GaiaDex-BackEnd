@@ -191,4 +191,18 @@ router.get('/find/:topicId', async (req, res) => {
   }
 });
 
+router.get('/find/:topicId', async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+
+    return res.send({ topic });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while find topic id.${err}` });
+  }
+});
+
 module.exports = router;
