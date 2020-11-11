@@ -147,5 +147,4 @@ router.post('/dislike/:commentId', auth, async (req, res) => {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
-
 module.exports = router;
