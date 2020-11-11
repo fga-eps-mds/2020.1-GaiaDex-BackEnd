@@ -1,11 +1,13 @@
 const express = require('express');
 
 const router = express.Router();
-
+const User = require('../models/User');
+const Like = require('../models/Likes');
 const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
+const { auth, authConfig } = require('./auth');
 
-router.post('/create/:topicId/:userId', async (req, res) => {
+router.post('/create/:topicId/:userId',auth, async (req, res) => {
   try {
     if (!req.body.text)
       return res.status(400).send({ error: 'Comment should not be empty' });
@@ -78,32 +80,52 @@ router.delete('/delete/:commentId', async (req, res) => {
   }
 });
 
-router.post('/like/:commentId', async (req, res) => {
+router.post('/like/:commentId/:userId', async (req, res) => {
   try {
-    await Comment.findOneAndUpdate(
-      { _id: req.params.commentId },
-      { $inc: { likes: 1 } },
-      { useFindAndModify: false }
-    );
-    return res.send({ message: 'Liked!' });
+    const user = await User.findById(req.params.userId);
+    const comment = await Comment.findById(req.params.commentId).populate([
+      { path: 'likes'},
+      { path: 'user' },
+      { path: 'toppic' },
+    ]);
+    const isLiked = await Like.findOne({user:req.params.userId})
+    console.log(isLiked == null)
+    if(isLiked == null){
+    const like = await Like.create({
+      user: user,
+      comment: comment,
+    });
+    await like.save();
+    comment.likes.push(like);
+    await comment.save();
+    const commenttrue = await Comment.findById(req.params.commentId).populate([
+      { path: 'likes'},
+      { path: 'user' },
+      { path: 'toppic' },
+    ]);
+    return res.send(commenttrue);
+  }
+  else{
+    return res.send(comment);
+  }
   } catch (err) {
-    return res.status(400).send({ error: `Error while liking comment.${err}` });
+    return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
 
-router.post('/dislike/:commentId', async (req, res) => {
+router.post('/dislike/:commentId/:userId', async (req, res) => {
   try {
-    await Comment.findOneAndUpdate(
-      { _id: req.params.commentId },
-      { $inc: { dislikes: 1 } },
-      { useFindAndModify: false }
-    );
-    return res.send({ message: 'Disliked!' });
+    const like = Like.findOne({user:req.params.userId})
+    // await Like.findByIdAndRemove({user:req.params.userId});
+    const commenttrue = await Comment.findById(req.params.commentId).populate([
+      { path: 'likes'},
+      { path: 'user' },
+      { path: 'toppic' },
+    ]);
+    return res.send(like);
+  
   } catch (err) {
-    return res
-      .status(400)
-      .send({ error: `Error while linking comment.${err}` });
+    return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
-
 module.exports = router;
