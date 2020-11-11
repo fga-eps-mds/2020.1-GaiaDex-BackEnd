@@ -112,19 +112,22 @@ router.post('/like/:commentId/:userId',auth, async (req, res) => {
   }
 });
 
-router.post('/dislike/:commentId/:userId', async (req, res) => {
+router.post('/dislike/:commentId/:userId',auth, async (req, res) => {
   try {
-    const like = Like.findOne({user:req.params.userId})
-    // await Like.findByIdAndRemove({user:req.params.userId});
-    const commenttrue = await Comment.findById(req.params.commentId).populate([
-      { path: 'likes'},
-      { path: 'user' },
-      { path: 'toppic' },
-    ]);
-    return res.send(like);
-  
+    const comment = await Comment.findById(req.params.commentId);
+    const like = await Like.findOne({user:req.params.userId,comment:req.params.commentId});
+    const index = comment.likes.indexOf(like._id);
+    if (index > -1) {
+      comment.likes.splice(index, 1);
+    }
+
+    comment.save();
+
+    await Like.findByIdAndRemove(like._id).populate('user');
+    return res.send(comment);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
+
 module.exports = router;

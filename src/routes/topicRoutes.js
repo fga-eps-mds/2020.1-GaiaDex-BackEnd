@@ -138,21 +138,21 @@ router.post('/like/:topicId/:userId',auth, async (req, res) => {
   }
 });
 
-router.post('/dislike/:topicId', async (req, res) => {
+router.post('/dislike/:topicId/:userId',auth, async (req, res) => {
   try {
-    await Topic.findOneAndUpdate(
-      { _id: req.params.topicId },
-      { $inc: { dislikes: 1 } },
-      { useFindAndModify: false }
-    );
-    return res.send({ message: 'Disliked!' });
+    const topic = await Topic.findById(req.params.topicId);
+    const like = await Like.findOne({user:req.params.userId,topic:req.params.topicId});
+    const index = topic.likes.indexOf(like._id);
+    if (index > -1) {
+      topic.likes.splice(index, 1);
+    }
+    topic.save();
+    await Like.findByIdAndRemove(like._id).populate('user');
+    return res.send(topic);
   } catch (err) {
-    return res
-      .status(400)
-      .send({ error: `Error while dislikinng topic.${err}` });
+    return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
-
 router.get('/find/:topicId', async (req, res) => {
   try {
     const topic = await Topic.findById(req.params.topicId).populate([
