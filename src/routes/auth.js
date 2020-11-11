@@ -24,6 +24,8 @@ function auth(req, res, next) {
     return res.status(401).send({ Error: 'Token malformated' });
   }
 
+  
+  jwt.verify(token, authConfig.secret, function(err ,decoded){
   try {
     jwt.verify(token, authConfig.secret, (err, decoded) => {
       req.userId = decoded.id;
@@ -32,5 +34,8 @@ function auth(req, res, next) {
   } catch (err) {
     return res.status(400);
   }
+  });
+    
+ 
 }
 module.exports = { authConfig, auth };
