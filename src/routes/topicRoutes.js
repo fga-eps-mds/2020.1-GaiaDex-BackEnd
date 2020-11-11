@@ -98,8 +98,10 @@ router.delete('/delete/:topicId', async (req, res) => {
 
 router.get('/list', async (req, res) => {
   try {
-    const topic = await Topic.find().populate(['user']);
-
+    const topic = await Topic.find().populate([
+      { path: 'likes'},
+      { path: 'comments' },
+    ]);
     return res.send({ topic });
   } catch (err) {
     return res.status(400).send({ error: `Error while listing topics.${err}` });

@@ -17,14 +17,10 @@ const CommentSchema = new mongoose.Schema({
     ref: 'Topic',
     require: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Like',
+  }],
 });
 
 const Comment = mongoose.model('Comment', CommentSchema);
