@@ -120,7 +120,7 @@ router.post('/like/:topicId/:userId',auth, async (req, res) => {
     if(isLiked == null){
     const like = await Like.create({
       user: user,
-      topic: topic,
+      topic: topic
     });
     await like.save();
     topic.likes.push(like);
@@ -130,9 +130,11 @@ router.post('/like/:topicId/:userId',auth, async (req, res) => {
       { path: 'user' },
       { path: 'toppic' },
     ]);
+    console.log(topictrue.likes.length)
     return res.send(topictrue);
   }
   else{
+    console.log(topic.likes.length)
     return res.send(topic);
   }
   } catch (err) {
@@ -148,6 +150,7 @@ router.post('/dislike/:topicId/:userId',auth, async (req, res) => {
     if (index > -1) {
       topic.likes.splice(index, 1);
     }
+    console.log(topic.likes.length)
     topic.save();
     await Like.findByIdAndRemove(like._id).populate('user');
     return res.send(topic);
@@ -163,7 +166,7 @@ router.get('/find/:topicId', async (req, res) => {
       { path: 'plant' },
     ]);
 
-    return res.send({ topic });
+    return res.send(topic);
   } catch (err) {
     return res.status(400).send({ error: `Error while find topic id.${err}` });
   }
