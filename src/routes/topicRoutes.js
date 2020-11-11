@@ -1,12 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-
+const Like = require('../models/Likes');
 const Topic = require('../models/Topic');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
 const topicSchema = require('../schemas/topicSchema');
-
+const { auth, authConfig } = require('./auth');
 router.post('/create/:plantId/:userId', async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -108,16 +108,35 @@ router.get('/list', async (req, res) => {
   }
 });
 
-router.post('/like/:topicId', async (req, res) => {
+router.post('/like/:topicId/:userId',auth, async (req, res) => {
   try {
-    await Topic.findOneAndUpdate(
-      { _id: req.params.topicId },
-      { $inc: { likes: 1 } },
-      { useFindAndModify: false }
-    );
-    return res.send({ message: 'Liked!' });
+    const user = await User.findById(req.params.userId);
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'likes'},
+      { path: 'user' },
+      { path: 'toppic' },
+    ]);
+    const isLiked = await Like.findOne({user:req.params.userId,topic:req.params.topicId})
+    if(isLiked == null){
+    const like = await Like.create({
+      user: user,
+      topic: topic,
+    });
+    await like.save();
+    topic.likes.push(like);
+    await topic.save();
+    const topictrue = await Topic.findById(req.params.topicId).populate([
+      { path: 'likes'},
+      { path: 'user' },
+      { path: 'toppic' },
+    ]);
+    return res.send(topictrue);
+  }
+  else{
+    return res.send(topic);
+  }
   } catch (err) {
-    return res.status(400).send({ error: `Error while liking topic.${err}` });
+    return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
 
