@@ -26,7 +26,7 @@ function auth(req, res, next) {
 
   try {
     const { userId } = jwt.verify(token, authConfig.secret);
-    req.userId = userId;
+    res.userId = userId;
     return next();
   } catch (err) {
     req.redirect('/login_page');

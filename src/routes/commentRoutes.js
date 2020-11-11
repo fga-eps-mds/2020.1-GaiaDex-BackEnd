@@ -80,7 +80,7 @@ router.delete('/delete/:commentId', async (req, res) => {
   }
 });
 
-router.post('/like/:commentId/:userId', async (req, res) => {
+router.post('/like/:commentId/:userId',auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     const comment = await Comment.findById(req.params.commentId).populate([
@@ -88,8 +88,7 @@ router.post('/like/:commentId/:userId', async (req, res) => {
       { path: 'user' },
       { path: 'toppic' },
     ]);
-    const isLiked = await Like.findOne({user:req.params.userId})
-    console.log(isLiked == null)
+    const isLiked = await Like.findOne({user:req.params.userId,comment:req.params.commentId})
     if(isLiked == null){
     const like = await Like.create({
       user: user,
