@@ -1,13 +1,13 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 const User = require('../models/User');
 const Like = require('../models/Likes');
 const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
-const { auth, authConfig } = require('./auth');
+const { auth } = require('./auth');
 
-router.post('/create/:topicId/:userId',auth, async (req, res) => {
+router.post('/create/:topicId/:userId', auth, async (req, res) => {
   try {
     if (!req.body.text)
       return res.status(400).send({ error: 'Comment should not be empty' });
@@ -78,65 +78,68 @@ router.delete('/delete/:commentId', async (req, res) => {
   }
 });
 
-router.post('/like/:commentId',auth, async (req, res) => {
+router.post('/like/:commentId', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     const comment = await Comment.findById(req.params.commentId).populate([
-      { path: 'likes'},
+      { path: 'likes' },
       { path: 'user' },
       { path: 'toppic' },
     ]);
     const topic = await Topic.findById(comment.topic).populate([
-      { path: 'likes'},
+      { path: 'likes' },
       { path: 'user' },
       { path: 'toppic' },
     ]);
-    const isLiked = await Like.findOne({user:req.userId,comment:req.params.commentId})
-    if(isLiked == null){
-    const like = await Like.create({
-      user: user,
-      comment: comment,
+    const isLiked = await Like.findOne({
+      user: req.userId,
+      comment: req.params.commentId,
     });
-    await like.save();
-    comment.likes.push(like);
-    await comment.save();
-    const topicTrue = await Topic.findById(comment.topic).populate([
-      { path: 'likes'},
-      { path: 'user' },
-      { path: 'comments' },
-    ]);
-    return res.send(topicTrue);
-  }
-  else{
+    if (isLiked == null) {
+      const like = await Like.create({
+        user,
+        comment,
+      });
+      await like.save();
+      comment.likes.push(like);
+      await comment.save();
+      const topicTrue = await Topic.findById(comment.topic).populate([
+        { path: 'likes' },
+        { path: 'user' },
+        { path: 'comments' },
+      ]);
+      return res.send(topicTrue);
+    }
     return res.send(topic);
-  }
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
 
-router.post('/dislike/:commentId',auth, async (req, res) => {
+router.post('/dislike/:commentId', auth, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
     const topic = await Topic.findById(comment.topic);
-    const like = await Like.findOne({user:req.userId,comment:req.params.commentId});
-    if(like != null){
-    const index = comment.likes.indexOf(like._id);
-    if (index > -1) {
-      comment.likes.splice(index, 1);
-    }
+    const like = await Like.findOne({
+      user: req.userId,
+      comment: req.params.commentId,
+    });
+    if (like != null) {
+      const index = comment.likes.indexOf(like._id);
+      if (index > -1) {
+        comment.likes.splice(index, 1);
+      }
 
-    comment.save();
-
-    await Like.findByIdAndRemove(like._id).populate('user');
-    const topicTrue = await Topic.findById(comment.topic).populate([
-      { path: 'likes'},
-      { path: 'user' },
-      { path: 'comments' },
-    ]);
-    return res.send(topicTrue);
+      comment.save();
+      await Like.findByIdAndRemove(like._id).populate('user');
+      const topicTrue = await Topic.findById(comment.topic).populate([
+        { path: 'likes' },
+        { path: 'user' },
+        { path: 'comments' },
+      ]);
+      return res.send(topicTrue);
     }
-    return res.send(topic);  
+    return res.send(topic);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
