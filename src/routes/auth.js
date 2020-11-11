@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const authConfig = {
-  secret: 'd41d8cd98f00b204e9800998ecf8427e',
+  secret: process.env.SECRET,
 };
 function auth(req, res, next) {
   const sessiontoken = req.headers.authtoken;
@@ -24,18 +24,13 @@ function auth(req, res, next) {
     return res.status(401).send({ Error: 'Token malformated' });
   }
 
-  
-  jwt.verify(token, authConfig.secret, function(err ,decoded){
   try {
-    req.userId = decoded.id;
-    console.log(decoded.id)
-    next();
-  } 
-  catch (err) {
+    jwt.verify(token, authConfig.secret, (err, decoded) => {
+      req.userId = decoded.id;
+    });
+    return next();
+  } catch (err) {
     return res.status(400);
   }
-  });
-    
- 
 }
 module.exports = { authConfig, auth };
