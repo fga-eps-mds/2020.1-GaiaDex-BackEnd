@@ -92,4 +92,10 @@ describe('comment/', () => {
 
             expect(response.status).toBe(400);
     });
+
+    it('Should be able to delete the comment', async() => {
+        const response = await request.post(`/comment/delete/${comment.id}`);
+
+        expect(response.status).toBe(200);
+    });
 });
