@@ -53,19 +53,39 @@ const request = supertest(app);
 
 describe('comment/', () => {
 
-    it('Should be able to comment because there is no text', async() => {
+    it('Should be able to comment because there is text', async() => {
         const response = await request
             .post(`/comment/create/${topic.id}/${user.id}`)
             .send({
                 text: 'Comentario',
             });
 
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(200);
     });
 
     it('Should not be able to comment because there is no text', async() => {
         const response = await request
             .post(`/comment/create/${topic.id}/${user.id}`)
+            .send({
+                text: '',
+            });
+
+            expect(response.status).toBe(400);
+    });
+
+    it('Should be able to update the comment because there is text', async() => {
+        const response = await request
+            .post(`/comment/update/${comment.id}`)
+            .send({
+                text: 'Comentario atualizado',
+            });
+
+            expect(response.status).toBe(200);
+    });
+
+    it('Should not be able to update the comment because there is no text', async() => {
+        const response = await request
+            .post(`/comment/update/${comment.id}`)
             .send({
                 text: '',
             });
