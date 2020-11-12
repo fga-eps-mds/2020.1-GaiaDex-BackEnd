@@ -75,7 +75,7 @@ describe('comment/', () => {
 
     it('Should be able to update the comment because there is text', async() => {
         const response = await request
-            .post(`/comment/update/${comment.id}`)
+            .put(`/comment/update/${comment.id}`)
             .send({
                 text: 'Comentario atualizado',
             });
@@ -85,7 +85,7 @@ describe('comment/', () => {
 
     it('Should not be able to update the comment because there is no text', async() => {
         const response = await request
-            .post(`/comment/update/${comment.id}`)
+            .put(`/comment/update/${comment.id}`)
             .send({
                 text: '',
             });
@@ -94,8 +94,21 @@ describe('comment/', () => {
     });
 
     it('Should be able to delete the comment', async() => {
-        const response = await request.post(`/comment/delete/${comment.id}`);
+        const response = await request.delete(`/comment/delete/${comment.id}`);
 
         expect(response.status).toBe(200);
     });
+
+    it('Should be able to like the comment', async() => {
+        const response = await request.post(`/comment/like/${comment.id}`);
+
+        expect(response.status).toBe(200);
+    });
+
+    it('Should be able to dislike the comment', async() => {
+        const response = await request.post(`/comment/dislike/${comment.id}`);
+
+        expect(response.status).toBe(200);
+    });
+
 });
