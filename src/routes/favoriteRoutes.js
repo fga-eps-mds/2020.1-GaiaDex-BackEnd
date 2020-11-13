@@ -15,7 +15,9 @@ router.post('/add/:userId/:plantId', async (req, res) => {
       await user.save();
     }
 
-    return res.status(200).send({ plant });
+    return res
+      .status(200)
+      .send({ message: 'Plant successfuly added to user favorites.' });
   } catch (err) {
     return res
       .status(400)
@@ -24,16 +26,29 @@ router.post('/add/:userId/:plantId', async (req, res) => {
 });
 
 router.get('/list/:userId', async (req, res) => {
-  try{
+  try {
     const user = await User.findById(req.params.userId);
-    const favorites = user.favorites;
+    const { favorites } = user;
 
     return res.status(200).send({ favorites });
+  } catch (err) {
+    return res.status(400).send({ error: `Error loading favorites. ${err}` });
+  }
+});
 
-  }catch (err){
-    return res
-      .status(400)
-      .send({ error: `Error loading favorites. ${err}` });
+router.delete('/delete/:userId/:plantId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const index = user.favorites.indexOf(req.params.plantId);
+
+    if (index > -1) {
+      user.favorites.splice(index, 1);
+      await user.save();
+    }
+
+    return res.status(200).send({ message: 'Favorite deleted successfuly' });
+  } catch (err) {
+    return res.status(400).send({ error: `Error deleting favorite. ${err}` });
   }
 });
 

@@ -29,7 +29,7 @@ router.post('/add/:userId/:plantId', async (req, res) => {
     await user.myPlants.push(myPlant);
     await user.save();
 
-    return res.status(200).send({myPlant});
+    return res.status(200).send({ myPlant });
     // return res.status(200).send({
     //   message: 'Plant successfuly addded to backyard.',
     // });
