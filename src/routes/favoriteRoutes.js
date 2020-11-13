@@ -23,4 +23,18 @@ router.post('/add/:userId/:plantId', async (req, res) => {
   }
 });
 
+router.get('/list/:userId', async (req, res) => {
+  try{
+    const user = await User.findById(req.params.userId);
+    const favorites = user.favorites;
+
+    return res.status(200).send({ favorites });
+
+  }catch (err){
+    return res
+      .status(400)
+      .send({ error: `Error loading favorites. ${err}` });
+  }
+});
+
 module.exports = router;

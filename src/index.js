@@ -31,7 +31,7 @@ app.use('/plant', plantRoutes);
 app.use('/topic', topicRoutes);
 app.use('/comment', commentRoutes);
 app.use('/myplants', myPlantRoutes);
-app.use('/favorite', favoriteRoutes);
+app.use('/favorites', favoriteRoutes);
 
 // starting the server
 app.set('port', process.env.PORT || 3000);
