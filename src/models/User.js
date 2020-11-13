@@ -31,6 +31,13 @@ const userSchema = new Schema({
       require: true,
     },
   ],
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Plants',
+      require: true,
+    },
+  ],
 });
 
 const User = mongoose.model('User', userSchema);
