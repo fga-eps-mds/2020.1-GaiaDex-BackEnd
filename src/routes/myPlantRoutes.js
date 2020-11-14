@@ -20,18 +20,18 @@ router.post('/add/:userId/:plantId', async (req, res) => {
     const result = myPlantSchema.validate({ nickname: req.body.nickname });
     if (result.error) return res.status(400).send(result.error);
 
-    const myPlant = {
+    const myPlant = await MyPlant.create({
       user,
       nickname: req.body.nickname,
       plant,
-    };
-
-    await MyPlant.create(myPlant);
+    });
 
     await user.myPlants.push(myPlant);
     await user.save();
 
-    return res.send(user);
+    return res.status(200).send({
+      message: 'Plant successfuly addded to backyard.',
+    });
   } catch (err) {
     return res
       .status(400)
