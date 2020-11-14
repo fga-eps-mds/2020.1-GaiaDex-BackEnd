@@ -14,10 +14,11 @@ router.post('/create/:plantId/:userId', async (req, res) => {
 
     const result = topicSchema.validate(req.body);
 
-    if (result.error)
+    if (result.error) {
       return res
         .status(400)
         .send({ error: `Error while creating topic. ${result.error}` });
+    }
 
     const topic = await Topic.create({
       ...req.body,
@@ -49,10 +50,11 @@ router.put('/update/:topicId', async (req, res) => {
     if (!newData.description) newData.description = topic.description;
 
     const result = topicSchema.validate(newData);
-    if (result.error)
+    if (result.error) {
       return res
         .status(400)
         .send({ error: `Error while creating topic. ${result.error}` });
+    }
 
     await Topic.findOneAndUpdate({ _id: req.params.topicId }, newData, {
       useFindAndModify: false,
