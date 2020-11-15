@@ -39,11 +39,10 @@ router.post('/signup', async (req, res) => {
 
     await User.findOne({ username: newUserData.username });
 
-    if (result.error) {
+    if (result.error)
       return res
         .status(400)
         .send({ error: `Error while signing up. ${result.error}` });
-    }
 
     const user = new User(newUserData);
     await user.save();

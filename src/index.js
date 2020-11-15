@@ -8,6 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const myPlantRoutes = require('./routes/myPlantRoutes');
+// MongoDB connection
 
 // MongoDB connection
 // mongodb://localhost:27017/noderest  => meu banco de dados local polupado
@@ -28,6 +30,7 @@ app.use('/auth', authRoutes);
 app.use('/plant', plantRoutes);
 app.use('/topic', topicRoutes);
 app.use('/comment', commentRoutes);
+app.use('/myplants', myPlantRoutes);
 
 // starting the server
 app.set('port', process.env.PORT || 3000);

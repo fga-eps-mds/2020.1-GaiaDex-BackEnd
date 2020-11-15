@@ -53,7 +53,6 @@ router.post('/register', async (req, res) => {
     return res.send(err);
   }
 });
-
 // Listagem de Todas as plantas
 router.get('/', async (req, res) => {
   try {
@@ -64,7 +63,6 @@ router.get('/', async (req, res) => {
     return res.status(400).send({ error: 'Loading plants failed' });
   }
 });
-
 // Procurando planta por id
 router.get('/:plantId', async (req, res) => {
   try {
@@ -77,7 +75,6 @@ router.get('/:plantId', async (req, res) => {
       .send({ error: 'error when searching for this plant ' });
   }
 });
-
 // Deletando planta por id
 router.delete('/:plantId', async (req, res) => {
   try {
@@ -88,7 +85,6 @@ router.delete('/:plantId', async (req, res) => {
     return res.status(400).send({ error: 'Error when Delete this plant' });
   }
 });
-
 // Dando upgrade planta por id
 router.put('/:plantId', async (req, res) => {
   try {

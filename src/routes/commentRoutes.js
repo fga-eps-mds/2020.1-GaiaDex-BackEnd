@@ -49,9 +49,7 @@ router.put('/update/:commentId', async (req, res) => {
 
 router.delete('/delete/:commentId', async (req, res) => {
   try {
-    const comment = await Comment.findById(req.params.commentId);
-    const topic = await Topic.findById(comment.topic);
-
+    const topic = Topic.findById(req.body.topicId);
     const index = topic.comments.indexOf(req.params.commentId);
 
     if (index > -1) {
@@ -77,6 +75,7 @@ router.post('/like/:commentId', async (req, res) => {
       { $inc: { likes: 1 } },
       { useFindAndModify: false }
     );
+
     return res.send({ message: 'Liked!' });
   } catch (err) {
     return res.status(400).send({ error: `Error while liking comment.${err}` });
@@ -90,6 +89,7 @@ router.post('/dislike/:commentId', async (req, res) => {
       { $inc: { dislikes: 1 } },
       { useFindAndModify: false }
     );
+
     return res.send({ message: 'Disliked!' });
   } catch (err) {
     return res
