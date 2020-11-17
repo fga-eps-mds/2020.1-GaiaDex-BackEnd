@@ -7,7 +7,7 @@ const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
 const { auth } = require('./auth');
 
-router.post('/create/:topicId/:userId', auth, async (req, res) => {
+router.post('/create/:topicId/:userId', async (req, res) => {
   try {
     if (!req.body.text)
       return res.status(400).send({ error: 'Comment should not be empty' });
@@ -19,8 +19,7 @@ router.post('/create/:topicId/:userId', auth, async (req, res) => {
     });
     const topic = await Topic.findById(req.params.topicId).populate([
       { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' },
-      { path: 'plant' },
+      { path: 'user' }
     ]);
 
     await comment.save();
@@ -29,8 +28,7 @@ router.post('/create/:topicId/:userId', auth, async (req, res) => {
     await topic.save();
     const topicCorrect = await Topic.findById(req.params.topicId).populate([
       { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' },
-      { path: 'plant' },
+      { path: 'user' }
     ]);
     return res.send(topicCorrect);
   } catch (err) {
