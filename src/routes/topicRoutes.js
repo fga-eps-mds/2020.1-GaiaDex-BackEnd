@@ -25,7 +25,7 @@ router.post('/create/:plantId/:userId', async (req, res) => {
       ...req.body,
       user: req.params.userId,
       plant: req.params.plantId,
-    });
+    })
 
     await topic.save();
 
