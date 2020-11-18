@@ -53,6 +53,19 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+router.get('/user/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate([
+      { path: 'topics' },
+      { path: 'myPlants' },
+      { path: 'favorites' },
+    ]);
+    return res.send(user);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while finding user.${err}` });
+  }
+});
+
 router.put('/update/:id', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
