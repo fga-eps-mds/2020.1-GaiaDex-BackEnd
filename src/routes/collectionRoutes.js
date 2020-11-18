@@ -25,10 +25,9 @@ router.get('/:userId', async (req, res) => {
       });
 
       await Promise.all(promises);
-      res.send(plantArray);
-    } else {
-      return res.send({ message: 'No plants in my collection' });
+      return res.send(plantArray);
     }
+    return res.send({ message: 'No plants in my collection' });
   } catch (err) {
     return res
       .status(400)
