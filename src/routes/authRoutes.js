@@ -84,5 +84,4 @@ router.delete('/delete/:id', auth, async (req, res) => {
     return res.status(400).send({ error: `Error while deleting user. ${err}` });
   }
 });
-
 module.exports = router;

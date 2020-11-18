@@ -6,19 +6,19 @@ const PlantSchema = new mongoose.Schema({
     require: true,
     unique: true,
   },
-  family_name: {
+  familyName: {
     type: String,
     require: true,
   },
-  gender_name: {
+  genderName: {
     type: String,
     require: true,
   },
-  specie_name: {
+  specieName: {
     type: String,
     require: true,
   },
-  common_name: {
+  commonName: {
     type: String,
     require: true,
   },
@@ -26,11 +26,11 @@ const PlantSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  first_User: {
+  firstUser: {
     type: String,
     require: true,
   },
-  collection_count: {
+  collectionCount: {
     type: Number,
     require: true,
   },
@@ -38,7 +38,7 @@ const PlantSchema = new mongoose.Schema({
     type: Boolean,
     require: true,
   },
-  profile_picture: {
+  profilePicture: {
     type: String,
     require: true,
   },
