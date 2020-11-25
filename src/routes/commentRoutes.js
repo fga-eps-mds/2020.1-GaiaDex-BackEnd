@@ -7,38 +7,32 @@ const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
 const { auth } = require('./auth');
 
-router.post('/create/:topicId/:userId', async (req, res) => {
+router.post('/create/:topicId', auth, async (req, res) => {
   try {
     if (!req.body.text)
       return res.status(400).send({ error: 'Comment should not be empty' });
 
     const comment = await Comment.create({
-      ...req.body,
-      user: req.params.userId,
+      text: req.body.text,
+      user: req.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId).populate([
-      { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' }
-    ]);
+    const topic = await Topic.findById(req.params.topicId);
 
     await comment.save();
-
     topic.comments.push(comment);
     await topic.save();
-    const topicCorrect = await Topic.findById(req.params.topicId).populate([
-      { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' }
-    ]);
+
+    const topicCorrect = await Topic.findById(req.params.topicId);
     return res.send(topicCorrect);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
 });
 
-router.put('/update/:commentId', async (req, res) => {
+router.put('/update/:commentId', auth, async (req, res) => {
   try {
-    await Comment.findById(req.params.commentId);
+    const comment = await Comment.findById(req.params.commentId);
     const newData = req.body;
 
     if (!newData.text)
@@ -47,7 +41,12 @@ router.put('/update/:commentId', async (req, res) => {
     await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
       useFindAndModify: false,
     });
-    return res.send({ message: 'Comment updated successfully.' });
+    const newTopic = await Topic.findById(comment.topic).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(newTopic);
   } catch (err) {
     return res
       .status(400)
@@ -55,7 +54,7 @@ router.put('/update/:commentId', async (req, res) => {
   }
 });
 
-router.delete('/delete/:commentId', async (req, res) => {
+router.delete('/delete/:commentId', auth, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
     const topic = await Topic.findById(comment.topic);
@@ -68,11 +67,13 @@ router.delete('/delete/:commentId', async (req, res) => {
 
     topic.save();
 
-    await Comment.findByIdAndRemove(req.params.commentId).populate('user');
-
-    return res.send({
-      message: 'Comment successfully removed.',
-    });
+    await Comment.findByIdAndRemove(req.params.commentId);
+    const newTopic = await Topic.findById(comment.topic).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(newTopic);
   } catch (err) {
     return res.status(400).send({ error: `Error while deleting topic.${err}` });
   }
@@ -81,15 +82,11 @@ router.delete('/delete/:commentId', async (req, res) => {
 router.post('/like/:commentId', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
-    const comment = await Comment.findById(req.params.commentId).populate([
-      { path: 'likes' },
-      { path: 'user' },
-      { path: 'toppic' },
-    ]);
+    const comment = await Comment.findById(req.params.commentId);
     const topic = await Topic.findById(comment.topic).populate([
-      { path: 'likes' },
+      { path: 'comments', populate: 'user' },
       { path: 'user' },
-      { path: 'toppic' },
+      { path: 'plant' },
     ]);
     const isLiked = await Like.findOne({
       user: req.userId,
@@ -104,9 +101,9 @@ router.post('/like/:commentId', auth, async (req, res) => {
       comment.likes.push(like);
       await comment.save();
       const topicTrue = await Topic.findById(comment.topic).populate([
-        { path: 'likes' },
+        { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'comments' },
+        { path: 'plant' },
       ]);
       return res.send(topicTrue);
     }
@@ -119,7 +116,11 @@ router.post('/like/:commentId', auth, async (req, res) => {
 router.post('/dislike/:commentId', auth, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
-    const topic = await Topic.findById(comment.topic);
+    const topic = await Topic.findById(comment.topic).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
     const like = await Like.findOne({
       user: req.userId,
       comment: req.params.commentId,
@@ -131,11 +132,11 @@ router.post('/dislike/:commentId', auth, async (req, res) => {
       }
 
       comment.save();
-      await Like.findByIdAndRemove(like._id).populate('user');
+      await Like.findByIdAndRemove(like._id);
       const topicTrue = await Topic.findById(comment.topic).populate([
-        { path: 'likes' },
+        { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'comments' },
+        { path: 'plant' },
       ]);
       return res.send(topicTrue);
     }
