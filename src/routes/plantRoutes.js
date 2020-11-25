@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
       firstUser,
       collectionCount,
       extinction,
-      profilePicture,
+      profile_picture,
       gbifID,
       stateProvince,
     } = req.body;
@@ -33,7 +33,7 @@ router.post('/register', async (req, res) => {
       firstUser,
       collectionCount,
       extinction,
-      profilePicture,
+      profile_picture,
       gbifID,
       stateProvince,
     });
