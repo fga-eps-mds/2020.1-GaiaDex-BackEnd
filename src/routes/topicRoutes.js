@@ -114,12 +114,12 @@ router.post('/like/:topicId', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     const topic = await Topic.findById(req.params.topicId).populate([
-      { path: 'likes' },
+      { path: 'comments', populate: { path: 'user' } },
       { path: 'user' },
-      { path: 'toppic' },
+      { path: 'plant' },
     ]);
     const isLiked = await Like.findOne({
-      user: req.params.userId,
+      user: req.userId,
       topic: req.params.topicId,
     });
     if (isLiked == null) {
@@ -132,7 +132,8 @@ router.post('/like/:topicId', auth, async (req, res) => {
       await topic.save();
       const topictrue = await Topic.findById(req.params.topicId).populate([
         { path: 'comments', populate: { path: 'user' } },
-        { path: 'user' }
+        { path: 'user' },
+        { path: 'plant' },
       ]);
       return res.send(topictrue);
     }
@@ -145,20 +146,27 @@ router.post('/like/:topicId', auth, async (req, res) => {
 
 router.post('/dislike/:topicId', auth, async (req, res) => {
   try {
-    const topic = await Topic.findById(req.params.topicId);
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
     const like = await Like.findOne({
       user: req.userId,
       topic: req.params.topicId,
     });
-    const index = topic.likes.indexOf(like._id);
-    if (index > -1) {
-      topic.likes.splice(index, 1);
+    if(like != null){
+      const index = topic.likes.indexOf(like._id);
+      if (index > -1) {
+        topic.likes.splice(index, 1);
+      }
+      topic.save();
+      await Like.findByIdAndRemove(like._id).populate([
+        { path: 'comments', populate: { path: 'user' } },
+        { path: 'user' },
+        { path: 'plant' },
+      ]);
     }
-    topic.save();
-    await Like.findByIdAndRemove(like._id).populate([
-      { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' }
-    ]);
     return res.send(topic);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
