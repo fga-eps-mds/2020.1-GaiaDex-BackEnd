@@ -17,10 +17,7 @@ router.post('/create/:topicId', auth, async (req, res) => {
       user: req.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId).populate([
-      { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' }
-    ]);
+    const topic = await Topic.findById(req.params.topicId);
 
     await comment.save();
     topic.comments.push(comment);
