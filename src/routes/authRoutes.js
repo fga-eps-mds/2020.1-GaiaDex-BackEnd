@@ -66,6 +66,19 @@ router.get('/user/:id', async (req, res) => {
   }
 });
 
+router.post('/user/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).populate([
+      { path: 'topics' },
+      { path: 'myPlants' },
+      { path: 'favorites' },
+    ]);
+    return res.send(user);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while finding user.${err}` });
+  }
+});
+
 router.put('/update/:id', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

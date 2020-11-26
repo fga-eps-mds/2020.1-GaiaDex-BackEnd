@@ -3,7 +3,8 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const authConfig = {
-  secret: process.env.SECRET,
+  //secret: process.env.SECRET,
+  secret: 'd41d8cd98f00b204e9800998ecf8427e',
 };
 function auth(req, res, next) {
   const sessiontoken = req.headers.authtoken;
@@ -25,11 +26,11 @@ function auth(req, res, next) {
   }
 
   try {
-    const { userId } = jwt.verify(token, authConfig.secret);
-    req.userId = userId;
+    jwt.verify(token, authConfig.secret, (err, decoded) => {
+      req.userId = decoded.id;
+    });
     return next();
   } catch (err) {
-    req.redirect('/login_page');
     return res.status(400);
   }
 }
