@@ -1,7 +1,7 @@
 const Plant = require('../models/Plant');
 const Topic = require('../models/Topic');
 
-class PlantClontroller {
+class PlantController {
   // registro de uma nova planta
   // router.post('/register',
   async registerPlant(req, res) {
@@ -151,4 +151,4 @@ class PlantClontroller {
   }
 }
 
-module.exports = new PlantClontroller();
+module.exports = PlantController;

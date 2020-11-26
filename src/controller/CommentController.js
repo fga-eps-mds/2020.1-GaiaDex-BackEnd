@@ -2,7 +2,7 @@ const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
 
 class CommentController {
-  async createComment(req, res) {
+  static async createComment(req, res) {
     try {
       if (!req.body.text)
         return res.status(400).send({ error: 'Comment should not be empty' });
@@ -27,7 +27,8 @@ class CommentController {
     }
   }
 
-  async updateComment(req, res) {
+  // router.put('/update/:commentId', async (req, res) => {
+  static async updateComment(req, res) {
     try {
       await Comment.findById(req.params.commentId);
       const newData = req.body;
@@ -46,13 +47,15 @@ class CommentController {
     }
   }
 
-  async deleteComment(req, res) {
+  // router.delete('/delete/:commentId', async (req, res) => {
+  static async deleteComment(req, res) {
+    console.log('*************\n');
+    console.log(req.body);
+    console.log('*************\n');
     try {
-      const comment = await Comment.findById(req.params.commentId);
-      const topic = await Topic.findById(comment.topic);
-
+      const topic = await Topic.findById(req.body.topicId);
+      console.log(topic);
       const index = topic.comments.indexOf(req.params.commentId);
-
       if (index > -1) {
         topic.comments.splice(index, 1);
       }
@@ -67,11 +70,12 @@ class CommentController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while deleting topic.${err}` });
+        .send({ error: `Error while deleting comment.${err}` });
     }
   }
 
-  async likeComment(req, res) {
+  // router.post('/like/:commentId', async (req, res) => {
+  static async likeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
         { _id: req.params.commentId },
@@ -86,7 +90,8 @@ class CommentController {
     }
   }
 
-  async dislikeComment(req, res) {
+  // router.post('/dislike/:commentId', async (req, res) => {
+  static async dislikeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
         { _id: req.params.commentId },
@@ -102,4 +107,4 @@ class CommentController {
   }
 }
 
-module.exports = new CommentController();
+module.exports = CommentController;
