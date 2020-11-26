@@ -20,7 +20,21 @@ const userSchema = new Schema({
   topics: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Topics',
+      ref: 'Topic',
+      require: true,
+    },
+  ],
+  myPlants: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MyPlants',
+      require: true,
+    },
+  ],
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Plant',
       require: true,
     },
   ],

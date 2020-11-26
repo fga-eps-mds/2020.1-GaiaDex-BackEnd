@@ -17,6 +17,6 @@ jobs:
       - name: Setup ESLint
         run: |
           npm install --save-dev babel-eslint@10.1.x eslint@7.11.x eslint-config-airbnb@18.2.x eslint-config-prettier@6.13.x eslint-import-resolver-node@0.3.x eslint-module-utils@2.6.x eslint-plugin-import@2.22.x eslint-plugin-jsx-a11y@6.3.x eslint-plugin-prettier@3.1.x eslint-plugin-react@7.21.x eslint-plugin-react-hooks@4.1.x eslint-scope@5.1.x eslint-utils@2.1.x eslint-visitor-keys@2.0.x
-          [ -f .eslintrc.json ] || wget https://raw.githubusercontent.com/fga-eps-mds/2020.1-GaiaDex-BackEnd/adding_eslint/.eslintrc.json
+          [ -f .eslintrc.json ] || wget https://raw.githubusercontent.com/fga-eps-mds/2020.1-GaiaDex-BackEnd/develop/.eslintrc.json
       - name: ESLint Report
         run: npx eslint .

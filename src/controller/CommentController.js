@@ -2,7 +2,8 @@ const Topic = require('../models/Topic');
 const Comment = require('../models/Comment');
 
 class CommentController {
-  async createComment(req, res) {
+  // router.post('/create/:topicId/:userId', async (req, res) => {
+  static async createComment(req, res) {
     try {
       if (!req.body.text)
         return res.status(400).send({ error: 'Comment should not be empty' });
@@ -19,15 +20,14 @@ class CommentController {
       topic.comments.push(comment);
       await topic.save();
 
-      return res
-        .status(200)
-        .send({ message: 'Comment successfully registered.' });
+      return res.send({ message: 'Comment successfully registered.' });
     } catch (err) {
       return res.status(400).send({ error: `Error while commenting.${err}` });
     }
   }
 
-  async updateComment(req, res) {
+  // router.put('/update/:comment/:id', async (req, res) => {
+  static async updateComment(req, res) {
     try {
       await Comment.findById(req.params.commentId);
       const newData = req.body;
@@ -38,7 +38,7 @@ class CommentController {
       await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
         useFindAndModify: false,
       });
-      return res.statue(200).send({ message: 'Comment updated successfully.' });
+      return res.send({ message: 'Comment updated successfully.' });
     } catch (err) {
       return res
         .status(400)
@@ -46,11 +46,10 @@ class CommentController {
     }
   }
 
-  async deleteComment(req, res) {
+  // router.delete('/delete/:comment/:id', async (req, res) => {
+  static async deleteComment(req, res) {
     try {
-      const comment = await Comment.findById(req.params.commentId);
-      const topic = await Topic.findById(comment.topic);
-
+      const topic = Topic.findById(req.body.topicId);
       const index = topic.comments.indexOf(req.params.commentId);
 
       if (index > -1) {
@@ -61,7 +60,7 @@ class CommentController {
 
       await Comment.findByIdAndRemove(req.params.commentId).populate('user');
 
-      return res.status(200).send({
+      return res.send({
         message: 'Comment successfully removed.',
       });
     } catch (err) {
@@ -71,14 +70,16 @@ class CommentController {
     }
   }
 
-  async likeComment(req, res) {
+  // router.post('/like/:comment/:id', async (req, res) => {
+  static async likeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
         { _id: req.params.commentId },
         { $inc: { likes: 1 } },
         { useFindAndModify: false }
       );
-      return res.status(200).send({ message: 'Liked!' });
+
+      return res.send({ message: 'Liked!' });
     } catch (err) {
       return res
         .status(400)
@@ -86,14 +87,16 @@ class CommentController {
     }
   }
 
-  async dislikeComment(req, res) {
+  // router.post('/dislike/:comment/:id', async (req, res) => {
+  static async dislikeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
         { _id: req.params.commentId },
         { $inc: { dislikes: 1 } },
         { useFindAndModify: false }
       );
-      return res.status(200).send({ message: 'Disliked!' });
+
+      return res.send({ message: 'Disliked!' });
     } catch (err) {
       return res
         .status(400)

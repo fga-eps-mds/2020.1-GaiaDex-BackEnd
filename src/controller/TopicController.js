@@ -4,17 +4,18 @@ const Plant = require('../models/Plant');
 const topicSchema = require('../schemas/topicSchema');
 
 class TopicController {
-  async createTopic(req, res) {
+  static async createTopic(req, res) {
     try {
       const user = await User.findById(req.params.userId);
       const plant = await Plant.findById(req.params.plantId);
 
       const result = topicSchema.validate(req.body);
 
-      if (result.error)
+      if (result.error) {
         return res
           .status(400)
           .send({ error: `Error while creating topic. ${result.error}` });
+      }
 
       const topic = await Topic.create({
         ...req.body,
@@ -38,7 +39,7 @@ class TopicController {
     }
   }
 
-  async updateTopic(req, res) {
+  static async updateTopic(req, res) {
     try {
       const topic = await Topic.findById(req.params.topicId);
 
@@ -48,10 +49,11 @@ class TopicController {
       if (!newData.description) newData.description = topic.description;
 
       const result = topicSchema.validate(newData);
-      if (result.error)
+      if (result.error) {
         return res
           .status(400)
           .send({ error: `Error while creating topic. ${result.error}` });
+      }
 
       await Topic.findOneAndUpdate({ _id: req.params.topicId }, newData, {
         useFindAndModify: false,
@@ -64,7 +66,7 @@ class TopicController {
     }
   }
 
-  async deleteTopic(req, res) {
+  static async deleteTopic(req, res) {
     try {
       const topic = await Topic.findById(req.params.topicId);
       const user = await User.findById(topic.user);
@@ -87,7 +89,7 @@ class TopicController {
         useFindAndModify: false,
       });
 
-      return res.status(200).send({
+      return res.send({
         message: 'Topic successfully removed.',
       });
     } catch (err) {
@@ -97,7 +99,7 @@ class TopicController {
     }
   }
 
-  async listTopics(req, res) {
+  static async listTopics(req, res) {
     try {
       const topic = await Topic.find().populate(['user']);
 
@@ -109,7 +111,7 @@ class TopicController {
     }
   }
 
-  async likeTopic(req, res) {
+  static async likeTopic(req, res) {
     try {
       await Topic.findOneAndUpdate(
         { _id: req.params.topicId },
@@ -122,7 +124,7 @@ class TopicController {
     }
   }
 
-  async dislikeTopic(req, res) {
+  static async dislikeTopic(req, res) {
     try {
       await Topic.findOneAndUpdate(
         { _id: req.params.topicId },

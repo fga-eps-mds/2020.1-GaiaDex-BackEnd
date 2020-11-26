@@ -3,8 +3,7 @@ const Topic = require('../models/Topic');
 
 class PlantClontroller {
   // registro de uma nova planta
-  // router.post('/register',
-  async registerPlant(req, res) {
+  static async registerPlant(req, res) {
     try {
       const {
         scientificName,
@@ -53,8 +52,7 @@ class PlantClontroller {
   }
 
   // Listagem de Todas as plantas
-  // router.get('/',
-  async listPlants(req, res) {
+  static async fetchAll(req, res) {
     try {
       const plants = await Plant.find().populate('topics');
 
@@ -65,8 +63,7 @@ class PlantClontroller {
   }
 
   // Procurando planta por id
-  // router.get('/:plantId',
-  async searchPlant(req, res) {
+  static async searchPlant(req, res) {
     try {
       const plant = await Plant.findById(req.params.plantId).populate('topics');
 
@@ -79,8 +76,7 @@ class PlantClontroller {
   }
 
   // Deletando planta por id
-  // router.delete('/:plantId',
-  async deletePlant(req, res) {
+  static async deletePlant(req, res) {
     try {
       const deleted = await Plant.findByIdAndRemove(req.params.plantId);
 
@@ -91,8 +87,7 @@ class PlantClontroller {
   }
 
   // Dando upgrade planta por id
-  // router.put('/:plantId',
-  async updatePlant(req, res) {
+  static async updatePlant(req, res) {
     try {
       const {
         scientificName,
