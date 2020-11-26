@@ -107,40 +107,52 @@ router.get('/list', async (req, res) => {
 });
 
 router.get('/find/:topicId', async (req, res) => {
-    try {
-
-        const topic = await Topic.findById(req.params.topicId)
-          .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
-        return res.send({ topic });
-
-    } catch (err) {
-        return res.status(400).send({ error: 'Error while listing topics.' + err });
-    }
+  try {
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send({ topic });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while listing topics.${err}` });
+  }
 });
 
 router.post('/like/:topicId', async (req, res) => {
-    try {
-
-        const topic = await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { likes: 1 }}, { useFindAndModify: false})
-        .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
-        res.send(topic)
-        
-    } catch (err) {
-        return res.status(400).send({ error: 'Error while liking topic.' + err });
-    }
+  try {
+    const topic = await Topic.findOneAndUpdate(
+      { _id: req.params.topicId },
+      { $inc: { likes: 1 } },
+      { useFindAndModify: false }
+    ).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(topic);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while liking topic.${err}` });
+  }
 });
 
 router.post('/dislike/:topicId', async (req, res) => {
-    try {
-
-        const topic = await Topic.findOneAndUpdate({_id: req.params.topicId}, { $inc: { dislikes: 1 }}, { useFindAndModify: false})
-        .populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);
-        res.send(topic)
-        
-        
-    } catch (err) {
-        return res.status(400).send({ error: 'Error while dislikinng topic.' + err });
-    }
+  try {
+    const topic = await Topic.findOneAndUpdate(
+      { _id: req.params.topicId },
+      { $inc: { dislikes: 1 } },
+      { useFindAndModify: false }
+    ).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(topic);
+  } catch (err) {
+    return res
+      .status(400)
+      .send({ error: `Error while dislikinng topic.${err}` });
+  }
 });
 
 module.exports = router;

@@ -15,7 +15,11 @@ router.post('/create/:topicId/:userId', async (req, res) => {
       user: req.params.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId).populate([{path:'comments',populate:{path:'user'}},{path:'user'},{path:'plant'}]);;
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
 
     await comment.save();
 

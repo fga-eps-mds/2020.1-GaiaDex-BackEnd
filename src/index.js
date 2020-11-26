@@ -11,7 +11,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const myPlantRoutes = require('./routes/myPlantRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
-const scanner = require('./routes/scanner')
+const scanner = require('./routes/scanner');
 
 // MongoDB connection
 // mongodb://localhost:27017/noderest  => meu banco de dados local polupado
@@ -24,7 +24,7 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log(err));
 // middlewares
-app.use(express.json({ limit: 20*1024*1024}));
+app.use(express.json({ limit: 20 * 1024 * 1024 }));
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

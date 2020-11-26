@@ -23,23 +23,18 @@ const PlantSchema = new mongoose.Schema({
   },
   usage: {
     type: String,
-
   },
   firstUser: {
     type: String,
-
   },
   collectionCount: {
     type: Number,
-
   },
   extinction: {
     type: Boolean,
-
   },
   profilePicture: {
     type: String,
-
   },
   gbifID: {
     type: Number,
@@ -47,7 +42,6 @@ const PlantSchema = new mongoose.Schema({
   },
   stateProvince: {
     type: String,
-
   },
   topics: [
     {

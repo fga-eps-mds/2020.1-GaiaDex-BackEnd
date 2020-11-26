@@ -48,26 +48,26 @@ router.post('/register', async (req, res) => {
 
     await plant.save();
 
-        return res.send({ plant });
-    }catch (err){
-        if (err.code == 11000){
-            const {scientificName} = req.body;
-            const plant = await Plant.find({'scientificName':scientificName}).populate('topics');
-            return res.send({plant});
-        }else{
-            return res.send(err);
-        }
-       
+    return res.send({ plant });
+  } catch (err) {
+    if (err.code === 11000) {
+      const { scientificName } = req.body;
+      const plant = await Plant.find({
+        scientificName,
+      }).populate('topics');
+      return res.send({ plant });
     }
+    return res.send(err);
+  }
 });
-//Listagem de Todas as plantas
-router.get('/', async (req , res) => {
-    try{
-        const plants = await Plant.find().populate('topics');
-        return res.send({ plants });
-    }catch (err){
-        return res.status(400).send({ error: 'Loading plants failed'});
-    }
+// Listagem de Todas as plantas
+router.get('/', async (req, res) => {
+  try {
+    const plants = await Plant.find().populate('topics');
+    return res.send({ plants });
+  } catch (err) {
+    return res.status(400).send({ error: 'Loading plants failed' });
+  }
 });
 // Procurando planta por id
 router.get('/:plantId', async (req, res) => {
@@ -81,16 +81,15 @@ router.get('/:plantId', async (req, res) => {
       .send({ error: 'error when searching for this plant ' });
   }
 });
+// Detando planta por id
+router.delete('/:plantId', async (req, res) => {
+  try {
+    const deleted = await Plant.findByIdAndRemove(req.params.plantId);
 
-//Detando planta por id
-router.delete('/:plantId', async (req , res) => {
-    try{
-        const deleted = await Plant.findByIdAndRemove(req.params.plantId);
-
-        return res.send(deleted);
-    }catch (err){
-        return res.status(400).send({ error: 'Error when Delete this plant'});
-    }
+    return res.send(deleted);
+  } catch (err) {
+    return res.status(400).send({ error: 'Error when Delete this plant' });
+  }
 });
 // Dando upgrade planta por id
 router.put('/:plantId', async (req, res) => {
