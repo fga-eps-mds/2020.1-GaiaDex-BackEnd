@@ -89,7 +89,9 @@ describe('comment/', () => {
   });
 
   it('Should be able to delete the comment', async () => {
-    const response = await request.delete(`/comment/delete/${comment.id}`);
+    const response = await request
+      .delete(`/comment/delete/${comment.id}`)
+      .send({ topicId: topic.id });
 
     expect(response.status).toBe(200);
   });

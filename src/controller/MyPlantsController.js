@@ -108,4 +108,4 @@ class MyPlantsController {
   }
 }
 
-module.exports = new MyPlantsController();
+module.exports = MyPlantsController;

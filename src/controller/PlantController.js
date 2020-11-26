@@ -1,7 +1,7 @@
 const Plant = require('../models/Plant');
 const Topic = require('../models/Topic');
 
-class PlantClontroller {
+class PlantController {
   // registro de uma nova planta
   static async registerPlant(req, res) {
     try {
@@ -146,4 +146,4 @@ class PlantClontroller {
   }
 }
 
-module.exports = new PlantClontroller();
+module.exports = PlantController;

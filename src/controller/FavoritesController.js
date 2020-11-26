@@ -50,4 +50,4 @@ class FavoritesController {
   }
 }
 
-module.exports = new FavoritesController();
+module.exports = FavoritesController;

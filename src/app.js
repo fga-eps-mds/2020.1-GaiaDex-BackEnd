@@ -8,7 +8,7 @@ const databaseHelper = require('./database');
 class App {
   constructor() {
     this.express = express();
-    this.database();
+    App.database();
     this.middlewares();
     this.routes();
   }

@@ -34,4 +34,4 @@ class CollectionController {
   }
 }
 
-module.exports = new CollectionController();
+module.exports = CollectionController;

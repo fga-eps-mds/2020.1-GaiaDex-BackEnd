@@ -26,7 +26,7 @@ class CommentController {
     }
   }
 
-  // router.put('/update/:comment/:id', async (req, res) => {
+  // router.put('/update/:commentId', async (req, res) => {
   static async updateComment(req, res) {
     try {
       await Comment.findById(req.params.commentId);
@@ -46,12 +46,15 @@ class CommentController {
     }
   }
 
-  // router.delete('/delete/:comment/:id', async (req, res) => {
+  // router.delete('/delete/:commentId', async (req, res) => {
   static async deleteComment(req, res) {
+    console.log('*************\n');
+    console.log(req.body);
+    console.log('*************\n');
     try {
-      const topic = Topic.findById(req.body.topicId);
+      const topic = await Topic.findById(req.body.topicId);
+      console.log(topic);
       const index = topic.comments.indexOf(req.params.commentId);
-
       if (index > -1) {
         topic.comments.splice(index, 1);
       }
@@ -66,11 +69,11 @@ class CommentController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while deleting topic.${err}` });
+        .send({ error: `Error while deleting comment.${err}` });
     }
   }
 
-  // router.post('/like/:comment/:id', async (req, res) => {
+  // router.post('/like/:commentId', async (req, res) => {
   static async likeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
@@ -87,7 +90,7 @@ class CommentController {
     }
   }
 
-  // router.post('/dislike/:comment/:id', async (req, res) => {
+  // router.post('/dislike/:commentId', async (req, res) => {
   static async dislikeComment(req, res) {
     try {
       await Comment.findOneAndUpdate(
@@ -105,4 +108,4 @@ class CommentController {
   }
 }
 
-module.exports = new CommentController();
+module.exports = CommentController;
