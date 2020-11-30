@@ -5,7 +5,7 @@ const { authConfig } = require('../lib/auth');
 
 class AuthController {
   // router.post('/login',
-  async login(req, res, next) {
+  static async login(req, res, next) {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email, password });
@@ -31,8 +31,7 @@ class AuthController {
     }
   }
 
-  // router.post('/signup',
-  async signUp(req, res) {
+  static async signUp(req, res) {
     try {
       const newUserData = req.body;
       const result = userSchema.validate(req.body);
@@ -53,8 +52,20 @@ class AuthController {
     }
   }
 
-  // router.put('/update/:id', auth,
-  async updateId(req, res) {
+  static async userId(req, res) {
+    try {
+      const user = await User.findById(req.params.id).populate([
+        { path: 'topics' },
+        { path: 'myPlants' },
+        { path: 'favorites' },
+      ]);
+      return res.send(user);
+    } catch (err) {
+      return res.status(400).send({ error: `Error while finding user.${err}` });
+    }
+  }
+
+  static async updateId(req, res) {
     try {
       const user = await User.findById(req.params.id);
       const newData = req.body;
@@ -79,8 +90,7 @@ class AuthController {
     }
   }
 
-  // router.delete('/delete/:id', auth,
-  async deleteId(req, res) {
+  static async deleteId(req, res) {
     try {
       await User.findByIdAndDelete(req.params.id);
       return res.send({ message: 'User successfully deleted.' });
