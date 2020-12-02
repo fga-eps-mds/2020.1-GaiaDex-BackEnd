@@ -17,14 +17,17 @@ router.post('/create/:topicId', auth, async (req, res) => {
       user: req.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId);
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
 
     await comment.save();
     topic.comments.push(comment);
     await topic.save();
+    return res.send(topic);
 
-    const topicCorrect = await Topic.findById(req.params.topicId);
-    return res.send(topicCorrect);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }

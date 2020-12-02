@@ -143,6 +143,7 @@ router.post('/like/:topicId', auth, async (req, res) => {
       return res.send(topictrue);
     }
     console.log(topic.likes.length);
+
     return res.send(topic);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });

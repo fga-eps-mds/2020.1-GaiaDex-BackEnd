@@ -50,6 +50,13 @@ router.post('/register', async (req, res) => {
 
     return res.send({ plant });
   } catch (err) {
+    if (err.code === 11000) {
+      const { scientificName } = req.body;
+      const plant = await Plant.find({
+        scientificName,
+      }).populate('topics');
+      return res.send({ plant });
+    }
     return res.send(err);
   }
 });
@@ -57,7 +64,6 @@ router.post('/register', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const plants = await Plant.find().populate('topics');
-
     return res.send({ plants });
   } catch (err) {
     return res.status(400).send({ error: 'Loading plants failed' });
@@ -75,7 +81,7 @@ router.get('/:plantId', async (req, res) => {
       .send({ error: 'error when searching for this plant ' });
   }
 });
-// Deletando planta por id
+// Detando planta por id
 router.delete('/:plantId', async (req, res) => {
   try {
     const deleted = await Plant.findByIdAndRemove(req.params.plantId);
