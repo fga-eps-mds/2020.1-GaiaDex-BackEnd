@@ -1,63 +1,195 @@
 const express = require('express');
-const Plant = require('../models/Plant');
-const Topico = require('../models/Topico');
 
 const router = express.Router();
-//Criar um novo topico pelo id da planta
-router.put('/:plantId', async (req , res) => {
-    try{
-        const {topicos} = req.body;
-        const plant = await Plant.findByIdAndUpdate(req.params.plantId,
-            {},{ new: true}).populate('topicos');
-        await Promise.all(topicos.map(async topico =>{
-            const plantTopic = new Topico({...topico,plant : plant._id});
+const Like = require('../models/Likes');
+const Topic = require('../models/Topic');
+const User = require('../models/User');
+const Plant = require('../models/Plant');
+const topicSchema = require('../schemas/topicSchema');
+const { auth } = require('./auth');
 
-            await plantTopic.save();
+router.post('/create/:plantId/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const plant = await Plant.findById(req.params.plantId);
 
-            plant.topicos.push(plantTopic);
-        }));
-        await plant.save();
-        return res.send({ plant });
-    }catch (err){
-        return res.status(400).send({ error: 'Registration failed'});
+    const result = topicSchema.validate(req.body);
+
+    if (result.error) {
+      return res
+        .status(400)
+        .send({ error: `Error while creating topic. ${result.error}` });
     }
+
+    const topic = await Topic.create({
+      ...req.body,
+      user: req.params.userId,
+      plant: req.params.plantId,
+    });
+
+    await topic.save();
+
+    user.topics.push(topic);
+    await user.save();
+
+    plant.topics.push(topic);
+    await plant.save();
+
+    return res.send({ topic });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while creating topic.${err}` });
+  }
 });
-//Listando todos os topics
-router.get('/', async (req , res) => {
-    try{
-        const topics = await Topico.find();
-        return res.send({ topics });
-    }catch (err){
-        return res.status(400).send({ error: 'Loading plants failed'});
+
+router.put('/update/:topicId', async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId);
+
+    const newData = req.body;
+
+    if (!newData.title) newData.title = topic.title;
+    if (!newData.description) newData.description = topic.description;
+
+    const result = topicSchema.validate(newData);
+    if (result.error) {
+      return res
+        .status(400)
+        .send({ error: `Error while creating topic. ${result.error}` });
     }
+
+    const topicNew = await Topic.findOneAndUpdate(
+      { _id: req.params.topicId },
+      newData,
+      {
+        useFindAndModify: true,
+      }
+    ).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plnt' },
+    ]);
+    return res.send(topicNew);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while updating topic.${err}` });
+  }
 });
-//Procurando topic por id
-router.get('/:topicId', async (req , res) => {
-    try{
-        const topico = await Topico.findById(req.params.topicId);
-        return res.send({ topico });
-    }catch (err){
-        return res.status(400).send({ error: 'error when searching for this topic '});
+
+router.delete('/delete/:topicId', async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId);
+    const user = await User.findById(topic.user);
+    const plant = await Plant.findById(topic.plant);
+
+    const indexAtUser = user.topics.indexOf(req.params.topicId);
+    const indexAtPlant = plant.topics.indexOf(req.params.topicId);
+
+    if (indexAtUser > -1) {
+      user.topics.splice(indexAtUser, 1);
     }
+    if (indexAtPlant > -1) {
+      plant.topics.splice(indexAtPlant, 1);
+    }
+
+    user.save();
+    plant.save();
+
+    await Topic.findByIdAndRemove(req.params.topicId, {
+      useFindAndModify: false,
+    });
+    return res.send(topic);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while deleting topic.${err}` });
+  }
 });
-//Deletando topic por id
-router.delete('/:topicId', async (req , res) => {
-    try{
-        await Topico.findByIdAndRemove(req.params.topicId);
-        return res.send();
-    }catch (err){
-        return res.status(400).send({ error: 'Error when Delete this topic'});
-    }
+
+router.get('/list', async (req, res) => {
+  try {
+    const topic = await Topic.find().populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send({ topic });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while listing topics.${err}` });
+  }
 });
-//Dando upgrade topic por id
-router.put('/:topicId', async (req , res) => {
-    try{
-        await Topico.findByIdAndUpdate(req.params.topicId,{description: 'marcos felipe'},{new : true});
-        return res.send();
-    }catch (err){
-        console.log(err);
-        return res.status(400).send({ error: 'Error when Delete this plant'});
+
+router.post('/like/:topicId', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plnt' },
+    ]);
+    const isLiked = await Like.findOne({
+      user: req.userId,
+      topic: req.params.topicId,
+    });
+    if (isLiked == null) {
+      const like = await Like.create({
+        user,
+        topic,
+      });
+      await like.save();
+      topic.likes.push(like);
+      await topic.save();
+      const topictrue = await Topic.findById(req.params.topicId).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+      return res.send(topictrue);
     }
+    console.log(topic.likes.length);
+
+    return res.send(topic);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while commenting.${err}` });
+  }
+});
+
+router.post('/dislike/:topicId', auth, async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plnt' },
+    ]);
+    const like = await Like.findOne({
+      user: req.userId,
+      topic: req.params.topicId,
+    });
+    if (like != null) {
+      const index = topic.likes.indexOf(like._id);
+      if (index > -1) {
+        topic.likes.splice(index, 1);
+      }
+      topic.save();
+      await Like.findByIdAndRemove(like._id).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+    }
+    return res.send(topic);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while commenting.${err}` });
+  }
+});
+router.get('/find/:topicId', async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: 'user' },
+      { path: 'user' },
+      { path: 'plnt' },
+    ]);
+
+    return res.send(topic);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while find topic id.${err}` });
+  }
 });
 
 module.exports = router;

@@ -1,91 +1,100 @@
 const express = require('express');
 
 const router = express.Router();
-
-const User = require('../models/user');
+const jsonwebtoken = require('jsonwebtoken');
+const User = require('../models/User');
 const userSchema = require('../schemas/userSchema');
+const { auth, authConfig } = require('./auth');
 
-router.get('/', (req, res) => {
-    res.json({
-        message: 'Authentication!'
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email, password });
+    if (!user) {
+      return res.status(400).send({ Error: 'User not found' });
+    }
+    if (password !== user.password) {
+      return res.status(400).send({ Error: 'Incorrect password' });
+    }
+    user.password = undefined;
+    const token = jsonwebtoken.sign({ id: user.id }, authConfig.secret, {
+      expiresIn: 86400,
     });
+    const aToken = `Bearer ${token}`;
+    res.header('authtoken', aToken);
+    return res
+      .json({
+        message: 'Auth token generated',
+      })
+      .redirect('/main');
+  } catch (err) {
+    return next(err);
+  }
 });
 
-router.post('/signup', async(req, res, next) => {
+router.post('/signup', async (req, res) => {
+  try {
+    const newUserData = req.body;
+    const result = userSchema.validate(req.body);
 
-    try {
+    await User.findOne({ username: newUserData.username });
 
-        const newUserData = req.body;
-        const result = userSchema.validate(req.body);
+    if (result.error)
+      return res
+        .status(400)
+        .send({ error: `Error while signing up. ${result.error}` });
 
-        if( await User.findOne({ username: newUserData.username}) ) {
-            const error = new Error('Username already being used.');
-            return next(error);
-        }
+    const user = new User(newUserData);
+    await user.save();
 
-        if( result.error ) {
-            return next(result.error);
-        }
-
-        const user = new User(newUserData);
-
-        user.save()
-            .then( result => {
-                return res.send(result);
-            })
-            .catch( err => next(err));
-
-    } catch(err) {
-        return next(err);
-    }
-
+    return res.send(user);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while signing up.${err}` });
+  }
 });
 
-router.put('/update-user/:id', async(req, res, next) => {
-
-    try {
-
-        const user = await User.findById(req.params.id);
-        const newData = req.body;
-
-        if ( !newData.username ) {
-            newData.username = user.username;
-        }
-        if ( !newData.password ) {
-            newData.password = user.password;
-        }
-        if ( !newData.email ) {
-            newData.email = user.email;
-        }
-
-        const result = userSchema.validate(newData);
-
-        if(result.error) {
-            return next(result.error);
-        }
-        
-        await User.findOneAndUpdate({_id: req.params.id}, req.body, { useFindAndModify: false})
-                    .then( () => {
-                        res.send({ message: 'User updated successfully.'});
-                    });
-
-    } catch(err) {
-        return next(err);
-    }
-
+router.get('/user/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate([
+      { path: 'topics' },
+      { path: 'myPlants' },
+      { path: 'favorites' },
+    ]);
+    return res.send(user);
+  } catch (err) {
+    return res.status(400).send({ error: `Error while finding user.${err}` });
+  }
 });
 
-router.delete('/delete-user/:id', async(req, res, next) => {
-    
-    try {
-        
-        await User.findByIdAndDelete(req.params.id);
-        return res.send({ message: 'User successfully deleted.' });
+router.put('/update/:id', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const newData = req.body;
 
-    } catch(err) {
-        return next(err);
-    }
+    if (!newData.username) newData.username = user.username;
+    if (!newData.password) newData.password = user.password;
+    if (!newData.email) newData.email = user.email;
 
+    const result = userSchema.validate(newData);
+
+    if (result.error) return res.status(400).send(result.error);
+
+    await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+      useFindAndModify: false,
+    });
+
+    return res.send({ message: 'User updated successfully.' });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while updating user.${err}` });
+  }
 });
 
+router.delete('/delete/:id', auth, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    return res.send({ message: 'User successfully deleted.' });
+  } catch (err) {
+    return res.status(400).send({ error: `Error while deleting user. ${err}` });
+  }
+});
 module.exports = router;
