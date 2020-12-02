@@ -25,11 +25,11 @@ function auth(req, res, next) {
   }
 
   try {
-    const { userId } = jwt.verify(token, authConfig.secret);
-    req.userId = userId;
+    jwt.verify(token, authConfig.secret, (err, decoded) => {
+      req.userId = decoded.id;
+    });
     return next();
   } catch (err) {
-    req.redirect('/login_page');
     return res.status(400);
   }
 }

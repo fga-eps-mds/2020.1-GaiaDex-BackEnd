@@ -20,14 +20,12 @@ const topicSchema = new Schema({
     ref: 'User',
     require: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Like',
+    },
+  ],
   comments: [
     {
       type: Schema.Types.ObjectId,
