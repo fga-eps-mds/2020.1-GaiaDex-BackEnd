@@ -192,5 +192,4 @@ router.get('/find/:topicId', async (req, res) => {
   }
 });
 
-
 module.exports = router;

@@ -27,7 +27,6 @@ router.post('/create/:topicId', auth, async (req, res) => {
     topic.comments.push(comment);
     await topic.save();
     return res.send(topic);
-
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
