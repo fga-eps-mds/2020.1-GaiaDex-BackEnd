@@ -65,6 +65,24 @@ describe('favorite/', () => {
         expect(response.status).toBe(404);
     });
 
+    it('It not should be possible to add a new favored plant.', async () => {
+        const response = await request
+        .post (`/favorites/add/${user.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
+    it('It not should be possible to add a new favored plant.', async () => {
+        const response = await request
+        .post (`/favorites/add/${plant.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
     // listing
     it('It should be possible to see a list of favorite plants.', async () => {
         const response = await request
@@ -93,5 +111,50 @@ describe('favorite/', () => {
         expect(response.status).toBe(404);
     });
 
+    // deletion
+    it('Must be able to delete a favorite plant.', async () => {
+        const response = await request
+        .delete (`/favorites/delete/${user.id}/${plant.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(200);
+    });
+
+    it('Must be able to delete a favorite plant.', async () => {
+        const response = await request
+        .delete (`/favorites/delete/${plant.id}/${user.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(400);
+    });
+
+    it('Must be able to delete a favorite plant.', async () => {
+        const response = await request
+        .delete (`/favorites/delete/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
+    it('Must be able to delete a favorite plant.', async () => {
+        const response = await request
+        .delete (`/favorites/delete/${user.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
+    it('Must be able to delete a favorite plant.', async () => {
+        const response = await request
+        .delete (`/favorites/delete/${plant.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
 
 });
