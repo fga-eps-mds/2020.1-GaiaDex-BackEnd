@@ -2,6 +2,7 @@ const supertest = require ('supertest');
 const app = require ('../../src/app');
 const UserModel = require ('../../src/models/User');
 const PlantModel = require ('../../src/models/Plant');
+const User = require('../../src/models/User');
 
 const request = supertest (app);
 
@@ -35,6 +36,7 @@ const plant = new PlantModel({
 plant.save();
 
 describe('favorite/', () => {
+
     // addition
     it('It should be possible to add a new favored plant.', async () => {
         const response = await request
@@ -43,5 +45,53 @@ describe('favorite/', () => {
             // no argument is needed
         });
         expect(response.status).toBe(200);
-     });
+    });
+
+    it('It not should be possible to add a new favored plant.', async () => {
+        const response = await request
+        .post (`/favorites/add/${plant.id}/${user.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to add a new favored plant.', async () => {
+        const response = await request
+        .post (`/favorites/add/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
+    // listing
+    it('It should be possible to see a list of favorite plants.', async () => {
+        const response = await request
+        .get (`/favorites/list/${user.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(200);
+    });
+
+    it('It not should be possible to see a list of favorite plants.', async () => {
+        const response = await request
+        .get (`/favorites/list/${plant.id}/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to see a list of favorite plants.', async () => {
+        const response = await request
+        .get (`/favorites/list/`)
+        .send ({
+            // no argument is needed
+        });
+        expect(response.status).toBe(404);
+    });
+
+
 });
