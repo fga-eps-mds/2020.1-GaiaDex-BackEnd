@@ -52,4 +52,4 @@ jobs:
           heroku_app_name: gaiadex-backend-homolog
           email: ${{secrets.EMAIL}}
           dockerfile_name: homologDockerfile
-          dockerfile_directory: ../
+          dockerfile_directory: ./
