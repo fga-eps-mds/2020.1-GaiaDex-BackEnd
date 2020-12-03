@@ -43,13 +43,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Deploy package to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
+        # uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          # DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        # with:
+        #   email: ${{secrets.EMAIL}}
+        #   heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        #   heroku_app_name: gaiadex-backend-homolog
+        #   dockerfile_name: homologDockerfile
+        #   dockerfile_directory: ./
+        id: heroku
+        uses: snithyanantham/docker-compose-multiple-apps-heroku-deploy@v1.0  # use the latest version of the action
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: gaiadex-backend-homolog
-          email: ${{secrets.EMAIL}}
-          dockerfile_name: homologDockerfile
-          dockerfile_directory: ./
+          email: ${{ secrets.EMAIL }} # your heroku email
+          api_key: ${{ secrets.HEROKU_API_KEY }} # your  heroku api key
+          docker_compose_file: 'homolog-docker-compose.yml' # set the path to the folder where the docker-compose file is located
+          heroku_apps: '[{"imagename":"ghcr.io/fga-eps-mds/2020.1-gaiadex-backend:homolog","appname":"gaiadex-backend-homolog","apptype":"web"},{"imagename":"mongo","appname":"gaiadex-database-homolog","apptype":"web"}]' # List of Docker Image name, Heroku app and Heroku app type
