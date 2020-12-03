@@ -1,0 +1,36 @@
+name: Homolog Continuous Delivery
+
+on:
+  push:
+    # branches: 
+    #   - develop
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Modules
+        run: npm install
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_REPORTER_ID}}
+        with:
+          coverageCommand: npm run test
+  build:
+    name: Push Docker image to GitHub Packages
+    #needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          name: fga-eps-mds/2020.1-gaiadex-backend
+          default_branch: develop
+          tags: homolog
