@@ -35,7 +35,26 @@ jobs:
           default_branch: develop
           tags: homolog
 
-  deploy:
+  deploy-database:
+    name: Deploy Database package to Heroku
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy Database package to Heroku
+        uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          email: ${{secrets.EMAIL}}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: gaiadex-database-homolog
+          dockerfile_name: homologDataBaseDockerfile
+          dockerfile_directory: ./
+          
+  deploy-backend:
     name: Deploy package to Heroku
     needs: build
     runs-on: ubuntu-latest
@@ -52,19 +71,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: gaiadex-backend-homolog
           dockerfile_name: homologDockerfile
-          dockerfile_directory: ./
-      - name: Deploy Data Base package to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        with:
-          email: ${{secrets.EMAIL}}
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: gaiadex-database-homolog
-          dockerfile_name: homologDataBaseDockerfile
-          dockerfile_directory: ./
-        
+          dockerfile_directory: ./          
         # id: heroku
         # uses: snithyanantham/docker-compose-multiple-apps-heroku-deploy@v1.0  # use the latest version of the action
         # with:
