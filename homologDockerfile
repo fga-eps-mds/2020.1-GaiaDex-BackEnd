@@ -1,13 +1,3 @@
-FROM node:14.10.1-alpine3.10
-
-WORKDIR /app
-
-COPY ./package* ./
-
-RUN npm ci
-
-COPY . .
-
-EXPOSE 3000
+FROM ghcr.io/fga-eps-mds/2020.1-gaiadex-backend:homolog
 
 ENTRYPOINT [ "npm", "start" ]
