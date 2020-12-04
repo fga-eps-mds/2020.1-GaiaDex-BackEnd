@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { Schema } = mongoose;
+
 const PlantSchema = new mongoose.Schema({
   scientificName: {
     type: String,
@@ -25,7 +27,9 @@ const PlantSchema = new mongoose.Schema({
     type: String,
   },
   firstUser: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    require: true,
   },
   collectionCount: {
     type: Number,

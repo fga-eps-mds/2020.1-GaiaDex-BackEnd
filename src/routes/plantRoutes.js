@@ -2,11 +2,13 @@ const express = require('express');
 
 const Plant = require('../models/Plant');
 const Topic = require('../models/Topic');
+const User = require('./models/User');
 
+const { auth } = require('./auth');
 const router = express.Router();
 
 // registro de uma nova planta
-router.post('/register', async (req, res) => {
+router.post('/register', auth, async (req, res) => {
   try {
     const {
       scientificName,
@@ -15,13 +17,14 @@ router.post('/register', async (req, res) => {
       specieName,
       commonName,
       usage,
-      firstUser,
       collectionCount,
       extinction,
       profilePicture,
       gbifID,
       stateProvince,
     } = req.body;
+
+    const firstUser = await User.findById(req.userId);
 
     const plant = await Plant.create({
       scientificName,
