@@ -12,6 +12,8 @@ services:
             - mongo
     mongo:
         container_name: mongo_container
-        image: mongo
+        build: 
+            dockerfile: homologDataBaseDockerfile
+            context: .
         ports: 
             - 27017:27017
