@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const plantRoutes = require('./routes/plantRoutes');
@@ -16,11 +17,24 @@ const scanner = require('./routes/scanner');
 // MongoDB connection
 // mongodb://localhost:27017/noderest  => meu banco de dados local polupado
 // mongodb://mongo:27017/backend => banco de dados da develop
+console.log(`db host ${process.env.DB_HOST}`);
+console.log(`db host ${process.env.DB_PORT}`);
+console.log(`db host ${process.env.DB_NAME}`);
+console.log(
+  `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+);
 mongoose
-  .connect('mongodb://mongo:27017/backend', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    // `mongodb://mongo:27017/backend`,
+    {
+      authSource: 'admin',
+      user: process.env.MONGO_INITDB_ROOT_USERNAME,
+      password: process.env.MONGO_INITDB_ROOT_PASSWORD,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log(err));
 // middlewares
