@@ -14,13 +14,13 @@ jobs:
         env:
           CI: true
         run: npm run lint:js:fix
-  # test:
-  #   name: Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Install Modules
-  #     run: npm install
-  #   - name: Run Tests
-  #     working-directory: server
-  #     run: npm run test
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Modules
+      run: npm install
+    - name: Run Tests
+      working-directory: server
+      run: npm run test
