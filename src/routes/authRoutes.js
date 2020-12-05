@@ -66,7 +66,7 @@ router.get('/user/:id', async (req, res) => {
   }
 });
 
-router.post('/user/me', auth, async (req, res) => {
+router.get('/user', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate([
       { path: 'topics' },
