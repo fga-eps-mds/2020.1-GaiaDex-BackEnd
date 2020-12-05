@@ -21,13 +21,16 @@ console.log(`db host ${process.env.DB_HOST}`);
 console.log(`db host ${process.env.DB_PORT}`);
 console.log(`db host ${process.env.DB_NAME}`);
 console.log(
-  `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+  `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
 );
 mongoose
   .connect(
     `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
     // `mongodb://mongo:27017/backend`,
     {
+      authSource: 'admin',
+      user: process.env.MONGO_INITDB_ROOT_USERNAME,
+      password: process.env.MONGO_INITDB_ROOT_PASSWORD,
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }

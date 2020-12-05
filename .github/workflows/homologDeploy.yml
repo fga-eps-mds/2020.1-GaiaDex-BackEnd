@@ -34,28 +34,9 @@ jobs:
           name: fga-eps-mds/2020.1-gaiadex-backend
           default_branch: develop
           tags: homolog
-
-  deploy-database:
-    name: Deploy Database package to Heroku
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Deploy Database package to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        with:
-          email: ${{secrets.EMAIL}}
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: gaiadex-database-homolog
-          dockerfile_name: homologDataBaseDockerfile
-          dockerfile_directory: ./
           
   deploy-backend:
-    name: Deploy package to Heroku
+    name: Deploy Backend package to Heroku
     needs: build
     runs-on: ubuntu-latest
     steps:
