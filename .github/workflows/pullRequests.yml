@@ -24,3 +24,10 @@ jobs:
     - name: Run Tests
       working-directory: server
       run: npm run test
+  build:
+    name: CI Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build container
+        run: docker-compose up --build
