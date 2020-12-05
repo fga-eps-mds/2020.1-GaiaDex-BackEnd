@@ -2,6 +2,8 @@ name: Production Continuous Delivery
 
 on:
   push:
+    tags:
+      - "v*"
 jobs:
   test:
     name: Tests
@@ -51,3 +53,15 @@ jobs:
           heroku_app_name: gaiadex-backend-production
           dockerfile_name: productionDockerfile
           dockerfile_directory: ./
+  tagged-release:
+    name: "Tagged Release"
+    needs: deploy-backed
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          files: |
+            LICENSE.txt
