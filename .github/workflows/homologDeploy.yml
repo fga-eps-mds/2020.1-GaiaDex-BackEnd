@@ -2,8 +2,11 @@ name: Homolog Continuous Delivery
 
 on:
   push:
-    # branches: 
-    #   - develop
+    branches: 
+      - develop
+  pull_request:
+    branches:
+      - develop
 jobs:
   test:
     name: Tests
@@ -34,7 +37,7 @@ jobs:
           name: fga-eps-mds/2020.1-gaiadex-backend
           default_branch: develop
           tags: homolog
-          
+
   deploy-backend:
     name: Deploy Backend package to Heroku
     needs: build
