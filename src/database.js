@@ -10,20 +10,34 @@ const mongoose = require('mongoose');
 //   })
 //   .then(() => console.log('MongoDB Connected'))
 //   .catch((err) => console.log(err));
+// console.log(`db host ${process.env.DB_HOST}`);
+// console.log(`db host ${process.env.DB_PORT}`);
+// console.log(`db host ${process.env.DB_NAME}`);
+// console.log(
+//   `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+// );
+// Pra subir pra produção: `mongo://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
 
 const connect = async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(
-      process.env.NODE_ENV === 'test'
-        ? global.__DB_URL__
-        : 'mongodb://mongo:27017/backend',
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-      }
-    );
+    let url;
+    switch (process.env.NODE_ENV) {
+      case 'production':
+        url = `mongo://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+        break;
+      case 'test':
+        url = global.__DB_URL__;
+        break;
+      default:
+        url = `mongodb://mongo:27017/backend`;
+    }
+
+    await mongoose.connect(url, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    });
   }
 };
 

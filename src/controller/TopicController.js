@@ -1,6 +1,7 @@
 const Topic = require('../models/Topic');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
+const Like = require('../models/Like');
 const topicSchema = require('../schemas/topicSchema');
 
 class TopicController {
@@ -55,10 +56,18 @@ class TopicController {
           .send({ error: `Error while creating topic. ${result.error}` });
       }
 
-      await Topic.findOneAndUpdate({ _id: req.params.topicId }, newData, {
-        useFindAndModify: false,
-      });
-      return res.send({ message: 'Topic updated successfully.' });
+      const topicNew = await Topic.findOneAndUpdate(
+        { _id: req.params.topicId },
+        newData,
+        {
+          useFindAndModify: true,
+        }
+      ).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+      return res.send(topicNew);
     } catch (err) {
       return res
         .status(400)
@@ -89,9 +98,7 @@ class TopicController {
         useFindAndModify: false,
       });
 
-      return res.send({
-        message: 'Topic successfully removed.',
-      });
+      return res.send(topic);
     } catch (err) {
       return res
         .status(400)
@@ -101,8 +108,11 @@ class TopicController {
 
   static async listTopics(req, res) {
     try {
-      const topic = await Topic.find().populate(['user']);
-
+      const topic = await Topic.find().populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plant' },
+      ]);
       return res.send({ topic });
     } catch (err) {
       return res
@@ -113,29 +123,81 @@ class TopicController {
 
   static async likeTopic(req, res) {
     try {
-      await Topic.findOneAndUpdate(
-        { _id: req.params.topicId },
-        { $inc: { likes: 1 } },
-        { useFindAndModify: false }
-      );
-      return res.send({ message: 'Liked!' });
+      const user = await User.findById(req.userId);
+      const topic = await Topic.findById(req.params.topicId).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+      const isLiked = await Like.findOne({
+        user: req.userId,
+        topic: req.params.topicId,
+      });
+      if (isLiked == null) {
+        const like = await Like.create({
+          user,
+          topic,
+        });
+        await like.save();
+        topic.likes.push(like);
+        await topic.save();
+        const topictrue = await Topic.findById(req.params.topicId).populate([
+          { path: 'comments', populate: 'user' },
+          { path: 'user' },
+          { path: 'plnt' },
+        ]);
+        return res.send(topictrue);
+      }
+      console.log(topic.likes.length);
+
+      return res.send(topic);
     } catch (err) {
-      return res.status(400).send({ error: `Error while liking topic.${err}` });
+      return res.status(400).send({ error: `Error while commenting.${err}` });
     }
   }
 
   static async dislikeTopic(req, res) {
     try {
-      await Topic.findOneAndUpdate(
-        { _id: req.params.topicId },
-        { $inc: { dislikes: 1 } },
-        { useFindAndModify: false }
-      );
-      return res.send({ message: 'Disliked!' });
+      const topic = await Topic.findById(req.params.topicId).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+      const like = await Like.findOne({
+        user: req.userId,
+        topic: req.params.topicId,
+      });
+      if (like != null) {
+        const index = topic.likes.indexOf(like._id);
+        if (index > -1) {
+          topic.likes.splice(index, 1);
+        }
+        topic.save();
+        await Like.findByIdAndRemove(like._id).populate([
+          { path: 'comments', populate: 'user' },
+          { path: 'user' },
+          { path: 'plnt' },
+        ]);
+      }
+      return res.send(topic);
+    } catch (err) {
+      return res.status(400).send({ error: `Error while commenting.${err}` });
+    }
+  }
+
+  static async findTopic(req, res) {
+    try {
+      const topic = await Topic.findById(req.params.topicId).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plnt' },
+      ]);
+
+      return res.send(topic);
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while dislikinng topic.${err}` });
+        .send({ error: `Error while find topic id.${err}` });
     }
   }
 }

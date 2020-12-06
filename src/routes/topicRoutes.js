@@ -9,5 +9,6 @@ router.delete('/delete/:topicId', TopicController.deleteTopic);
 router.get('/list', TopicController.listTopics);
 router.post('/like/:topicId', TopicController.likeTopic);
 router.post('/dislike/:topicId', TopicController.dislikeTopic);
+router.get('/find/:topicId', TopicController.findTopic);
 
 module.exports = router;

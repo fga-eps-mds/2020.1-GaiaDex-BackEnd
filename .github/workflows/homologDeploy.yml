@@ -1,0 +1,58 @@
+name: Homolog Continuous Delivery
+
+on:
+  push:
+    branches: 
+      - develop
+  pull_request:
+    branches:
+      - develop
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Modules
+        run: npm install
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_REPORTER_ID}}
+        with:
+          coverageCommand: npm run test
+  build:
+    name: Push Docker image to GitHub Packages
+    #needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          name: fga-eps-mds/2020.1-gaiadex-backend
+          default_branch: develop
+          tags: homolog
+
+  deploy-backend:
+    name: Deploy Backend package to Heroku
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy Backend package to Heroku
+        uses: gonuit/heroku-docker-deploy@v1.2.0 # This is the action
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          email: ${{secrets.EMAIL}}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: gaiadex-backend-homolog
+          dockerfile_name: homologDockerfile
+          dockerfile_directory: ./

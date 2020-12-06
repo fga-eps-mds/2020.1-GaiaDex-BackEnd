@@ -1,0 +1,33 @@
+name: Continuous Integration - Pull Requests Lint and Tests
+
+on:
+  pull_request:
+jobs:
+  lint:
+    name: CI Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Modules
+        run: npm install
+      - name: ESLint
+        env:
+          CI: true
+        run: npm run lint:js:fix
+  test:
+    name: CI Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Modules
+      run: npm install
+    - name: Run Tests
+      working-directory: server
+      run: npm run test
+  build:
+    name: CI Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build container
+        run: docker-compose build

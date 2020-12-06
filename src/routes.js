@@ -12,11 +12,11 @@ const routes = new express.Router();
 
 routes.use('/auth', authRoutes);
 routes.use('/plant', plantRoutes);
-routes.use('/scanner', scannerRoutes);
 routes.use('/topic', topicRoutes);
 routes.use('/comment', commentRoutes);
 routes.use('/myplants', myPlantRoutes);
 routes.use('/favorites', favoriteRoutes);
 routes.use('/collection', collectionRoutes);
+routes.use('/scanner', scannerRoutes);
 
 module.exports = routes;
