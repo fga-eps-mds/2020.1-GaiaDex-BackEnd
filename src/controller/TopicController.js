@@ -45,8 +45,8 @@ class TopicController {
 
       const newData = req.body;
 
-      if (!newData.title) newData.title = topic.title;
-      if (!newData.description) newData.description = topic.description;
+      if (!('title' in newData)) newData.title = topic.title;
+      if (!('description' in newData)) newData.description = topic.description;
 
       const result = topicSchema.validate(newData);
       if (result.error) {
