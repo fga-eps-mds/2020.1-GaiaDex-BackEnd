@@ -132,14 +132,34 @@ describe('topic/', () => {
 
   // Like
   it('Should be able to like a topic.', async () => {
-    const response = await request.post(`/topic/like/${topic.id}/`);
+    const login = await request.post('/auth/login').send({
+      username: 'username',
+      password: 'password',
+      email: 'email@email.com',
+    });
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .post(`/topic/like/${topic.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });
 
   // Dislike
   it('Should be able to dislike a topic.', async () => {
-    const response = await request.post(`/topic/dislike/${topic.id}/`);
+    const login = await request.post('/auth/login').send({
+      username: 'username',
+      password: 'password',
+      email: 'email@email.com',
+    });
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .post(`/topic/dislike/${topic.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });

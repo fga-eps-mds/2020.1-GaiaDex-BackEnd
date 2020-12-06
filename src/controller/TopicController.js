@@ -65,7 +65,7 @@ class TopicController {
       ).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
       return res.send(topicNew);
     } catch (err) {
@@ -127,7 +127,7 @@ class TopicController {
       const topic = await Topic.findById(req.params.topicId).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
       const isLiked = await Like.findOne({
         user: req.userId,
@@ -144,7 +144,7 @@ class TopicController {
         const topictrue = await Topic.findById(req.params.topicId).populate([
           { path: 'comments', populate: 'user' },
           { path: 'user' },
-          { path: 'plnt' },
+          { path: 'plant' },
         ]);
         return res.send(topictrue);
       }
@@ -161,7 +161,7 @@ class TopicController {
       const topic = await Topic.findById(req.params.topicId).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
       const like = await Like.findOne({
         user: req.userId,
@@ -176,7 +176,7 @@ class TopicController {
         await Like.findByIdAndRemove(like._id).populate([
           { path: 'comments', populate: 'user' },
           { path: 'user' },
-          { path: 'plnt' },
+          { path: 'plant' },
         ]);
       }
       return res.send(topic);
@@ -190,7 +190,7 @@ class TopicController {
       const topic = await Topic.findById(req.params.topicId).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
 
       return res.send(topic);

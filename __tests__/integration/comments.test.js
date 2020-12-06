@@ -11,13 +11,12 @@ let user;
 let comment;
 let topic;
 let plant;
-
+let authtoken;
 describe('comment/', () => {
   beforeEach(async (done) => {
     user = new UserModel({
       username: 'username',
       password: 'password',
-      passwordConfirmation: 'password',
       email: 'email@email.com',
     });
     await user.save();
@@ -56,61 +55,77 @@ describe('comment/', () => {
     });
     await comment.save();
 
+    const login = await request.post('/auth/login').send({
+      username: 'username',
+      password: 'password',
+      email: 'email@email.com',
+    });
+
+    authtoken = login.headers.authtoken;
+
     done();
   });
 
   it('Should be able to comment because there is text', async () => {
     const response = await request
-      .post(`/comment/create/${topic.id}/${user.id}`)
+      .post(`/comment/create/${topic.id}`)
       .send({
         text: 'Comentario',
-      });
+      })
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });
 
   it('Should not be able to comment because there is no text', async () => {
     const response = await request
-      .post(`/comment/create/${topic.id}/${user.id}`)
+      .post(`/comment/create/${topic.id}`)
       .send({
         text: '',
-      });
+      })
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(400);
   });
 
   it('Should be able to update the comment because there is text', async () => {
-    const response = await request.put(`/comment/update/${comment.id}`).send({
-      text: 'Comentario atualizado',
-    });
-
+    const response = await request
+      .put(`/comment/update/${comment.id}`)
+      .send({
+        text: 'Comentario atualizado',
+      })
+      .set('authtoken', `${authtoken}`);
     expect(response.status).toBe(200);
   });
 
   it('Should not be able to update the comment because there is no text', async () => {
-    const response = await request.put(`/comment/update/${comment.id}`).send({
-      text: '',
-    });
-
+    const response = await request
+      .put(`/comment/update/${comment.id}`)
+      .send({
+        text: '',
+      })
+      .set('authtoken', `${authtoken}`);
     expect(response.status).toBe(400);
   });
 
   it('Should be able to delete the comment', async () => {
     const response = await request
       .delete(`/comment/delete/${comment.id}`)
-      .send({ topicId: topic.id });
-
+      .set('authtoken', `${authtoken}`);
     expect(response.status).toBe(200);
   });
 
   it('Should be able to like the comment', async () => {
-    const response = await request.post(`/comment/like/${comment.id}`);
-
+    const response = await request
+      .post(`/comment/like/${comment.id}`)
+      .set('authtoken', `${authtoken}`);
     expect(response.status).toBe(200);
   });
 
   it('Should be able to dislike the comment', async () => {
-    const response = await request.post(`/comment/dislike/${comment.id}`);
+    const response = await request
+      .post(`/comment/dislike/${comment.id}`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });

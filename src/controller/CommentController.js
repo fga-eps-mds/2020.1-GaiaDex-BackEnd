@@ -58,8 +58,8 @@ class CommentController {
   // router.delete('/delete/:commentId', async (req, res) => {
   static async deleteComment(req, res) {
     try {
-      const comment = Comment.findById(req.params.commentId);
-      const topic = Topic.findById(comment.topic);
+      const comment = await Comment.findById(req.params.commentId);
+      const topic = await Topic.findById(comment.topic);
       const index = topic.comments.indexOf(req.params.commentId);
 
       if (index > -1) {
