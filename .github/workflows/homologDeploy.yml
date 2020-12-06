@@ -12,15 +12,38 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Modules
-        run: npm install
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.7.4
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_REPORTER_ID}}
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
         with:
-          coverageCommand: npm run test
+          node-version: '14'
+      - name: Install Modules
+        run: |
+          npm install -g yarn
+          yarn install
+      - name: Run test    
+        run: yarn test
+
+  coverage:
+    needs: [test]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: '14'
+      - name: Install Modules
+        run: |
+          npm install -g yarn
+          yarn install
+      - name: Collect code coverage    
+        uses: paambaati/codeclimate-action@v2.7.2
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn coverage
+          debug: true
+        
   build:
     name: Push Docker image to GitHub Packages
     #needs: test

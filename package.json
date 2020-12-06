@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "NODE_ENV=test npx jest",
+    "coverage": "rm -rf coverage/ node_modules/.cache/ && NODE_ENV=test npx jest --collect-coverage",
     "lint:js": "npx eslint . --ext .js,.jsx",
     "lint:js:fix": "npm run lint:js -- --fix"
   },
