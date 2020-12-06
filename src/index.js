@@ -25,7 +25,7 @@ console.log(
 );
 mongoose
   .connect(
-    //Pra subir pra produção: `mongo://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    // Pra subir pra produção: `mongo://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
     `mongodb://mongo:27017/backend`,
     {
       useNewUrlParser: true,

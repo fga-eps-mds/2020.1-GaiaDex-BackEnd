@@ -60,7 +60,7 @@ router.put('/update/:commentId', auth, async (req, res) => {
 router.delete('/delete/:commentId', auth, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
-    console.log(comment)
+    console.log(comment);
     const topic = await Topic.findById(comment.topic);
     const index = topic.comments.indexOf(req.params.commentId);
 

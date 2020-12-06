@@ -17,6 +17,11 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  photo: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   topics: [
     {
       type: mongoose.Schema.Types.ObjectId,
