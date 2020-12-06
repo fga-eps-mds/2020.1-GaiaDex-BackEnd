@@ -56,9 +56,9 @@ router.post('/signup', async (req, res) => {
 router.get('/user/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate([
-      { path: 'topics' },
-      { path: 'myPlants' },
-      { path: 'favorites' },
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plants' },
+      { path: 'favorites', populate: 'plants' },
     ]);
     return res.send(user);
   } catch (err) {
@@ -69,9 +69,9 @@ router.get('/user/:id', async (req, res) => {
 router.get('/user', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate([
-      { path: 'topics' },
-      { path: 'myPlants' },
-      { path: 'favorites' },
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plants' },
+      { path: 'favorites', populate: 'plants' },
     ]);
     return res.send(user);
   } catch (err) {

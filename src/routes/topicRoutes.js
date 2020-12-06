@@ -8,9 +8,9 @@ const Plant = require('../models/Plant');
 const topicSchema = require('../schemas/topicSchema');
 const { auth } = require('./auth');
 
-router.post('/create/:plantId/:userId', async (req, res) => {
+router.post('/create/:plantId', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.userId);
     const plant = await Plant.findById(req.params.plantId);
 
     const result = topicSchema.validate(req.body);
@@ -23,7 +23,7 @@ router.post('/create/:plantId/:userId', async (req, res) => {
 
     const topic = await Topic.create({
       ...req.body,
-      user: req.params.userId,
+      user: req.userId,
       plant: req.params.plantId,
     });
 
@@ -62,11 +62,12 @@ router.put('/update/:topicId', async (req, res) => {
       newData,
       {
         useFindAndModify: true,
+        new: true,
       }
     ).populate([
       { path: 'comments', populate: 'user' },
       { path: 'user' },
-      { path: 'plnt' },
+      { path: 'plant' },
     ]);
     return res.send(topicNew);
   } catch (err) {
@@ -121,7 +122,7 @@ router.post('/like/:topicId', auth, async (req, res) => {
     const topic = await Topic.findById(req.params.topicId).populate([
       { path: 'comments', populate: 'user' },
       { path: 'user' },
-      { path: 'plnt' },
+      { path: 'plant' },
     ]);
     const isLiked = await Like.findOne({
       user: req.userId,
@@ -138,7 +139,7 @@ router.post('/like/:topicId', auth, async (req, res) => {
       const topictrue = await Topic.findById(req.params.topicId).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
       return res.send(topictrue);
     }
@@ -155,7 +156,7 @@ router.post('/dislike/:topicId', auth, async (req, res) => {
     const topic = await Topic.findById(req.params.topicId).populate([
       { path: 'comments', populate: 'user' },
       { path: 'user' },
-      { path: 'plnt' },
+      { path: 'plant' },
     ]);
     const like = await Like.findOne({
       user: req.userId,
@@ -170,7 +171,7 @@ router.post('/dislike/:topicId', auth, async (req, res) => {
       await Like.findByIdAndRemove(like._id).populate([
         { path: 'comments', populate: 'user' },
         { path: 'user' },
-        { path: 'plnt' },
+        { path: 'plant' },
       ]);
     }
     return res.send(topic);
@@ -183,7 +184,7 @@ router.get('/find/:topicId', async (req, res) => {
     const topic = await Topic.findById(req.params.topicId).populate([
       { path: 'comments', populate: 'user' },
       { path: 'user' },
-      { path: 'plnt' },
+      { path: 'plant' },
     ]);
 
     return res.send(topic);

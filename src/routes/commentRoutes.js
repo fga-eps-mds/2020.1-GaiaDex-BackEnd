@@ -17,16 +17,17 @@ router.post('/create/:topicId', auth, async (req, res) => {
       user: req.userId,
       topic: req.params.topicId,
     });
-    const topic = await Topic.findById(req.params.topicId).populate([
-      { path: 'comments', populate: { path: 'user' } },
-      { path: 'user' },
-      { path: 'plant' },
-    ]);
+    const topic = await Topic.findById(req.params.topicId);
 
     await comment.save();
     topic.comments.push(comment);
     await topic.save();
-    return res.send(topic);
+    const newTopic = await Topic.findById(req.params.topicId).populate([
+      { path: 'comments', populate: { path: 'user' } },
+      { path: 'user' },
+      { path: 'plant' },
+    ]);
+    return res.send(newTopic);
   } catch (err) {
     return res.status(400).send({ error: `Error while commenting.${err}` });
   }
@@ -58,8 +59,9 @@ router.put('/update/:commentId', auth, async (req, res) => {
 
 router.delete('/delete/:commentId', auth, async (req, res) => {
   try {
-    const comment = Comment.findById(req.params.commentId);
-    const topic = Topic.findById(comment.topic);
+    const comment = await Comment.findById(req.params.commentId);
+    console.log(comment)
+    const topic = await Topic.findById(comment.topic);
     const index = topic.comments.indexOf(req.params.commentId);
 
     if (index > -1) {
