@@ -5,6 +5,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Plant = require('../models/Plant');
 const MyPlant = require('../models/MyPlant');
+const { auth } = require('./auth');
 
 const myPlantSchema = require('../schemas/myPlantSchema');
 
@@ -12,9 +13,9 @@ router.get('/', async (req, res) => {
   res.send({ message: 'User Backyard.' });
 });
 
-router.post('/add/:userId/:plantId', async (req, res) => {
+router.post('/add/:plantId', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.userId);
     const plant = await Plant.findById(req.params.plantId);
 
     const result = myPlantSchema.validate({ nickname: req.body.nickname });
