@@ -9,7 +9,7 @@ const userSchema = Joi.object({
     .valid(Joi.ref('password'))
     .error(new Error('Password confirmation does not match.')),
   email: Joi.string().email().required(),
-  photo: Joi.string().min(4).max(300).required(),
+  photo: Joi.string().min(4).max(300),
 });
 
 module.exports = userSchema;
