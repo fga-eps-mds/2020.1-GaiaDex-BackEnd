@@ -5,6 +5,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Plant = require('../models/Plant');
 const MyPlant = require('../models/MyPlant');
+const { auth } = require('./auth');
 
 const myPlantSchema = require('../schemas/myPlantSchema');
 
@@ -12,9 +13,9 @@ router.get('/', async (req, res) => {
   res.send({ message: 'User Backyard.' });
 });
 
-router.post('/add/:userId/:plantId', async (req, res) => {
+router.post('/add/:plantId', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.userId);
     const plant = await Plant.findById(req.params.plantId);
 
     const result = myPlantSchema.validate({ nickname: req.body.nickname });
@@ -74,11 +75,17 @@ router.put('/edit/:myPlantId', async (req, res) => {
         .send({ error: `Error while editing plant. ${result.error}` });
     }
 
-    await MyPlant.findOneAndUpdate({ _id: req.params.myPlantId }, newNick, {
+    const myPlant = await MyPlant.findOneAndUpdate({ _id: req.params.myPlantId }, newNick, {
       useFindAndModify: false,
+      new: true,
     });
 
-    return res.send({ message: 'Backyard plant updated successfully.' });
+    const newUser = await User.findById(myPlant.user).populate([
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plant' },
+      { path: 'favorites', populate: 'plants' },
+    ]);
+    return res.send( newUser );
   } catch (err) {
     return res
       .status(400)
@@ -102,10 +109,13 @@ router.delete('/delete/:myPlantId', async (req, res) => {
     await MyPlant.findByIdAndRemove(req.params.myPlantId, {
       useFindAndModify: false,
     });
+    const newUser = await User.findById(user._id).populate([
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plant' },
+      { path: 'favorites', populate: 'plants' },
+    ]);
 
-    return res.send({
-      message: 'Plant successfully removed from backyard.',
-    });
+    return res.send( newUser );
   } catch (err) {
     return res
       .status(400)

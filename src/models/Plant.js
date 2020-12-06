@@ -25,7 +25,9 @@ const PlantSchema = new mongoose.Schema({
     type: String,
   },
   firstUser: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   collectionCount: {
     type: Number,

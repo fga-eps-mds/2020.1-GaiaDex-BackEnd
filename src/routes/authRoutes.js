@@ -70,7 +70,7 @@ router.get('/user', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate([
       { path: 'topics', populate: 'plants' },
-      { path: 'myPlants', populate: 'plants' },
+      { path: 'myPlants', populate: 'plant' },
       { path: 'favorites', populate: 'plants' },
     ]);
     return res.send(user);
