@@ -1,49 +1,21 @@
 const supertest = require('supertest');
 const app = require('../../src/app');
 const PlantModel = require('../../src/models/Plant');
+const { defaultPlant1, defaultPlant2 } = require('../defaultModels');
 
 const request = supertest(app);
 let plant;
 
 describe('/Plant', () => {
   beforeEach(async (done) => {
-    plant = new PlantModel({
-      scientificName: 'PlantaVela',
-      familyName: 'FamiliaVelha',
-      genderName: 'Male',
-      specieName: 'EspeciesAntigas',
-      commonName: 'Velha',
-      usage: 'Esta planta e muito antiga',
-      firstUser: 'AqueleSenhor',
-      collectionCount: 1,
-      extinction: false,
-      profilePicture:
-        'https://cdn.pixabay.com/photo/2017/08/18/20/44/flower-2656484_960_720.jpg',
-      gbifID: '1234566767',
-      stateProvince: 'antiga_provincia',
-    });
+    plant = new PlantModel(defaultPlant1);
     await plant.save();
     done();
   });
 
   // REGISTER
   it('should register a plant', async () => {
-    const response = await request.post('/plant/register').send({
-      scientificName: 'PlantaCiencia',
-      familyName: 'FamiliarePlantae',
-      genderName: 'PlantMale',
-      specieName: 'EspeciesPlantae',
-      commonName: 'Planta',
-      usage:
-        'Esta planta e muito utilizada para fins medicinais, no preparo de chas e serve como tempero de varios alimentos',
-      firstUser: 'Sou_eu',
-      collectionCount: 1,
-      extinction: false,
-      profilePicture:
-        'https://cdn.pixabay.com/photo/2017/08/18/20/44/flower-2656484_960_720.jpg',
-      gbifID: '1234566767',
-      stateProvince: 'alguma_provincia',
-    });
+    const response = await request.post('/plant/register').send(defaultPlant2);
     expect(response.status).toBe(200);
   });
 

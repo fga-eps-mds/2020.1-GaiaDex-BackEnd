@@ -1,48 +1,11 @@
 const Plant = require('../models/Plant');
-const Topic = require('../models/Topic');
+const { Topic } = require('../models/Topic');
 
 class PlantController {
   // registro de uma nova planta
   static async registerPlant(req, res) {
     try {
-      const {
-        scientificName,
-        familyName,
-        genderName,
-        specieName,
-        commonName,
-        usage,
-        firstUser,
-        collectionCount,
-        extinction,
-        profilePicture,
-        gbifID,
-        stateProvince,
-      } = req.body;
-
-      const plant = await Plant.create({
-        scientificName,
-        familyName,
-        genderName,
-        specieName,
-        commonName,
-        usage,
-        firstUser,
-        collectionCount,
-        extinction,
-        profilePicture,
-        gbifID,
-        stateProvince,
-      });
-
-      // await Promise.all(topics.map(async topico =>{
-      //     const plantTopic = new Topico({...topico,plant : plant._id});
-
-      //     await plantTopic.save();
-
-      //     plant.topics.push(plantTopic);
-      // }));
-
+      const plant = await Plant.create(req.body);
       await plant.save();
 
       return res.send({ plant });
@@ -89,38 +52,11 @@ class PlantController {
   // Dando upgrade planta por id
   static async updatePlant(req, res) {
     try {
-      const {
-        scientificName,
-        familyName,
-        genderName,
-        specieName,
-        commonName,
-        usage,
-        firstUser,
-        collectionCount,
-        extinction,
-        profilePicture,
-        gbifID,
-        stateProvince,
-        topics,
-      } = req.body;
+      const { topics, ...plantPayload } = req.body;
 
       const plant = await Plant.findByIdAndUpdate(
         req.params.plantId,
-        {
-          scientificName,
-          familyName,
-          genderName,
-          specieName,
-          commonName,
-          usage,
-          firstUser,
-          collectionCount,
-          extinction,
-          profilePicture,
-          gbifID,
-          stateProvince,
-        },
+        plantPayload,
         { new: true }
       );
 

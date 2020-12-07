@@ -1,4 +1,4 @@
-const Topic = require('../models/Topic');
+const { Topic, defaultTopicPopulate } = require('../models/Topic');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
 const User = require('../models/User');
@@ -42,11 +42,9 @@ class CommentController {
       await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
         useFindAndModify: false,
       });
-      const newTopic = await Topic.findById(comment.topic).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const newTopic = await Topic.findById(comment.topic).populate(
+        defaultTopicPopulate
+      );
       return res.send(newTopic);
     } catch (err) {
       return res
@@ -69,11 +67,9 @@ class CommentController {
       topic.save();
 
       await Comment.findByIdAndRemove(req.params.commentId);
-      const newTopic = await Topic.findById(comment.topic).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const newTopic = await Topic.findById(comment.topic).populate(
+        defaultTopicPopulate
+      );
       return res.send(newTopic);
     } catch (err) {
       return res
@@ -87,11 +83,9 @@ class CommentController {
     try {
       const user = await User.findById(req.userId);
       const comment = await Comment.findById(req.params.commentId);
-      const topic = await Topic.findById(comment.topic).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.findById(comment.topic).populate(
+        defaultTopicPopulate
+      );
       const isLiked = await Like.findOne({
         user: req.userId,
         comment: req.params.commentId,
@@ -121,11 +115,9 @@ class CommentController {
   static async dislikeComment(req, res) {
     try {
       const comment = await Comment.findById(req.params.commentId);
-      const topic = await Topic.findById(comment.topic).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.findById(comment.topic).populate(
+        defaultTopicPopulate
+      );
       const like = await Like.findOne({
         user: req.userId,
         comment: req.params.commentId,

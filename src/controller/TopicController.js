@@ -1,4 +1,4 @@
-const Topic = require('../models/Topic');
+const { Topic, defaultTopicPopulate } = require('../models/Topic');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
 const Like = require('../models/Like');
@@ -62,11 +62,7 @@ class TopicController {
         {
           useFindAndModify: true,
         }
-      ).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      ).populate(defaultTopicPopulate);
       return res.send(topicNew);
     } catch (err) {
       return res
@@ -108,11 +104,7 @@ class TopicController {
 
   static async listTopics(req, res) {
     try {
-      const topic = await Topic.find().populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.find().populate(defaultTopicPopulate);
       return res.send({ topic });
     } catch (err) {
       return res
@@ -124,11 +116,9 @@ class TopicController {
   static async likeTopic(req, res) {
     try {
       const user = await User.findById(req.userId);
-      const topic = await Topic.findById(req.params.topicId).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.findById(req.params.topicId).populate(
+        defaultTopicPopulate
+      );
       const isLiked = await Like.findOne({
         user: req.userId,
         topic: req.params.topicId,
@@ -141,12 +131,12 @@ class TopicController {
         await like.save();
         topic.likes.push(like);
         await topic.save();
-        const topictrue = await Topic.findById(req.params.topicId).populate([
+        const topicTrue = await Topic.findById(req.params.topicId).populate([
           { path: 'comments', populate: 'user' },
           { path: 'user' },
           { path: 'plant' },
         ]);
-        return res.send(topictrue);
+        return res.send(topicTrue);
       }
       console.log(topic.likes.length);
 
@@ -158,11 +148,9 @@ class TopicController {
 
   static async dislikeTopic(req, res) {
     try {
-      const topic = await Topic.findById(req.params.topicId).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.findById(req.params.topicId).populate(
+        defaultTopicPopulate
+      );
       const like = await Like.findOne({
         user: req.userId,
         topic: req.params.topicId,
@@ -187,11 +175,9 @@ class TopicController {
 
   static async findTopic(req, res) {
     try {
-      const topic = await Topic.findById(req.params.topicId).populate([
-        { path: 'comments', populate: 'user' },
-        { path: 'user' },
-        { path: 'plant' },
-      ]);
+      const topic = await Topic.findById(req.params.topicId).populate(
+        defaultTopicPopulate
+      );
 
       return res.send(topic);
     } catch (err) {

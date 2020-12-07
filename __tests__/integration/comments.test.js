@@ -1,9 +1,10 @@
 const supertest = require('supertest');
 const app = require('../../src/app');
-const TopicModel = require('../../src/models/Topic');
+const { Topic: TopicModel } = require('../../src/models/Topic');
 const UserModel = require('../../src/models/User');
 const PlantModel = require('../../src/models/Plant');
 const CommentModel = require('../../src/models/Comment');
+const { defaultPlant1, defaultUser1 } = require('../defaultModels');
 
 const request = supertest(app);
 
@@ -14,30 +15,10 @@ let plant;
 let authtoken;
 describe('comment/', () => {
   beforeEach(async (done) => {
-    user = new UserModel({
-      username: 'username',
-      password: 'password',
-      email: 'email@email.com',
-    });
+    user = new UserModel(defaultUser1);
     await user.save();
 
-    plant = new PlantModel({
-      scientificName: 'Butia archeri Glassman',
-      family_name: 'Arecaceae',
-      gender_name: 'Butia',
-      specie_name: 'Butia archeri',
-      common_name: 'butiazinho',
-      usage:
-        'A espécie é conhecida popularmente como butiazinho, coqueirinho-do-campo, butiá-do-campo, butiá-do-cerrado ou palmeira-butiá. Em alguns locais do Cerrado, as folhas desta palmeirinha são utilizadas para a confecção de vassouras, daí atribui-se também o nome popular de palmeira-de-vassoura.',
-      first_User: ' julceia',
-      collection_count: '108',
-      extinction: '0',
-      profile_picture:
-        'https://static.inaturalist.org/photos/68945583/large.jpeg?1587849882',
-      gbifID: '28601793778',
-      stateProvince: 'Distrito Federal',
-      topicos: [],
-    });
+    plant = new PlantModel(defaultPlant1);
     await plant.save();
 
     topic = new TopicModel({
@@ -55,11 +36,7 @@ describe('comment/', () => {
     });
     await comment.save();
 
-    const login = await request.post('/auth/login').send({
-      username: 'username',
-      password: 'password',
-      email: 'email@email.com',
-    });
+    const login = await request.post('/auth/login').send(defaultUser1);
 
     authtoken = login.headers.authtoken;
 
