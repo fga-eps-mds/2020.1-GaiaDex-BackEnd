@@ -26,11 +26,13 @@ describe ('collection/', () => {
     });
 
     it('It not should be possible to list a user collection.', async () => {
+        const response = await request.get(`/collection/${plant.id}/`);
+        expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to list a user collection.', async () => {
         const response = await request.get(`/collection/`);
         expect(response.status).toBe(404);
     });
-
-
-
 
 });
