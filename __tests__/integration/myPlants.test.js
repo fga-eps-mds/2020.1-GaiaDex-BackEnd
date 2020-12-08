@@ -55,17 +55,6 @@ describe ('collection/', () => {
     });
 
     it('It not should be possible to add a plant to the collection.', async () =>{
-        const response = await request.post(`/myPlants/add/${user.id}/${!plant.id}`)
-        .send({
-            nickname: 'A',
-        });
-        const result = myPlantSchema
-            .validate({ nickname: response.nickname });
-        if(result.error)
-            expect(response.status).toBe(400);
-    });
-
-    it('It not should be possible to add a plant to the collection.', async () =>{
         const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`);
         expect(response.status).toBe(400);
     });
@@ -79,16 +68,6 @@ describe ('collection/', () => {
     it('It must be possible to search for a plant by id.', async () => {
         const response = await request.get(`/myPlants/${user.id}/${!plant._id}`);
         expect(response.status).toBe(200);
-    });
-
-    it('It not must be possible to search for a plant by id.', async () => {
-        const response = await request.get(`/myPlants/${!user.id}/${plant._id}`);
-        expect(response.status).toBe(400);
-    });
-
-    it('It must be possible to search for a plant by id.', async () => {
-        const response = await request.get(`/myPlants/${!user.id}/${!plant._id}`);
-        expect(response.status).toBe(400);
     });
 
     // editing
@@ -127,17 +106,6 @@ describe ('collection/', () => {
         const result = myPlantSchema
             .validate({ nickname: response.nickname });
         if (!result.error) 
-            expect(response.status).toBe(400);
-    });
-
-    it('It not must be possible to edit the nickname of a particular plant.', async () => {
-        const response = await request.put(`/myPlants/edit/${!plant.id}`)
-        .send({
-            nickname: 'A',
-        });
-        const result = myPlantSchema
-            .validate({ nickname: response.nickname });
-        if (result.error) 
             expect(response.status).toBe(400);
     });
 
