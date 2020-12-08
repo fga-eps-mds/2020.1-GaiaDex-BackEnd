@@ -78,10 +78,9 @@ class CommentController {
     }
   }
 
-  // router.post('/like/:commentId', async (req, res) => {
-  static async likeComment(req, res) {
+  static async handleLikeOrDislike(req, res) {
+    const option = req.path.split('/')[1];
     try {
-      const user = await User.findById(req.userId);
       const comment = await Comment.findById(req.params.commentId);
       const topic = await Topic.findById(comment.topic).populate(
         defaultTopicPopulate
@@ -90,56 +89,69 @@ class CommentController {
         user: req.userId,
         comment: req.params.commentId,
       });
-      if (isLiked == null) {
-        const like = await Like.create({
-          user,
+
+      if ((option === 'like') === !isLiked) {
+        const hadErrors = await CommentController.createLikeOrDislike(
+          option,
+          req.userId,
+          res,
           comment,
-        });
-        await like.save();
-        comment.likes.push(like);
-        await comment.save();
-        const topicTrue = await Topic.findById(comment.topic).populate([
-          { path: 'comments', populate: 'user' },
-          { path: 'user' },
-          { path: 'plant' },
-        ]);
-        return res.send(topicTrue);
+          isLiked
+        );
+        if (!hadErrors) {
+          return await CommentController.updatedTopic(res, comment);
+        }
+        return hadErrors;
       }
       return res.send(topic);
     } catch (err) {
-      return res.status(400).send({ error: `Error while commenting.${err}` });
+      return res
+        .status(400)
+        .send({ error: `Error while ${option.slice(0, -1)}ing.${err}` });
     }
   }
 
-  // router.post('/dislike/:commentId', async (req, res) => {
-  static async dislikeComment(req, res) {
-    try {
-      const comment = await Comment.findById(req.params.commentId);
-      const topic = await Topic.findById(comment.topic).populate(
-        defaultTopicPopulate
-      );
-      const like = await Like.findOne({
-        user: req.userId,
-        comment: req.params.commentId,
-      });
-      if (like != null) {
-        const index = comment.likes.indexOf(like._id);
-        if (index > -1) {
-          comment.likes.splice(index, 1);
-        }
+  static async createLikeOrDislike(option, userId, res, comment, isLiked) {
+    if (option === 'like') {
+      return CommentController.likeComment(userId, res, comment);
+    }
+    return CommentController.dislikeComment(res, comment, isLiked);
+  }
 
-        comment.save();
-        await Like.findByIdAndRemove(like._id);
-        const topicTrue = await Topic.findById(comment.topic).populate([
-          { path: 'comments', populate: 'user' },
-          { path: 'user' },
-          { path: 'plant' },
-        ]);
-        return res.send(topicTrue);
-      }
-      return res.send(topic);
+  static async updatedTopic(res, comment) {
+    const topicTrue = await Topic.findById(comment.topic).populate(
+      defaultTopicPopulate
+    );
+    return res.send(topicTrue);
+  }
+
+  static async likeComment(userId, res, comment) {
+    const user = await User.findById(userId);
+    try {
+      const like = await Like.create({
+        user,
+        comment,
+      });
+      await like.save();
+      comment.likes.push(like);
+      await comment.save();
+      return null;
     } catch (err) {
-      return res.status(400).send({ error: `Error while commenting.${err}` });
+      return res.status(400).send({ error: `Error while liking.${err}` });
+    }
+  }
+
+  static async dislikeComment(res, comment, like) {
+    try {
+      const index = comment.likes.indexOf(like._id);
+      if (index > -1) {
+        comment.likes.splice(index, 1);
+      }
+      await comment.save();
+      await Like.findByIdAndRemove(like._id);
+      return null;
+    } catch (err) {
+      return res.status(400).send({ error: `Error while disliking.${err}` });
     }
   }
 }

@@ -9,30 +9,29 @@ const request = supertest(app);
 let user;
 let plant;
 
-describe ('collection/', () => {
-    beforeEach(async (done) => {
-        user = new UserModel(defaultUser2);
-        await user.save();
-    
-        plant = new PlantModel(defaultPlant1);
-        await plant.save();
-        done();
-    });
+describe('collection/', () => {
+  beforeEach(async (done) => {
+    user = new UserModel(defaultUser2);
+    await user.save();
 
-    // listing 
-    it('It should be possible to list a user collection.', async () => {
-        const response = await request.get(`/collection/${user.id}/`);
-        expect(response.status).toBe(200);
-    });
+    plant = new PlantModel(defaultPlant1);
+    await plant.save();
+    done();
+  });
 
-    it('It not should be possible to list a user collection.', async () => {
-        const response = await request.get(`/collection/${plant.id}/`);
-        expect(response.status).toBe(400);
-    });
+  // listing
+  it('It should be possible to list a user collection.', async () => {
+    const response = await request.get(`/collection/${user.id}/`);
+    expect(response.status).toBe(200);
+  });
 
-    it('It not should be possible to list a user collection.', async () => {
-        const response = await request.get(`/collection/`);
-        expect(response.status).toBe(404);
-    });
+  it('It not should be possible to list a user collection.', async () => {
+    const response = await request.get(`/collection/${plant.id}/`);
+    expect(response.status).toBe(400);
+  });
 
+  it('It not should be possible to list a user collection.', async () => {
+    const response = await request.get(`/collection/`);
+    expect(response.status).toBe(404);
+  });
 });

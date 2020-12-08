@@ -13,7 +13,7 @@ let comment;
 let topic;
 let plant;
 let authtoken;
-describe('comment/', () => {
+describe('Testing Comments routes', () => {
   beforeEach(async (done) => {
     user = new UserModel(defaultUser1);
     await user.save();
@@ -37,7 +37,6 @@ describe('comment/', () => {
     await comment.save();
 
     const login = await request.post('/auth/login').send(defaultUser1);
-
     authtoken = login.headers.authtoken;
 
     done();
@@ -96,6 +95,7 @@ describe('comment/', () => {
     const response = await request
       .post(`/comment/like/${comment.id}`)
       .set('authtoken', `${authtoken}`);
+
     expect(response.status).toBe(200);
   });
 

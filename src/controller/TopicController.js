@@ -59,9 +59,7 @@ class TopicController {
       const topicNew = await Topic.findOneAndUpdate(
         { _id: req.params.topicId },
         newData,
-        {
-          useFindAndModify: true,
-        }
+        { useFindAndModify: false }
       ).populate(defaultTopicPopulate);
       return res.send(topicNew);
     } catch (err) {
@@ -131,11 +129,9 @@ class TopicController {
         await like.save();
         topic.likes.push(like);
         await topic.save();
-        const topicTrue = await Topic.findById(req.params.topicId).populate([
-          { path: 'comments', populate: 'user' },
-          { path: 'user' },
-          { path: 'plant' },
-        ]);
+        const topicTrue = await Topic.findById(req.params.topicId).populate(
+          defaultTopicPopulate
+        );
         return res.send(topicTrue);
       }
       console.log(topic.likes.length);
@@ -161,11 +157,7 @@ class TopicController {
           topic.likes.splice(index, 1);
         }
         topic.save();
-        await Like.findByIdAndRemove(like._id).populate([
-          { path: 'comments', populate: 'user' },
-          { path: 'user' },
-          { path: 'plant' },
-        ]);
+        await Like.findByIdAndRemove(like._id).populate(defaultTopicPopulate);
       }
       return res.send(topic);
     } catch (err) {

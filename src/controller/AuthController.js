@@ -19,8 +19,8 @@ class AuthController {
       const token = jwt.sign({ id: user.id }, authConfig.secret, {
         expiresIn: 86400,
       });
-      const aToken = `Bearer ${token}`;
-      res.header('authtoken', aToken);
+      const authtoken = `Bearer ${token}`;
+      res.header('authtoken', authtoken);
       return res
         .json({
           message: 'Auth token generated',

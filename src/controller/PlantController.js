@@ -61,7 +61,8 @@ class PlantController {
       );
 
       plant.topics = [];
-      await Topic.remove({ plant: plant._id });
+
+      await Topic.deleteOne({ plant: plant._id });
 
       await Promise.all(
         topics.map(async (topic) => {
