@@ -4,17 +4,22 @@ const router = express.Router();
 
 const User = require('../models/User');
 const Plant = require('../models/Plant');
-const {auth} = require('./auth');
+const { auth } = require('./auth');
 
 router.post('/add/:plantId', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate([
-       { path: 'topics', populate: 'plants' },
-       { path: 'myPlants', populate: 'plant' },
-       { path: 'favorites', populate: 'plant' },
-     ]);
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plant' },
+      { path: 'favorites', populate: 'plant' },
+    ]);
     const plant = await Plant.findById(req.params.plantId);
-    if(user.favorites.some((favorite) => JSON.stringify(favorite._id) === JSON.stringify(plant._id))) return res.status(200).send(user);
+    if (
+      user.favorites.some(
+        (favorite) => JSON.stringify(favorite?._id) === JSON.stringify(plant._id)
+      )
+    )
+      return res.status(200).send(user);
 
     if (user.favorites.indexOf(plant) === -1) {
       user.favorites.push(plant);
@@ -23,9 +28,7 @@ router.post('/add/:plantId', auth, async (req, res) => {
 
     return res.status(200).send(user);
   } catch (err) {
-    return res
-      .status(400)
-      .send(err);
+    return res.status(400).send(err);
   }
 });
 
@@ -50,9 +53,11 @@ router.delete('/delete/:plantId', auth, async (req, res) => {
       await user.save();
     }
     const newUser = await User.findById(req.userId).populate([
-      { path: 'favorites' },
+      { path: 'topics', populate: 'plants' },
+      { path: 'myPlants', populate: 'plant' },
+      { path: 'favorites', populate: 'plant' },
     ]);
-    return res.status(200).send( newUser.favorites );
+    return res.status(200).send(newUser);
   } catch (err) {
     return res.status(400).send({ error: `Error deleting favorite. ${err} ` });
   }

@@ -23,7 +23,7 @@ router.post('/register', auth, async (req, res) => {
       gbifID,
       stateProvince,
     } = req.body;
-    const firstUser = await User.findById(req.userId)
+    const firstUser = await User.findById(req.userId);
     const plant = await Plant.create({
       scientificName,
       familyName,
@@ -46,17 +46,17 @@ router.post('/register', auth, async (req, res) => {
 
     //     plant.topics.push(plantTopic);
     // }));
-
     await plant.save();
-
-    return res.send({ plant });
+    console.log('chegou aki');
+    return res.send(plant);
   } catch (err) {
     if (err.code === 11000) {
       const { scientificName } = req.body;
-      const plant = await Plant.find({
+      const plant = await Plant.findOne({
         scientificName,
-      }).populate('topics');
-      return res.send({ plant });
+      });
+      console.log('Planta já registrada');
+      return res.send(plant);
     }
     return res.send(err);
   }

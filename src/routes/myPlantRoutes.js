@@ -75,17 +75,21 @@ router.put('/edit/:myPlantId', async (req, res) => {
         .send({ error: `Error while editing plant. ${result.error}` });
     }
 
-    const myPlant = await MyPlant.findOneAndUpdate({ _id: req.params.myPlantId }, newNick, {
-      useFindAndModify: false,
-      new: true,
-    });
+    const myPlant = await MyPlant.findOneAndUpdate(
+      { _id: req.params.myPlantId },
+      newNick,
+      {
+        useFindAndModify: false,
+        new: true,
+      }
+    );
 
     const newUser = await User.findById(myPlant.user).populate([
       { path: 'topics', populate: 'plants' },
       { path: 'myPlants', populate: 'plant' },
-      { path: 'favorites', populate: 'plants' },
+      { path: 'favorites', populate: 'plant' },
     ]);
-    return res.send( newUser );
+    return res.send(newUser);
   } catch (err) {
     return res
       .status(400)
@@ -112,10 +116,10 @@ router.delete('/delete/:myPlantId', async (req, res) => {
     const newUser = await User.findById(user._id).populate([
       { path: 'topics', populate: 'plants' },
       { path: 'myPlants', populate: 'plant' },
-      { path: 'favorites', populate: 'plants' },
+      { path: 'favorites', populate: 'plant' },
     ]);
 
-    return res.send( newUser );
+    return res.send(newUser);
   } catch (err) {
     return res
       .status(400)
