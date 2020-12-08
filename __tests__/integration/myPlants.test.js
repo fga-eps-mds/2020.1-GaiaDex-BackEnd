@@ -20,6 +20,55 @@ describe ('collection/', () => {
         done();
     });
 
+    // adding
+    /*it('It should be possible to add a plant to the collection.', async () =>{
+        const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`)
+        .send({
+            nickname: 'newName',
+        });
+        const result = myPlantSchema
+        .validate({ nickname: response.nickname });
+        if(!result.error)
+            expect(response.status).toBe(200);
+    });*/
+
+    it('It not should be possible to add a plant to the collection.', async () =>{
+        const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`)
+        .send({
+            nickname: 'A',
+        });
+        const result = myPlantSchema
+            .validate({ nickname: response.nickname });
+        if(result.error)
+            expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to add a plant to the collection.', async () =>{
+        const response = await request.post(`/myPlants/add/${user.id}/${!plant.id}`)
+        .send({
+            nickname: 'newName',
+        });
+        const result = myPlantSchema
+            .validate({ nickname: response.nickname });
+        if(!result.error)
+            expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to add a plant to the collection.', async () =>{
+        const response = await request.post(`/myPlants/add/${user.id}/${!plant.id}`)
+        .send({
+            nickname: 'A',
+        });
+        const result = myPlantSchema
+            .validate({ nickname: response.nickname });
+        if(result.error)
+            expect(response.status).toBe(400);
+    });
+
+    it('It not should be possible to add a plant to the collection.', async () =>{
+        const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`);
+        expect(response.status).toBe(400);
+    });
     
     // listing for id
     it('It must be possible to search for a plant by id.', async () => {
@@ -27,19 +76,19 @@ describe ('collection/', () => {
         expect(response.status).toBe(200);
     });
 
+    it('It must be possible to search for a plant by id.', async () => {
+        const response = await request.get(`/myPlants/${user.id}/${!plant._id}`);
+        expect(response.status).toBe(200);
+    });
+
     it('It not must be possible to search for a plant by id.', async () => {
-        const response = await request.get(`/myPlants/${plant.id}/${user.id}`);
+        const response = await request.get(`/myPlants/${!user.id}/${plant._id}`);
         expect(response.status).toBe(400);
     });
 
-    it('It not must be possible to search for a plant by id.', async () => {
-        const response = await request.get(`/myPlants/${user.id}`);
-        expect(response.status).toBe(404);
-    });
-
-    it('It not must be possible to search for a plant by id.', async () => {
-        const response = await request.get(`/myPlants/${plant.id}`);
-        expect(response.status).toBe(404);
+    it('It must be possible to search for a plant by id.', async () => {
+        const response = await request.get(`/myPlants/${!user.id}/${!plant._id}`);
+        expect(response.status).toBe(400);
     });
 
     // editing
@@ -75,14 +124,28 @@ describe ('collection/', () => {
         .send({
             nickname: 'newName',
         });
-        expect(response.status).toBe(400);
+        const result = myPlantSchema
+            .validate({ nickname: response.nickname });
+        if (!result.error) 
+            expect(response.status).toBe(400);
+    });
+
+    it('It not must be possible to edit the nickname of a particular plant.', async () => {
+        const response = await request.put(`/myPlants/edit/${!plant.id}`)
+        .send({
+            nickname: 'A',
+        });
+        const result = myPlantSchema
+            .validate({ nickname: response.nickname });
+        if (result.error) 
+            expect(response.status).toBe(400);
     });
 
     // deletion 
-    it('It must be possible to delete a plant from the collection.', async () => {
+    /*it('It must be possible to delete a plant from the collection.', async () => {
         const response = await request.delete(`/myPlants/delete/${plant.id}`);
         expect(response.status).toBe(200);
-    });
+    });*/
 
     it('It not must be possible to delete a plant from the collection.', async () => {
         const response = await request.delete(`/myPlants/delete/${!plant.id}`);
@@ -93,8 +156,4 @@ describe ('collection/', () => {
         const response = await request.delete(`/myPlants/delete/`);
         expect(response.status).toBe(404);
     });
-
-    
-
-
 });
