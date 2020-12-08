@@ -77,4 +77,24 @@ describe ('collection/', () => {
         });
         expect(response.status).toBe(400);
     });
+
+    // deletion 
+    it('It must be possible to delete a plant from the collection.', async () => {
+        const response = await request.delete(`/myPlants/delete/${plant.id}`);
+        expect(response.status).toBe(200);
+    });
+
+    it('It not must be possible to delete a plant from the collection.', async () => {
+        const response = await request.delete(`/myPlants/delete/${!plant.id}`);
+        expect(response.status).toBe(400);
+    });
+
+    it('It not must be possible to delete a plant from the collection.', async () => {
+        const response = await request.delete(`/myPlants/delete/`);
+        expect(response.status).toBe(404);
+    });
+
+    
+
+
 });
