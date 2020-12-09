@@ -20,7 +20,9 @@ describe('collection/', () => {
     done();
   });
 
-  it.skip('It should be possible to add a plant to the collection.', async () => {
+  // adding 
+  it('It should be possible to add a plant to the collection.', async () => {
+    jest.setTimeout(30000);
     const response = await request
       .post(`/myPlants/add/${user.id}/${plant.id}`)
       .send({
@@ -96,6 +98,7 @@ describe('collection/', () => {
     if (!result.error) expect(response.status).toBe(400);
   });
 
+  // deleting 
   it.skip('It must be possible to delete a plant from the collection.', async () => {
     const response = await request.delete(`/myPlants/delete/${plant.id}`);
     expect(response.status).toBe(200);
