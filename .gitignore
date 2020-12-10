@@ -1,4 +1,4 @@
 /node_modules
-# /coverage
-# test-report.xml
+/coverage
+test-report.xml
 yarn-error.log
