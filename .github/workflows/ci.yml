@@ -14,7 +14,6 @@ jobs:
         env:
           CI: true
         run: npm run lint:js:fix
-
   test:
     name: CI Tests
     runs-on: ubuntu-latest
@@ -23,28 +22,8 @@ jobs:
     - name: Install Modules
       run: npm install
     - name: Run Tests
+      # working-directory: server
       run: npm run test
-      
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Generate SonarCloud-formated test coverage report
-        env:
-          NODE_ENV: test
-        run: |
-          sudo npm install -g yarn jest
-          yarn install
-          yarn jest --coverage
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   build:
     name: CI Build
     runs-on: ubuntu-latest
