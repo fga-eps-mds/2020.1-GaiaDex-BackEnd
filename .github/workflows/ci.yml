@@ -22,7 +22,7 @@ jobs:
     - name: Install Modules
       run: npm install
     - name: Run Tests
-      working-directory: server
+      # working-directory: server
       run: npm run test
   build:
     name: CI Build
