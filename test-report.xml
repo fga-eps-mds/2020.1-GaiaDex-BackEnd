@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/plant.test.js">
+    <testCase name="/Plant should register a plant" duration="687"/>
+    <testCase name="/Plant should be able to find a plant by her ID" duration="35"/>
+    <testCase name="/Plant should be able to update plant" duration="79"/>
+    <testCase name="/Plant should be able to delete plant" duration="28"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/auth.test.js">
+    <testCase name="Auth/User should be able to create user" duration="588"/>
+    <testCase name="Auth/User should give error because trying to signup USERNAME that already exists" duration="99"/>
+    <testCase name="Auth/User should give error because trying to signup EMAIL that already exists" duration="31"/>
+    <testCase name="Auth/User should give error 400 because the signup of USERNAME with less of 4 characters" duration="39"/>
+    <testCase name="Auth/User should give error 400 because PASSWORD not valid (less than 8 char)" duration="34"/>
+    <testCase name="Auth/User should give error 400 because passwordConfirmation wrong" duration="75"/>
+    <testCase name="Auth/User should be able to login in account with correct data" duration="65"/>
+    <testCase name="Auth/User should not be able to login with wrong password" duration="52"/>
+    <testCase name="Auth/User should not be able to login if wrong email" duration="66"/>
+    <testCase name="Auth/User should be able to update User" duration="136"/>
+    <testCase name="Auth/User should not be able to update if new username has less tha 4 characters" duration="33"/>
+    <testCase name="Auth/User should not be able to update if new password has less than 8 characters" duration="33"/>
+    <testCase name="Auth/User should be able to delete user" duration="34"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/comments.test.js">
+    <testCase name="Testing Comments routes Should be able to comment because there is text" duration="849"/>
+    <testCase name="Testing Comments routes Should not be able to comment because there is no text" duration="85"/>
+    <testCase name="Testing Comments routes Should be able to update the comment because there is text" duration="144"/>
+    <testCase name="Testing Comments routes Should not be able to update the comment because there is no text" duration="149"/>
+    <testCase name="Testing Comments routes Should be able to delete the comment" duration="272"/>
+    <testCase name="Testing Comments routes Should be able to like the comment" duration="304"/>
+    <testCase name="Testing Comments routes Should be able to dislike the comment" duration="253"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/myPlants.test.js">
+    <testCase name="collection/ It should be possible to add a plant to the collection." duration="0"/>
+    <testCase name="collection/ It should not be possible to add a plant to the collection." duration="0"/>
+    <testCase name="collection/ It not should be possible to add a plant to the collection." duration="65"/>
+    <testCase name="collection/ It not should be possible to add a plant to the collection." duration="20"/>
+    <testCase name="collection/ It must be possible to search for a plant by id." duration="40"/>
+    <testCase name="collection/ It must be possible to search for a plant by id." duration="20"/>
+    <testCase name="collection/ It must be possible to edit the nickname of a particular plant." duration="48"/>
+    <testCase name="collection/ It not must be possible to edit the nickname of a particular plant." duration="21"/>
+    <testCase name="collection/ It not must be possible to edit the nickname of a particular plant." duration="26"/>
+    <testCase name="collection/ It not must be possible to edit the nickname of a particular plant." duration="13"/>
+    <testCase name="collection/ It must be possible to delete a plant from the collection." duration="0"/>
+    <testCase name="collection/ It not must be possible to delete a plant from the collection." duration="18"/>
+    <testCase name="collection/ It not must be possible to delete a plant from the collection." duration="19"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/topics.test.js">
+    <testCase name="topic/ Should be able to create a new topic." duration="154"/>
+    <testCase name="topic/ Should not be able to create a new topic because there is no topic title." duration="58"/>
+    <testCase name="topic/ Should not be able to create a new topic because topic title is too short." duration="127"/>
+    <testCase name="topic/ Should not be able to create a new topic because user is not valid." duration="37"/>
+    <testCase name="topic/ Should not be able to create a new topic because plant is not valid." duration="64"/>
+    <testCase name="topic/ Should be able to update a topic." duration="147"/>
+    <testCase name="topic/ Should be able to update, even tho title isnt being passed" duration="43"/>
+    <testCase name="topic/ Should not be able to update a topic because new title is too short." duration="45"/>
+    <testCase name="topic/ Should be able to like a topic." duration="160"/>
+    <testCase name="topic/ Should be able to dislike a topic." duration="145"/>
+    <testCase name="topic/ Should be able to list all topics." duration="159"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/collection.test.js">
+    <testCase name="collection/ It should be possible to list a user collection." duration="149"/>
+    <testCase name="collection/ It not should be possible to list a user collection." duration="27"/>
+    <testCase name="collection/ It not should be possible to list a user collection." duration="33"/>
+  </file>
+  <file path="/home/guilherme/final_gaiadex/back/__tests__/integration/favorites.test.js">
+    <testCase name="favorite/ It should be possible to add a new favored plant." duration="110"/>
+    <testCase name="favorite/ It not should be possible to add a new favored plant." duration="29"/>
+    <testCase name="favorite/ It not should be possible to add a new favored plant." duration="36"/>
+    <testCase name="favorite/ It not should be possible to add a new favored plant." duration="32"/>
+    <testCase name="favorite/ It not should be possible to add a new favored plant." duration="18"/>
+    <testCase name="favorite/ It should be possible to see a list of favorite plants." duration="31"/>
+    <testCase name="favorite/ It not should be possible to see a list of favorite plants." duration="25"/>
+    <testCase name="favorite/ It not should be possible to see a list of favorite plants." duration="16"/>
+    <testCase name="favorite/ Must be able to delete a favorite plant." duration="25"/>
+    <testCase name="favorite/ Must be able to delete a favorite plant." duration="18"/>
+    <testCase name="favorite/ Must be able to delete a favorite plant." duration="16"/>
+    <testCase name="favorite/ Must be able to delete a favorite plant." duration="22"/>
+    <testCase name="favorite/ Must be able to delete a favorite plant." duration="31"/>
+  </file>
+</testExecutions>
