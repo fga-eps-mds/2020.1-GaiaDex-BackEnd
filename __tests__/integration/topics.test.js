@@ -28,6 +28,7 @@ describe('topic/', () => {
     await topic.save();
     done();
   });
+
   // Creation
   it('Should be able to create a new topic.', async () => {
     const response = await request
@@ -119,7 +120,6 @@ describe('topic/', () => {
     const response = await request
       .post(`/topic/like/${topic.id}/`)
       .set('authtoken', `${authtoken}`);
-
     expect(response.status).toBe(200);
   });
 
@@ -128,11 +128,15 @@ describe('topic/', () => {
     const login = await request.post('/auth/login').send(defaultUser1);
 
     const { authtoken } = login.headers;
+    await request
+      .post(`/topic/like/${topic.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     const response = await request
       .post(`/topic/dislike/${topic.id}/`)
       .set('authtoken', `${authtoken}`);
 
+    console.log(response.body);
     expect(response.status).toBe(200);
   });
 

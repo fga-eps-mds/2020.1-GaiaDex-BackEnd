@@ -30,8 +30,7 @@
     ]
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "repository": {
     "type": "git",

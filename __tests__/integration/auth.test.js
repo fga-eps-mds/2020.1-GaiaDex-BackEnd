@@ -70,17 +70,6 @@ describe('Auth/User', () => {
     expect(response.status).toBe(200);
   });
 
-  // @TODO: remove this comment
-  // this test is no longer being used since at the login method we're
-  // only validating email (and not username).
-  it.skip('should not be able to login if user does not exists', async () => {
-    const response = await request.post('/auth/login').send({
-      ...defaultUser1,
-      username: 'lucia',
-    });
-    expect(response.status).toBe(400);
-  });
-
   it('should not be able to login with wrong password', async () => {
     const response = await request.post('/auth/login').send({
       ...defaultUser1,

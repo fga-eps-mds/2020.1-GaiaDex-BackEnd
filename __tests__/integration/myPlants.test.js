@@ -20,17 +20,19 @@ describe('collection/', () => {
     done();
   });
 
-  it.skip('It should be possible to add a plant to the collection.', async () => {
+  xit('It should be possible to add a plant to the collection.', async () => {
     const response = await request
       .post(`/myPlants/add/${user.id}/${plant.id}`)
       .send({
         nickname: 'newName',
       });
-    const result = myPlantSchema.validate({ nickname: response.nickname });
-    if (!result.error) expect(response.status).toBe(200);
+    console.log(response.body);
+    // const result = myPlantSchema.validate({ nickname: response.nickname });
+    // if (!result.error)
+    expect(response.status).toBe(200);
   });
 
-  it('It not should be possible to add a plant to the collection.', async () => {
+  xit('It should not be possible to add a plant to the collection.', async () => {
     const response = await request
       .post(`/myPlants/add/${user.id}/${plant.id}`)
       .send({
@@ -96,7 +98,7 @@ describe('collection/', () => {
     if (!result.error) expect(response.status).toBe(400);
   });
 
-  it.skip('It must be possible to delete a plant from the collection.', async () => {
+  xit('It must be possible to delete a plant from the collection.', async () => {
     const response = await request.delete(`/myPlants/delete/${plant.id}`);
     expect(response.status).toBe(200);
   });

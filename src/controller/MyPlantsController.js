@@ -25,7 +25,6 @@ class MyPlantsController {
 
       await user.myPlants.push(myPlant);
       await user.save();
-
       return res.status(200).send({ myPlant });
     } catch (err) {
       return res

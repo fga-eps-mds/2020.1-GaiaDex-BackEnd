@@ -1,7 +1,6 @@
 const { Topic, defaultTopicPopulate } = require('../models/Topic');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
-const Like = require('../models/Like');
 const topicSchema = require('../schemas/topicSchema');
 
 class TopicController {
@@ -23,7 +22,6 @@ class TopicController {
         user: req.params.userId,
         plant: req.params.plantId,
       });
-
       await topic.save();
 
       user.topics.push(topic);
@@ -111,60 +109,6 @@ class TopicController {
     }
   }
 
-  static async likeTopic(req, res) {
-    try {
-      const user = await User.findById(req.userId);
-      const topic = await Topic.findById(req.params.topicId).populate(
-        defaultTopicPopulate
-      );
-      const isLiked = await Like.findOne({
-        user: req.userId,
-        topic: req.params.topicId,
-      });
-      if (isLiked == null) {
-        const like = await Like.create({
-          user,
-          topic,
-        });
-        await like.save();
-        topic.likes.push(like);
-        await topic.save();
-        const topicTrue = await Topic.findById(req.params.topicId).populate(
-          defaultTopicPopulate
-        );
-        return res.send(topicTrue);
-      }
-      console.log(topic.likes.length);
-
-      return res.send(topic);
-    } catch (err) {
-      return res.status(400).send({ error: `Error while commenting.${err}` });
-    }
-  }
-
-  static async dislikeTopic(req, res) {
-    try {
-      const topic = await Topic.findById(req.params.topicId).populate(
-        defaultTopicPopulate
-      );
-      const like = await Like.findOne({
-        user: req.userId,
-        topic: req.params.topicId,
-      });
-      if (like != null) {
-        const index = topic.likes.indexOf(like._id);
-        if (index > -1) {
-          topic.likes.splice(index, 1);
-        }
-        topic.save();
-        await Like.findByIdAndRemove(like._id).populate(defaultTopicPopulate);
-      }
-      return res.send(topic);
-    } catch (err) {
-      return res.status(400).send({ error: `Error while commenting.${err}` });
-    }
-  }
-
   static async findTopic(req, res) {
     try {
       const topic = await Topic.findById(req.params.topicId).populate(
@@ -177,6 +121,13 @@ class TopicController {
         .status(400)
         .send({ error: `Error while find topic id.${err}` });
     }
+  }
+
+  static async refreshTopicContents(res, topicId) {
+    const topicTrue = await Topic.findById(topicId).populate(
+      defaultTopicPopulate
+    );
+    return res.send(topicTrue);
   }
 }
 
