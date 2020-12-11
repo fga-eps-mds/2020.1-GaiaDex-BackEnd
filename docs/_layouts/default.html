@@ -8,21 +8,34 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="{{ '/assets/js/respond.js' | relative_url }}"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="{{ '/assets/css/ie.css' | relative_url }}">
-    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
   </head>
-  <body>
+    <body>
     <div style="width:1200px; margin:0 auto">
-
+      <div id="header">
+        <nav style="max-width: 100%">
+          <li class="fork">
+            <a href="{{ site.github.repository_url }}">View On GitHub</a>
+          </li>
+          <li style="position: absolute; left: 40%">
+              <h1 style="line-height: 48px; font-size: 48px; font-family: 'OpenSansLight', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; text-align: center; vertical-align: middle; color: #fbfbfb">Gaiadex - Backend</h1>
+          </li>
+          {% if site.show_downloads %}
+            <li class="downloads">
+              <a href="download/data.json" download>JSON</a>
+            </li>
+            <li class="downloads">
+              <a href="download/data.csv" download>CSV</a>
+            </li>
+            <li class="title">DOWNLOADS</li>
+          {% endif %}
+        </nav>
+      </div>
+      
       <section>
         <div id="title" style="width:1200px; margin:0 auto">
-          <h1>{{ site.title }}</h1>
+          <h2 style="line-height: 36px; font-size: 36px; font-family: 'OpenSansLight', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 800; text-align: center; vertical-align: middle; color: #ae90d4;">Dashboard</h>
           <p>{{ site.description }}</p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/fga-eps-mds/2020.1-GaiaDex-BackEnd/">GaiaDex-BackEnd</a></span>
