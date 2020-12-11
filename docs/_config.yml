@@ -27,7 +27,7 @@ url: "https://github.com/fga-eps-mds/2020.1-GaiaDex-BackEnd/" # the base hostnam
 
 
 # Build settings
-theme: minima
+theme: jekyll-theme-midnight
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
