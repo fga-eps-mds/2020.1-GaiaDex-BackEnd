@@ -18,4 +18,9 @@ describe('scanner', () => {
 
     expect(response.status).toBe(200);
   });
+
+  it('should not be able to detect plant since required fields wasnt filled', async () => {
+    const response = await request.post('/scanner').send({});
+    expect(response.status).toBe(400);
+  });
 });
