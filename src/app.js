@@ -18,10 +18,9 @@ class App {
   }
 
   middlewares() {
-    this.express.use(express.json({ limit: 20 * 1024 * 1024 }));
     this.express.use(morgan('dev'));
+    this.express.use(express.json({ limit: 20 * 1024 * 1024 }));
     this.express.use(express.urlencoded({ extended: false }));
-    this.express.use(express.json());
   }
 
   routes() {

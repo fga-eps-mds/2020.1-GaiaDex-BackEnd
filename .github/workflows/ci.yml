@@ -1,7 +1,12 @@
 name: Continuous Integration - Pull Requests Lint and Tests
 
 on:
+  push:
+    branches:
+      - master
+      - develop
   pull_request:
+
 jobs:
   lint:
     name: CI Lint

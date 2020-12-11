@@ -16,9 +16,13 @@ class ScannerController {
   static async validateBody(requiredFields) {
     const errors = [];
     Object.entries(requiredFields).forEach(([key, value]) => {
-      if (!value) errors.push(`${key} is required`);
+      if (!value) {
+        errors.push(`${key} is required`);
+      }
     });
-    if (errors.length) throw errors;
+    if (errors.length) {
+      throw errors;
+    }
   }
 
   static async savePhoto({ data, filename, mime }) {
@@ -47,7 +51,7 @@ class ScannerController {
     return response.data;
   }
 
-  static async scanner(req, res, next) {
+  static async scanner(req, res) {
     try {
       const apiKey = process.env.PLANT_NET_API_KEY;
 
@@ -63,10 +67,9 @@ class ScannerController {
       );
 
       fs.unlinkSync(filePath);
-      res.send(predictionResults);
+      return res.send(predictionResults);
     } catch (err) {
-      if (Array.isArray(err)) res.status(400).send({ errors: err });
-      next(err);
+      return res.status(400).send({ errors: err });
     }
   }
 }

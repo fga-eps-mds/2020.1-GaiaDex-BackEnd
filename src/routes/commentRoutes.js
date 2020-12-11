@@ -3,7 +3,7 @@ const { auth } = require('../lib/auth');
 const CommentController = require('../controller/CommentController');
 const LikeController = require('../controller/LikeController');
 
-const router = express.Router();
+const router = new express.Router();
 
 router.post('/create/:topicId', auth, CommentController.createComment);
 router.put('/update/:commentId', auth, CommentController.updateComment);
