@@ -16,9 +16,13 @@ class ScannerController {
   static async validateBody(requiredFields) {
     const errors = [];
     Object.entries(requiredFields).forEach(([key, value]) => {
-      if (!value) errors.push(`${key} is required`);
+      if (!value) {
+        errors.push(`${key} is required`);
+      }
     });
-    if (errors.length) throw errors;
+    if (errors.length) {
+      throw errors;
+    }
   }
 
   static async savePhoto({ data, filename, mime }) {
