@@ -26,9 +26,7 @@ describe('collection/', () => {
       .send({
         nickname: 'newName',
       });
-    console.log(response.body);
-    // const result = myPlantSchema.validate({ nickname: response.nickname });
-    // if (!result.error)
+
     expect(response.status).toBe(200);
   });
 

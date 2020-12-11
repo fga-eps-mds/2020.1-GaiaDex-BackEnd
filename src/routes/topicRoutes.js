@@ -3,8 +3,7 @@ const { auth } = require('../lib/auth');
 const TopicController = require('../controller/TopicController');
 const LikeController = require('../controller/LikeController');
 
-const router = express.Router();
-
+const router = new express.Router();
 router.post('/create/:plantId/:userId', TopicController.createTopic);
 router.put('/update/:topicId', TopicController.updateTopic);
 router.delete('/delete/:topicId', TopicController.deleteTopic);

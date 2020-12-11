@@ -1,7 +1,7 @@
 const express = require('express');
 const PlantController = require('../controller/PlantController');
 
-const router = express.Router();
+const router = new express.Router();
 
 router.post('/register', PlantController.registerPlant);
 router.get('/', PlantController.fetchAll);

@@ -2,6 +2,7 @@ const express = require('express');
 const authRoutes = require('./routes/authRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const scannerRoutes = require('./routes/scannerRoutes');
+// const scannerRoutes = require('./routes/scanner');
 const topicRoutes = require('./routes/topicRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const myPlantRoutes = require('./routes/myPlantRoutes');

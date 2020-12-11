@@ -72,7 +72,6 @@ describe('Testing Comments routes', () => {
         text: 'Comentario atualizado',
       })
       .set('authtoken', `${authtoken}`);
-    console.log(response.body);
     expect(response.status).toBe(200);
   });
 
@@ -98,8 +97,6 @@ describe('Testing Comments routes', () => {
       .post(`/comment/like/${commentId}`)
       .set('authtoken', `${authtoken}`);
 
-    console.log(response.body);
-
     expect(response.status).toBe(200);
   });
 
@@ -111,8 +108,6 @@ describe('Testing Comments routes', () => {
     const response = await request
       .post(`/comment/dislike/${commentId}`)
       .set('authtoken', `${authtoken}`);
-
-    console.log(response.body);
 
     expect(response.status).toBe(200);
   });
