@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./User');
 
 const PlantSchema = new mongoose.Schema({
   scientificName: {
@@ -25,7 +26,8 @@ const PlantSchema = new mongoose.Schema({
     type: String,
   },
   firstUser: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   collectionCount: {
     type: Number,

@@ -1,9 +1,10 @@
 const express = require('express');
 const PlantController = require('../controller/PlantController');
+const { auth } = require('../lib/auth');
 
 const router = new express.Router();
 
-router.post('/register', PlantController.registerPlant);
+router.post('/register', auth, PlantController.registerPlant);
 router.get('/', PlantController.fetchAll);
 router.get('/:plantId', PlantController.searchPlant);
 router.delete('/:plantId', PlantController.deletePlant);

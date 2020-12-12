@@ -53,18 +53,29 @@ class AuthController {
   static async userId(req, res) {
     try {
       const user = await User.findById(req.params.id).populate([
-        { path: 'topics' },
-        { path: 'myPlants' },
-        { path: 'favorites' },
+        { path: 'topics', populate: 'plant' },
+        { path: 'myPlants', populate: 'plant' },
+        { path: 'favorites', populate: 'plant' },
       ]);
       if (!user) {
         throw new Error("User doesn't exist.");
       }
       return res.send(user);
     } catch (err) {
-      return res
-        .status(400)
-        .send({ error: `Error while finding user.\n${err}` });
+      return res.status(400).send({ error: `Error while finding user.${err}` });
+    }
+  }
+
+  static async loggedUser(req, res) {
+    try {
+      const user = await User.findById(req.userId).populate([
+        { path: 'topics', populate: 'plant' },
+        { path: 'myPlants', populate: 'plant' },
+        { path: 'favorites', populate: 'plant' },
+      ]);
+      return res.send(user);
+    } catch (err) {
+      return res.status(400).send({ error: `Error while finding user.${err}` });
     }
   }
 

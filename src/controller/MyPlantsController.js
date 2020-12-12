@@ -37,9 +37,9 @@ class MyPlantsController {
 
   static async createPlant(req, res) {
     try {
-      const user = await User.findById(req.params.userId);
+      const user = await User.findById(req.userId);
       const plant = await Plant.findById(req.params.plantId);
-
+  
       const result = myPlantSchema.validate({ nickname: req.body.nickname });
       if (result.error) {
         return res.status(400).send(result.error);
@@ -52,6 +52,7 @@ class MyPlantsController {
       });
       await user.myPlants.push(myPlant._id);
       await user.save();
+  
       return res.status(200).send({ myPlant });
     } catch (err) {
       return res
@@ -64,7 +65,7 @@ class MyPlantsController {
     try {
       const user = await User.findById(req.params.userId);
       const index = user.myPlants.indexOf(req.params.myPlantId);
-
+  
       if (index > -1) {
         const myPlant = await MyPlant.findById(req.params.myPlantId);
         return res.send({
@@ -86,19 +87,29 @@ class MyPlantsController {
   static async updatePlant(req, res) {
     try {
       const newNick = req.body;
-
+  
       const result = myPlantSchema.validate(newNick);
       if (result.error) {
         return res
           .status(400)
           .send({ error: `Error while editing plant. ${result.error}` });
       }
-
-      await MyPlant.findOneAndUpdate({ _id: req.params.myPlantId }, newNick, {
-        useFindAndModify: false,
-      });
-
-      return res.send({ message: 'Backyard plant updated successfully.' });
+  
+      const myPlant = await MyPlant.findOneAndUpdate(
+        { _id: req.params.myPlantId },
+        newNick,
+        {
+          useFindAndModify: false,
+          new: true,
+        }
+      );
+  
+      const newUser = await User.findById(myPlant.user).populate([
+        { path: 'topics', populate: 'plants' },
+        { path: 'myPlants', populate: 'plant' },
+        { path: 'favorites', populate: 'plant' },
+      ]);
+      return res.send(newUser);
     } catch (err) {
       return res
         .status(400)
@@ -118,10 +129,13 @@ class MyPlantsController {
       await MyPlant.findByIdAndRemove(req.params.myPlantId, {
         useFindAndModify: false,
       });
-
-      return res.send({
-        message: 'Plant successfully removed from backyard.',
-      });
+      const newUser = await User.findById(user._id).populate([
+        { path: 'topics', populate: 'plants' },
+        { path: 'myPlants', populate: 'plant' },
+        { path: 'favorites', populate: 'plant' },
+      ]);
+  
+      return res.send(newUser);
     } catch (err) {
       return res
         .status(400)

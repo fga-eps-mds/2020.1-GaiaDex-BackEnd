@@ -4,7 +4,7 @@ const TopicController = require('../controller/TopicController');
 const LikeController = require('../controller/LikeController');
 
 const router = new express.Router();
-router.post('/create/:plantId/:userId', TopicController.createTopic);
+router.post('/create/:plantId', auth, TopicController.createTopic);
 router.put('/update/:topicId', TopicController.updateTopic);
 router.delete('/delete/:topicId', TopicController.deleteTopic);
 router.get('/list', TopicController.listTopics);
