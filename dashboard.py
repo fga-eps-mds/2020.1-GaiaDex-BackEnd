@@ -27,6 +27,8 @@ with urlopen(repo_url) as url:
         if metric_has_value(metric):
             metrics.append(metric)
 
+with open('docs/download/data.json', 'w', encoding='utf-8') as f:
+    json.dump(metrics, f, ensure_ascii=False, indent=4)
 
 import pandas as pd
 
@@ -35,7 +37,7 @@ df = df.pivot(index='date', columns='metric')
 df.columns = df.columns.droplevel(0)
 df = remove_non_numerical_values(df)
 print(df)
-
+df.to_csv('docs/download/data.csv', encoding='utf-8')
 
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
@@ -64,6 +66,6 @@ import plotly.io as pio
 pio.templates["custom_dark"] = pio.templates["plotly_dark"]
 pio.templates["custom_dark"]['layout']['paper_bgcolor'] = '#2a2a29'
 fig.layout.template = 'custom_dark'
-pio.write_html(fig, file='dashboard/_includes/figure.html') #, auto_open=True)
+pio.write_html(fig, file='docs/_includes/figure.html') #, auto_open=True)
 
 # fig.show()
