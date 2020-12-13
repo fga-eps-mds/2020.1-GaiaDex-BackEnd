@@ -10,10 +10,7 @@ class AuthController {
       const { email, password } = req.body;
       const user = await User.findOne({ email, password });
       if (!user) {
-        return res.status(400).send({ Error: 'User not found' });
-      }
-      if (password !== user.password) {
-        return res.status(400).send({ Error: 'Incorrect password' });
+        return res.status(400).send({ Error: 'Wrong email or password.' });
       }
       user.password = undefined;
       const token = jwt.sign({ id: user.id }, authConfig.secret, {
@@ -38,17 +35,18 @@ class AuthController {
 
       await User.findOne({ username: newUserData.username });
 
-      if (result.error)
+      if (result.error) {
         return res
           .status(400)
           .send({ error: `Error while signing up. ${result.error}` });
+      }
 
       const user = new User(newUserData);
       await user.save();
 
       return res.send(user);
     } catch (err) {
-      return res.status(400).send({ error: `Error while signing up.${err}` });
+      return res.status(400).send({ error: `Error while signing up.\n${err}` });
     }
   }
 
@@ -59,22 +57,14 @@ class AuthController {
         { path: 'myPlants' },
         { path: 'favorites' },
       ]);
+      if (!user) {
+        throw new Error("User doesn't exist.");
+      }
       return res.send(user);
     } catch (err) {
-      return res.status(400).send({ error: `Error while finding user.${err}` });
-    }
-  }
-
-  static async loggedUser(req, res) {
-    try {
-      const user = await User.findById(req.userId).populate([
-        { path: 'topics' },
-        { path: 'myPlants' },
-        { path: 'favorites' },
-      ]);
-      return res.send(user);
-    } catch (err) {
-      return res.status(400).send({ error: `Error while finding user.${err}` });
+      return res
+        .status(400)
+        .send({ error: `Error while finding user.\n${err}` });
     }
   }
 
@@ -83,13 +73,22 @@ class AuthController {
       const user = await User.findById(req.params.id);
       const newData = req.body;
 
-      if (!newData.username) newData.username = user.username;
-      if (!newData.password) newData.password = user.password;
-      if (!newData.email) newData.email = user.email;
+      if (!newData.username) {
+        newData.username = user.username;
+      }
+      if (!newData.password) {
+        newData.password = user.password;
+        newData.passwordConfirmation = user.password;
+      }
+      if (!newData.email) {
+        newData.email = user.email;
+      }
 
       const result = userSchema.validate(newData);
 
-      if (result.error) return res.status(400).send(result.error);
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
         useFindAndModify: false,
@@ -99,12 +98,15 @@ class AuthController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while updating user.${err}` });
+        .send({ error: `Error while updating user.\n${err}` });
     }
   }
 
   static async deleteId(req, res) {
     try {
+      if (req.userId !== req.params.id) {
+        throw new Error('Cant delete other users.');
+      }
       await User.findByIdAndDelete(req.params.id);
       return res.send({ message: 'User successfully deleted.' });
     } catch (err) {

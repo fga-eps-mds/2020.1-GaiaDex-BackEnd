@@ -13,7 +13,9 @@ class LikeController {
   }
 
   getEntity() {
-    if (this.isTopic) return this.topic;
+    if (this.isTopic) {
+      return this.topic;
+    }
     return this.comment;
   }
 
@@ -24,9 +26,16 @@ class LikeController {
   static async getController(req, isLike, isTopic) {
     const entityParameter = isTopic ? req.params.topicId : req.params.commentId;
     const entityName = LikeController.getEntityName(this.isTopic);
-    const topic = await Topic.findById(entityParameter).populate(
-      defaultTopicPopulate
-    );
+
+    const topic = isTopic
+      ? await Topic.findById(entityParameter).populate(defaultTopicPopulate)
+      : await Topic.findOne({})
+          .populate({
+            path: 'comments',
+            match: { _id: entityParameter },
+          })
+          .exec();
+
     const like = await Like.findOne({
       user: req.userId,
       [entityName]: entityParameter,
@@ -47,6 +56,7 @@ class LikeController {
       if (isLike === !controller.like) {
         return await controller.callCommentOrTopic(req, res);
       }
+
       return res.send(controller.topic);
     } catch (err) {
       return res
@@ -60,7 +70,9 @@ class LikeController {
     if (!this.isTopic) {
       this.comment = await Comment.findById(req.params.commentId);
       topicId = this.comment.topic;
-    } else topicId = this.topic.id;
+    } else {
+      topicId = this.topic.id;
+    }
     await this.applyLikeDislike(req.userId);
     return TopicController.refreshTopicContents(res, topicId);
   }
@@ -92,7 +104,9 @@ class LikeController {
     }
     await this.getEntity().save();
     const deletedLike = await Like.findByIdAndRemove(this.like._id);
-    if (this.isTopic) deletedLike.populate(defaultTopicPopulate);
+    if (this.isTopic) {
+      deletedLike.populate(defaultTopicPopulate);
+    }
   }
 }
 

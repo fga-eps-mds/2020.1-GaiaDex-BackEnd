@@ -6,7 +6,7 @@ const { defaultPlant1, defaultPlant2 } = require('../defaultModels');
 const request = supertest(app);
 let plant;
 
-describe('/Plant', () => {
+describe('/Plant sucess', () => {
   beforeEach(async (done) => {
     plant = new PlantModel(defaultPlant1);
     await plant.save();
@@ -50,5 +50,31 @@ describe('/Plant', () => {
   it('should be able to delete plant', async () => {
     const response = await request.delete(`/plant/${plant._id}`);
     expect(response.status).toBe(200);
+  });
+});
+
+describe('/Plant fail', () => {
+  beforeEach(async (done) => {
+    plant = new PlantModel(defaultPlant1);
+    await plant.save();
+    done();
+  });
+
+  // SEARCH
+  it('wont find a plant by her ID', async () => {
+    const response = await request.get(`/plant/hehehe`);
+    expect(response.status).toBe(400);
+  });
+
+  // UPDATE
+  it('wont update plant', async () => {
+    const response = await request.put(`/plant/${plant._id}`).send({});
+    expect(response.status).toBe(400);
+  });
+
+  // DELETE
+  it('wont delete plant', async () => {
+    const response = await request.delete(`/plant/hehehe`);
+    expect(response.status).toBe(400);
   });
 });

@@ -92,7 +92,7 @@ describe('Testing Comments routes', () => {
     expect(response.status).toBe(200);
   });
 
-  it('Should be able to like the comment', async () => {
+  it('like', async () => {
     const response = await request
       .post(`/comment/like/${commentId}`)
       .set('authtoken', `${authtoken}`);
@@ -100,7 +100,41 @@ describe('Testing Comments routes', () => {
     expect(response.status).toBe(200);
   });
 
-  it('Should be able to dislike the comment', async () => {
+  it('second like shouldnt count', async () => {
+    await request
+      .post(`/comment/like/${commentId}`)
+      .set('authtoken', `${authtoken}`);
+
+    const response = await request
+      .post(`/comment/like/${commentId}`)
+      .set('authtoken', `${authtoken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.comments[0].likes.length).toBe(1);
+  });
+
+  it('dislike', async () => {
+    const response = await request
+      .post(`/comment/dislike/${commentId}`)
+      .set('authtoken', `${authtoken}`);
+
+    console.log(response.body);
+    expect(response.status).toBe(200);
+  });
+
+  it('second dislike shouldnt have any effect', async () => {
+    await request
+      .post(`/comment/dislike/${commentId}`)
+      .set('authtoken', `${authtoken}`);
+
+    const response = await request
+      .post(`/comment/dislike/${commentId}`)
+      .set('authtoken', `${authtoken}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('dislike should remove like', async () => {
     await request
       .post(`/comment/like/${commentId}`)
       .set('authtoken', `${authtoken}`);
@@ -110,5 +144,6 @@ describe('Testing Comments routes', () => {
       .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
+    expect(response.body.comments[0].likes.length).toBe(0);
   });
 });
