@@ -1,5 +1,7 @@
 const { Topic } = require('../models/Topic');
 const Comment = require('../models/Comment');
+const Like = require('../models/Like');
+const User = require('../models/User');
 const TopicController = require('./TopicController');
 
 class CommentController {
@@ -67,6 +69,71 @@ class CommentController {
       return res
         .status(400)
         .send({ error: `Error while deleting topic.\n${err}` });
+    }
+  }
+  static async likeComment(req, res) {
+    try {
+      const user = await User.findById(req.userId);
+      const comment = await Comment.findById(req.params.commentId);
+      const topic = await Topic.findById(comment.topic).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plant' },
+      ]);
+      const isLiked = await Like.findOne({
+        user: req.userId,
+        comment: req.params.commentId,
+      });
+      if (isLiked == null) {
+        const like = await Like.create({
+          user,
+          comment,
+        });
+        await like.save();
+        comment.likes.push(like);
+        await comment.save();
+        const topicTrue = await Topic.findById(comment.topic).populate([
+          { path: 'comments', populate: 'user' },
+          { path: 'user' },
+          { path: 'plant' },
+        ]);
+        return res.send(topicTrue);
+      }
+      return res.send(topic);
+    } catch (err) {
+      return res.status(400).send({ error: `Error while commenting.${err}` });
+    }
+  }
+  static async dislikeComment(req, res) {
+    try {
+      const comment = await Comment.findById(req.params.commentId);
+      const topic = await Topic.findById(comment.topic).populate([
+        { path: 'comments', populate: 'user' },
+        { path: 'user' },
+        { path: 'plant' },
+      ]);
+      const like = await Like.findOne({
+        user: req.userId,
+        comment: req.params.commentId,
+      });
+      if (like != null) {
+        const index = comment.likes.indexOf(like._id);
+        if (index > -1) {
+          comment.likes.splice(index, 1);
+        }
+  
+        comment.save();
+        await Like.findByIdAndRemove(like._id);
+        const topicTrue = await Topic.findById(comment.topic).populate([
+          { path: 'comments', populate: 'user' },
+          { path: 'user' },
+          { path: 'plant' },
+        ]);
+        return res.send(topicTrue);
+      }
+      return res.send(topic);
+    } catch (err) {
+      return res.status(400).send({ error: `Error while commenting.${err}` });
     }
   }
 }
