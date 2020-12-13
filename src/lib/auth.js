@@ -5,6 +5,7 @@ const authConfig = {
   // secret: process.env.SECRET,
   secret: 'd41d8cd98f00b204e9800998ecf8427e',
 };
+
 function auth(req, res, next) {
   const sessionToken = req.headers.authtoken;
 

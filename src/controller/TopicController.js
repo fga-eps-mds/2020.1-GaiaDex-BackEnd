@@ -34,7 +34,7 @@ class TopicController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while creating topic.${err}` });
+        .send({ error: `Error while creating topic.\n${err}` });
     }
   }
 
@@ -44,8 +44,13 @@ class TopicController {
 
       const newData = req.body;
 
-      if (!('title' in newData)) newData.title = topic.title;
-      if (!('description' in newData)) newData.description = topic.description;
+      if (!('title' in newData)) {
+        newData.title = topic.title;
+      }
+
+      if (!('description' in newData)) {
+        newData.description = topic.description;
+      }
 
       const result = topicSchema.validate(newData);
       if (result.error) {
@@ -63,7 +68,7 @@ class TopicController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while updating topic.${err}` });
+        .send({ error: `Error while updating topic.\n${err}` });
     }
   }
 
@@ -94,7 +99,7 @@ class TopicController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while deleting topic.${err}` });
+        .send({ error: `Error while deleting topic.\n${err}` });
     }
   }
 
@@ -105,7 +110,7 @@ class TopicController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while listing topics.${err}` });
+        .send({ error: `Error while listing topics.\n${err}` });
     }
   }
 
@@ -119,7 +124,7 @@ class TopicController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while find topic id.${err}` });
+        .send({ error: `Error while find topic id.\n${err}` });
     }
   }
 

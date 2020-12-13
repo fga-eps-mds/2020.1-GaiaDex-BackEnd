@@ -10,7 +10,7 @@ const request = supertest(app);
 let user;
 let plant;
 
-describe('collection/', () => {
+describe('collection ->', () => {
   beforeEach(async (done) => {
     user = new UserModel(defaultUser2);
     await user.save();
@@ -20,17 +20,16 @@ describe('collection/', () => {
     done();
   });
 
-  xit('It should be possible to add a plant to the collection.', async () => {
+  it('It should be possible to add a plant to the collection.', async () => {
     const response = await request
       .post(`/myPlants/add/${user.id}/${plant.id}`)
       .send({
         nickname: 'newName',
       });
-
     expect(response.status).toBe(200);
   });
 
-  xit('It should not be possible to add a plant to the collection.', async () => {
+  it('It should not be possible to add a plant to the collection.', async () => {
     const response = await request
       .post(`/myPlants/add/${user.id}/${plant.id}`)
       .send({
@@ -40,7 +39,7 @@ describe('collection/', () => {
     if (result.error) expect(response.status).toBe(400);
   });
 
-  it('It not should be possible to add a plant to the collection.', async () => {
+  it('It should not be possible to add a plant to the collection.', async () => {
     const response = await request
       .post(`/myPlants/add/${user.id}/${!plant.id}`)
       .send({
@@ -50,15 +49,35 @@ describe('collection/', () => {
     if (!result.error) expect(response.status).toBe(400);
   });
 
-  it('It not should be possible to add a plant to the collection.', async () => {
+  it('It should not be possible to add a plant to the collection.', async () => {
     const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`);
     expect(response.status).toBe(400);
   });
 
-  // listing for id
-  it('It must be possible to search for a plant by id.', async () => {
-    const response = await request.get(`/myPlants/${user.id}/${plant._id}`);
+  it('found no plants of my own', async () => {
+    const invalidGenericId = user.id;
+    const response = await request.get(
+      `/myPlants/${user.id}/${invalidGenericId}`
+    );
     expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Backyard plant not found.');
+  });
+
+  it('found my plant', async () => {
+    const {
+      body: { myPlant },
+    } = await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
+      nickname: 'gisele',
+    });
+    const response = await request.get(`/myPlants/${user.id}/${myPlant._id}`);
+    expect(response.status).toBe(200);
+    expect(response.body.message).not.toBe('Backyard plant not found.');
+  });
+
+  it('invalid search for my plant', async () => {
+    const response = await request.get(`/myPlants/hehehe/hahahah`);
+    expect(response.status).toBe(400);
+    expect(response.body.message).not.toBe('Backyard plant not found.');
   });
 
   it('It must be possible to search for a plant by id.', async () => {
@@ -75,7 +94,7 @@ describe('collection/', () => {
     if (!result.error) expect(response.status).toBe(200);
   });
 
-  it('It not must be possible to edit the nickname of a particular plant.', async () => {
+  it('It must not be possible to edit the nickname of a particular plant.', async () => {
     const response = await request.put(`/myPlants/edit/${plant.id}`).send({
       nickname: 'A',
     });
@@ -83,12 +102,12 @@ describe('collection/', () => {
     if (result.error) expect(response.status).toBe(400);
   });
 
-  it('It not must be possible to edit the nickname of a particular plant.', async () => {
+  it('It must not be possible to edit the nickname of a particular plant.', async () => {
     const response = await request.put(`/myPlants/edit/${plant.id}`);
     expect(response.status).toBe(400);
   });
 
-  it('It not must be possible to edit the nickname of a particular plant.', async () => {
+  it('It must not be possible to edit the nickname of a particular plant.', async () => {
     const response = await request.put(`/myPlants/edit/${!plant.id}`).send({
       nickname: 'newName',
     });
@@ -96,18 +115,48 @@ describe('collection/', () => {
     if (!result.error) expect(response.status).toBe(400);
   });
 
-  xit('It must be possible to delete a plant from the collection.', async () => {
-    const response = await request.delete(`/myPlants/delete/${plant.id}`);
+  it('It must be possible to delete a plant from the collection.', async () => {
+    const responseCreate = await request
+      .post(`/myPlants/add/${user.id}/${plant.id}`)
+      .send({ nickname: 'newName' });
+
+    const response = await request.delete(
+      `/myPlants/delete/${responseCreate.body.myPlant._id}`
+    );
     expect(response.status).toBe(200);
   });
 
-  it('It not must be possible to delete a plant from the collection.', async () => {
-    const response = await request.delete(`/myPlants/delete/${!plant.id}`);
+  it('It must not be possible to delete a plant from the collection.', async () => {
+    const response = await request.delete(`/myPlants/delete/${plant.id}`);
     expect(response.status).toBe(400);
   });
 
-  it('It not must be possible to delete a plant from the collection.', async () => {
+  it('It must not be possible to delete a plant from the collection.', async () => {
     const response = await request.delete(`/myPlants/delete/`);
     expect(response.status).toBe(404);
+  });
+
+  it('list zero plants', async () => {
+    const response = await request.get(`/myPlants/${user._id}`);
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('No plants in my collection');
+  });
+
+  it('list two plants', async () => {
+    await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
+      nickname: 'gisele',
+    });
+    await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
+      nickname: 'irmaehehe',
+    });
+
+    const response = await request.get(`/myPlants/${user.id}`);
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
+  });
+
+  it('no list since no user', async () => {
+    const response = await request.get(`/myPlants/hehehehe`);
+    expect(response.status).toBe(400);
   });
 });

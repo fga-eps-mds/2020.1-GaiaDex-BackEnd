@@ -111,6 +111,36 @@ describe('topic/', () => {
     expect(response.status).toBe(400);
   });
 
+  it('Should not be able to update a topic because topic does not have a body.', async () => {
+    const response = await request.put(`/topic/update/${topic.id}/`).send({});
+
+    expect(response.status).toBe(400);
+  });
+
+  it('Should not be able to update a topic because topic id does not exist', async () => {
+    const response = await request.put(`/topic/update/dahkaaççhjkadsha/`).send({
+      title: 'Titulo Novo',
+      description: 'Nova descrição.',
+    });
+
+    expect(response.status).toBe(400);
+  });
+
+  // Find
+  it('Should be able to find a topic.', async () => {
+    const response = await request.get(`/topic/find/${topic.id}/`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Should not be able to find a topic because topic id does not exist.', async () => {
+    const response = await request.get(
+      `/topic/find/93293034sdjajsdajkdawdjjawkja/`
+    );
+
+    expect(response.status).toBe(400);
+  });
+
   // Like
   it('Should be able to like a topic.', async () => {
     const login = await request.post('/auth/login').send(defaultUser1);
@@ -137,6 +167,19 @@ describe('topic/', () => {
       .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
+  });
+
+  // Delete
+
+  it('Should be able to delete a topic.', async () => {
+    const response = await request.delete(`/topic/delete/${topic.id}/`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Should not be able to delete a topic because topic id does not exist.', async () => {
+    const response = await request.delete(`/topic/delete/ççsajaKSiiidajad/`);
+    expect(response.status).toBe(400);
   });
 
   // List

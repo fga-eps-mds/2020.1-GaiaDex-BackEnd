@@ -6,15 +6,15 @@ class FavoritesController {
     try {
       const user = await User.findById(req.params.userId);
       const plant = await Plant.findById(req.params.plantId);
-
-      if (user.favorites.indexOf(plant) === -1) {
-        user.favorites.push(plant);
+      if (user && plant && user.favorites.indexOf(plant.id) === -1) {
+        user.favorites.push(plant._id);
         await user.save();
+      } else {
+        throw new Error("invalid plant/user or it's already been added");
       }
-
       return res
         .status(200)
-        .send({ message: 'Plant successfuly added to user favorites.' });
+        .send({ message: 'Plant successfully added to user favorites.' });
     } catch (err) {
       return res
         .status(400)
@@ -41,6 +41,10 @@ class FavoritesController {
       if (index > -1) {
         user.favorites.splice(index, 1);
         await user.save();
+      } else {
+        return res.status(400).send({
+          error: `Could not delete Plant from favorites since it wasn't added first.`,
+        });
       }
 
       return res.status(200).send({ message: 'Favorite deleted successfuly' });

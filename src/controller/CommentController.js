@@ -5,8 +5,9 @@ const TopicController = require('./TopicController');
 class CommentController {
   static async createComment(req, res) {
     try {
-      if (!req.body.text)
+      if (!req.body.text) {
         return res.status(400).send({ error: 'Comment should not be empty' });
+      }
 
       const comment = await Comment.create({
         text: req.body.text,
@@ -24,7 +25,7 @@ class CommentController {
       await topic.save();
       return res.send(topic);
     } catch (err) {
-      return res.status(400).send({ error: `Error while commenting.${err}` });
+      return res.status(400).send({ error: `Error while commenting.\n${err}` });
     }
   }
 
@@ -33,8 +34,9 @@ class CommentController {
       const comment = await Comment.findById(req.params.commentId);
       const newData = req.body;
 
-      if (!newData.text)
+      if (!newData.text) {
         return res.status(400).send({ error: 'Comment should not be empty' });
+      }
 
       await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body, {
         useFindAndModify: false,
@@ -43,7 +45,7 @@ class CommentController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while updating comment.${err}` });
+        .send({ error: `Error while updating comment.\n${err}` });
     }
   }
 
@@ -64,7 +66,7 @@ class CommentController {
     } catch (err) {
       return res
         .status(400)
-        .send({ error: `Error while deleting topic.${err}` });
+        .send({ error: `Error while deleting topic.\n${err}` });
     }
   }
 }

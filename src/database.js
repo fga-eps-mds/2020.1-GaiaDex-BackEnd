@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-// // MongoDB connection
-// // mongodb://localhost:27017/noderest  => meu banco de dados local polupado
-// // mongodb://mongo:27017/backend => banco de dados da develop
+// MongoDB connection
+// mongodb://localhost:27017/noderest  => meu banco de dados local polupado
+// mongodb://mongo:27017/backend => banco de dados da develop
 // mongoose
 //   .connect('mongodb://mongo:27017/backend', {
 //     useNewUrlParser: true,
-//     // useUnifiedTopology: true,
+//     useUnifiedTopology: true,
 //   })
 //   .then(() => console.log('MongoDB Connected'))
 //   .catch((err) => console.log(err));

@@ -3,7 +3,7 @@ const MyPlantsController = require('../controller/MyPlantsController');
 
 const router = new express.Router();
 
-router.get('/', MyPlantsController.fetchPlants);
+router.get('/:userId', MyPlantsController.fetchPlants);
 router.post('/add/:userId/:plantId', MyPlantsController.createPlant);
 router.get('/:userId/:myPlantId', MyPlantsController.searchPlant);
 router.put('/edit/:myPlantId', MyPlantsController.updatePlant);
