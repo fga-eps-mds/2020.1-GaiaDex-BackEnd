@@ -2,7 +2,6 @@ const express = require('express');
 const { auth } = require('../lib/auth');
 const TopicController = require('../controller/TopicController');
 
-
 const router = new express.Router();
 router.post('/create/:plantId', auth, TopicController.createTopic);
 router.put('/update/:topicId', TopicController.updateTopic);

@@ -52,10 +52,10 @@ class PlantController {
   // Listagem de Todas as plantas
   static async fetchAll(req, res) {
     try {
-      const plants = await Plant.find().sort({ "topics": -1 }).populate([
-        { path: 'topics' },
-      ]);
-      return res.send( plants );
+      const plants = await Plant.find()
+        .sort({ topics: -1 })
+        .populate([{ path: 'topics' }]);
+      return res.send(plants);
     } catch (err) {
       return res.status(400).send({ error: 'Loading plants failed' });
     }
