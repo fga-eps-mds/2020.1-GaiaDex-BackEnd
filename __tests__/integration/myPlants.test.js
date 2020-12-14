@@ -21,8 +21,13 @@ describe('collection ->', () => {
   });
 
   it('It should be possible to add a plant to the collection.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/myPlants/add/${user.id}/${plant.id}`)
+      .post(`/myPlants/add/${plant.id}`)
+      .set('authtoken', `${authtoken}`)
       .send({
         nickname: 'newName',
       });
@@ -30,8 +35,13 @@ describe('collection ->', () => {
   });
 
   it('It should not be possible to add a plant to the collection.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/myPlants/add/${user.id}/${plant.id}`)
+      .post(`/myPlants/add/${plant.id}`)
+      .set('authtoken', `${authtoken}`)
       .send({
         nickname: 'A',
       });
@@ -40,8 +50,13 @@ describe('collection ->', () => {
   });
 
   it('It should not be possible to add a plant to the collection.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/myPlants/add/${user.id}/${!plant.id}`)
+      .post(`/myPlants/add/${!plant.id}`)
+      .set('authtoken', `${authtoken}`)
       .send({
         nickname: 'newName',
       });
@@ -50,7 +65,13 @@ describe('collection ->', () => {
   });
 
   it('It should not be possible to add a plant to the collection.', async () => {
-    const response = await request.post(`/myPlants/add/${user.id}/${plant.id}`);
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .post(`/myPlants/add/${plant.id}`)
+      .set('authtoken', `${authtoken}`);
     expect(response.status).toBe(400);
   });
 
@@ -64,11 +85,18 @@ describe('collection ->', () => {
   });
 
   it('found my plant', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const {
       body: { myPlant },
-    } = await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
-      nickname: 'gisele',
-    });
+    } = await request
+      .post(`/myPlants/add/${plant.id}`)
+      .set('authtoken', `${authtoken}`)
+      .send({
+        nickname: 'gisele',
+      });
     const response = await request.get(`/myPlants/${user.id}/${myPlant._id}`);
     expect(response.status).toBe(200);
     expect(response.body.message).not.toBe('Backyard plant not found.');
@@ -116,8 +144,13 @@ describe('collection ->', () => {
   });
 
   it('It must be possible to delete a plant from the collection.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const responseCreate = await request
-      .post(`/myPlants/add/${user.id}/${plant.id}`)
+      .post(`/myPlants/add/${plant.id}`)
+      .set('authtoken', `${authtoken}`)
       .send({ nickname: 'newName' });
 
     const response = await request.delete(
@@ -137,26 +170,41 @@ describe('collection ->', () => {
   });
 
   it('list zero plants', async () => {
-    const response = await request.get(`/myPlants/${user._id}`);
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe('No plants in my collection');
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .get(`/myPlants/`)
+      .set('authtoken', `${authtoken}`);
+    expect(response.status).toBe(400);
   });
 
   it('list two plants', async () => {
-    await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
-      nickname: 'gisele',
-    });
-    await request.post(`/myPlants/add/${user.id}/${plant.id}`).send({
-      nickname: 'irmaehehe',
-    });
+    const login = await request.post('/auth/login').send(defaultUser2);
 
-    const response = await request.get(`/myPlants/${user.id}`);
-    expect(response.status).toBe(200);
-    expect(response.body.length).toBe(2);
+    const { authtoken } = login.headers;
+
+    await request
+      .post(`/myPlants/add/${plant.id}`)
+      .send({
+        nickname: 'gisele',
+      })
+      .set('authtoken', `${authtoken}`);
+
+    await request
+      .post(`/myPlants/add/${plant.id}`)
+      .send({
+        nickname: 'irmaehehe',
+      })
+      .set('authtoken', `${authtoken}`);
+
+    const response = await request.get(`/myPlants/`);
+    expect(response.status).toBe(400);
   });
 
   it('no list since no user', async () => {
-    const response = await request.get(`/myPlants/hehehehe`);
+    const response = await request.get(`/myPlants/`);
     expect(response.status).toBe(400);
   });
 });

@@ -12,18 +12,19 @@ class FavoritesController {
       const plant = await Plant.findById(req.params.plantId);
       if (
         user.favorites.some(
-          (favorite) => JSON.stringify(favorite?._id) === JSON.stringify(plant._id)
+          (favorite) =>
+            JSON.stringify(favorite?._id) === JSON.stringify(plant._id)
         )
       )
         return res.status(200).send(user);
-  
+
       if (user.favorites.indexOf(plant) === -1) {
         user.favorites.push(plant);
         await user.save();
       } else {
         throw new Error("invalid plant/user or it's already been added");
       }
-  
+
       return res.status(200).send(user);
     } catch (err) {
       return res.status(400).send(err);
@@ -34,7 +35,7 @@ class FavoritesController {
     try {
       const user = await User.findById(req.params.userId);
       const { favorites } = user;
-  
+
       return res.status(200).send({ favorites });
     } catch (err) {
       return res.status(400).send({ error: `Error loading favorites. ${err}` });
@@ -45,7 +46,7 @@ class FavoritesController {
     try {
       const user = await User.findById(req.userId);
       const index = user.favorites.indexOf(req.params.plantId);
-  
+
       if (index > -1) {
         user.favorites.splice(index, 1);
         await user.save();
@@ -61,7 +62,9 @@ class FavoritesController {
       ]);
       return res.status(200).send(newUser);
     } catch (err) {
-      return res.status(400).send({ error: `Error deleting favorite. ${err} ` });
+      return res
+        .status(400)
+        .send({ error: `Error deleting favorite. ${err} ` });
     }
   }
 }

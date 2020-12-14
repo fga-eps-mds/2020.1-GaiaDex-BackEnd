@@ -7,7 +7,7 @@ const request = supertest(app);
 
 describe('scanner', () => {
   it('should be able to detect plant', async () => {
-    const filePath = path.join(__dirname, '../../src/planta.jpg');
+    const filePath = path.join(__dirname, '../assets/plant.jpg');
     const data = fs.readFileSync(filePath, { encoding: 'base64' });
     const response = await request.post('/scanner').send({
       filename: 'OutputImage',

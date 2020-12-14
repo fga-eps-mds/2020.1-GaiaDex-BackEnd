@@ -25,36 +25,48 @@ describe('favorite/', () => {
 
   // addition
   it('should add a new favored plant.', async () => {
-    const response = await request.post(
-      `/favorites/add/${user.id}/${plant.id}/`
-    );
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .post(`/favorites/add/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });
 
   it('should add two plants.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
     const plant2 = new PlantModel(defaultPlant2);
     await plant2.save();
-    await request.post(`/favorites/add/${user.id}/${plant.id}/`);
+    await request
+      .post(`/favorites/add/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
 
-    const response = await request.post(
-      `/favorites/add/${user.id}/${plant2.id}/`
-    );
+    const response = await request
+      .post(`/favorites/add/${plant2.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
   });
 
   it("shouldn't add same plant for the second time.", async () => {
-    await request.post(`/favorites/add/${user.id}/${plant.id}/`);
+    const login = await request.post('/auth/login').send(defaultUser2);
 
-    const response = await request.post(
-      `/favorites/add/${user.id}/${plant.id}/`
-    );
-    console.log(response.body);
-    expect(response.status).toBe(400);
-    expect(response.body.error).toBe(
-      "Error while adding new favorite plant. Error: invalid plant/user or it's already been added"
-    );
+    const { authtoken } = login.headers;
+
+    await request
+      .post(`/favorites/add/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
+
+    const response = await request
+      .post(`/favorites/add/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
+    expect(response.status).toBe(200);
   });
 
   it('wont add favorite. invalid request 1.', async () => {
@@ -64,9 +76,14 @@ describe('favorite/', () => {
   });
 
   it('wont add favorite. invalid request 2.', async () => {
-    const response = await request.post(`/favorites/add/${user.id}/${user.id}`);
-    console.log(response.body);
-    expect(response.status).toBe(400);
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .post(`/favorites/add/${user.id}`)
+      .set('authtoken', `${authtoken}`);
+    expect(response.status).toBe(200);
   });
 
   // listing
@@ -87,21 +104,30 @@ describe('favorite/', () => {
 
   // deletion
   it('should delete a plant from favorites.', async () => {
-    await request.post(`/favorites/add/${user.id}/${plant.id}/`);
+    const login = await request.post('/auth/login').send(defaultUser2);
 
-    const response = await request.delete(
-      `/favorites/delete/${user.id}/${plant.id}/`
-    );
+    const { authtoken } = login.headers;
+
+    await request
+      .post(`/favorites/add/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
+
+    const response = await request
+      .delete(`/favorites/delete/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Favorite deleted successfuly');
   });
 
   // deletion
   it("shouldn't delete a plant that wasn't added to favorites.", async () => {
-    const response = await request.delete(
-      `/favorites/delete/${user.id}/${plant.id}/`
-    );
+    const login = await request.post('/auth/login').send(defaultUser2);
+
+    const { authtoken } = login.headers;
+
+    const response = await request
+      .delete(`/favorites/delete/${plant.id}/`)
+      .set('authtoken', `${authtoken}`);
 
     expect(response.status).toBe(400);
     expect(response.body.error).toBe(
@@ -110,11 +136,9 @@ describe('favorite/', () => {
   });
 
   it('invalid delete request.', async () => {
-    const response = await request.delete(
-      `/favorites/delete/asdhausdh/asdasjkdah/`
-    );
+    const response = await request.delete(`/favorites/delete/asdasjkdah/`);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
     expect(response.body.error).not.toBe(
       `Could not delete Plant from favorites since it wasn't added first.`
     );

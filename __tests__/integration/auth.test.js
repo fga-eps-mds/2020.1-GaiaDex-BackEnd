@@ -200,7 +200,7 @@ describe('Auth/User', () => {
     const response = await request.get(`/auth/user/${dummyId}`);
     expect(response.status).toBe(400);
     expect(response.body.error).toBe(
-      "Error while finding user.\nError: User doesn't exist."
+      "Error while finding user.Error: User doesn't exist."
     );
   });
 
@@ -208,8 +208,7 @@ describe('Auth/User', () => {
     const response = await request.get(`/auth/user/blabla`);
     expect(response.status).toBe(400);
     expect(response.body.error).toBe(
-      'Error while finding user.\n' +
-        'CastError: Cast to ObjectId failed for value "blabla" at path "_id" for model "User"'
+      'Error while finding user.CastError: Cast to ObjectId failed for value "blabla" at path "_id" for model "User"'
     );
   });
 });

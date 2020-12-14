@@ -71,6 +71,7 @@ class CommentController {
         .send({ error: `Error while deleting topic.\n${err}` });
     }
   }
+
   static async likeComment(req, res) {
     try {
       const user = await User.findById(req.userId);
@@ -104,6 +105,7 @@ class CommentController {
       return res.status(400).send({ error: `Error while commenting.${err}` });
     }
   }
+
   static async dislikeComment(req, res) {
     try {
       const comment = await Comment.findById(req.params.commentId);
@@ -121,7 +123,7 @@ class CommentController {
         if (index > -1) {
           comment.likes.splice(index, 1);
         }
-  
+
         comment.save();
         await Like.findByIdAndRemove(like._id);
         const topicTrue = await Topic.findById(comment.topic).populate([

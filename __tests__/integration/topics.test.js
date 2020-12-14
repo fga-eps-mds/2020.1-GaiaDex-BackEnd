@@ -31,8 +31,13 @@ describe('topic/', () => {
 
   // Creation
   it('Should be able to create a new topic.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser1);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/topic/create/${plant.id}/${user.id}/`)
+      .post(`/topic/create/${plant.id}/`)
+      .set('authtoken', `${authtoken}`)
       .send({
         title: 'Titulo Tópico',
         description: 'Dúvidas sobre planta',
@@ -42,8 +47,13 @@ describe('topic/', () => {
   });
 
   it('Should not be able to create a new topic because there is no topic title.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser1);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/topic/create/${plant.id}/${user.id}/`)
+      .post(`/topic/create/${plant.id}/`)
+      .set('authtoken', `${authtoken}`)
       .send({
         description: 'Dúvidas sobre planta',
       });
@@ -52,8 +62,13 @@ describe('topic/', () => {
   });
 
   it('Should not be able to create a new topic because topic title is too short.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser1);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/topic/create/${plant.id}/${user.id}/`)
+      .post(`/topic/create/${plant.id}/`)
+      .set('authtoken', `${authtoken}`)
       .send({
         title: '',
         description: 'Dúvidas sobre planta',
@@ -64,18 +79,24 @@ describe('topic/', () => {
 
   it('Should not be able to create a new topic because user is not valid.', async () => {
     const response = await request
-      .post(`/topic/create/${plant.id}/notValidUserId`)
+      .post(`/topic/create/${plant.id}/`)
+      .set('authtoken', `notValidToken`)
       .send({
         title: 'Título Tópico',
         description: 'Dúvidas sobre planta',
       });
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   it('Should not be able to create a new topic because plant is not valid.', async () => {
+    const login = await request.post('/auth/login').send(defaultUser1);
+
+    const { authtoken } = login.headers;
+
     const response = await request
-      .post(`/topic/create/notValidPlantId/${user.id}`)
+      .post(`/topic/create/notValidPlantId/`)
+      .set('authtoken', `${authtoken}`)
       .send({
         title: 'Título Tópico',
         description: 'Dúvidas sobre planta',

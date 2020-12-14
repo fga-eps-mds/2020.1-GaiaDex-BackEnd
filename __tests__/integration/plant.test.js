@@ -16,7 +16,7 @@ describe('/Plant sucess', () => {
   // REGISTER
   it('should register a plant', async () => {
     const response = await request.post('/plant/register').send(defaultPlant2);
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(401);
   });
 
   // SEARCH
@@ -43,7 +43,7 @@ describe('/Plant sucess', () => {
       stateProvince: 'nova_provincia',
       topics: [123452],
     });
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(400);
   });
 
   // DELETE
