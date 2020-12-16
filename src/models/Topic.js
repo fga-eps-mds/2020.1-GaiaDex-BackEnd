@@ -40,4 +40,11 @@ const topicSchema = new Schema({
 
 const Topic = mongoose.model('Topic', topicSchema);
 
-module.exports = Topic;
+module.exports = {
+  defaultTopicPopulate: [
+    { path: 'comments', populate: 'user' },
+    { path: 'user' },
+    { path: 'plant' },
+  ],
+  Topic,
+};
